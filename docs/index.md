@@ -1,3 +1,10 @@
+---
+layout: default
+title: Home
+nav_order: 1
+description: "Introduction to the Aergias programming language."
+---
+
 # Aergia
 
 The most minimal yet still usable programming language.
