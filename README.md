@@ -1,4 +1,4 @@
-# Aergias (v1.0)
+# Aergias
 
 The most minimal yet still usable programming language.
 
