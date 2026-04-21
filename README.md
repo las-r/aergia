@@ -91,7 +91,7 @@ All operations use prefix notation:
 ### 4.1 Arithmetic
 
 | Op | Action   | Example  | Result |
-| -- | -- | -- |  |
+| -- | -------- | -------- | ------ |
 | +  | Add      | `+ 5 2`  | 7      |
 | -  | Subtract | `- 10 4` | 6      |
 | *  | Multiply | `* 3 3`  | 9      |
@@ -102,7 +102,7 @@ All operations use prefix notation:
 ### 4.2 Bitwise & Logic
 
 | Op | Action      | Example  |
-| -- | -- | -- |
+| -- | ----------- | -------- |
 | |  | Bitwise OR  | `\| x y` |
 | &  | Bitwise AND | `& x y`  |
 | $  | Bitwise XOR | `$ x y`  |
@@ -114,7 +114,7 @@ All operations use prefix notation:
 Comparisons return `1` for true and `0` for false.
 
 | Op | Action           | Example   |
-| -- | - |  |
+| -- | ---------------- | --------- |
 | == | Equals           | `== x 5`  |
 | << | Less than        | `<< x 10` |
 | >> | Greater than     | `>> x 0`  |
