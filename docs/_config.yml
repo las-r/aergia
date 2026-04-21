@@ -1,0 +1,9 @@
+title: Aergias Documentation
+description: The most minimal yet still usable programming language.
+theme: just-the-docs
+
+url: https://las-r.github.io/aergias
+
+aux_links:
+  "Aergias on GitHub":
+    - https://github.com/las-r/aergias
