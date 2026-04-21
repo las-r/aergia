@@ -108,13 +108,13 @@ Operations can be nested:
 
 ### 4.2 Bitwise & Logic
 
-| Op | Action      | Example  |
-| -- | ----------- | -------- |
-| |  | Bitwise OR  | `\| x y` |
-| &  | Bitwise AND | `& x y`  |
-| $  | Bitwise XOR | `$ x y`  |
-| ~  | Bitwise NOT | `~ x`    |
-| !  | Logical NOT | `! x`    |
+| Op  | Action      | Example  |
+| --- | ----------- | -------- |
+| \|  | Bitwise OR  | `\| x y` |
+| &   | Bitwise AND | `& x y`  |
+| $   | Bitwise XOR | `$ x y`  |
+| ~   | Bitwise NOT | `~ x`    |
+| !   | Logical NOT | `! x`    |
 
 ### 4.3 Comparison
 
