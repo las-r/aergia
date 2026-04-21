@@ -1,8 +1,8 @@
-# Aergias
+# Aergia
 
 The most minimal yet still usable programming language.
 
-Aergias is an expression-oriented language where every operation returns a value. It utilizes Prefix Notation (Polish Notation) to maintain a minimal footprint, eliminating the need for complex operator precedence and grouping parentheses in math.
+Aergia is an expression-oriented language where every operation returns a value. It utilizes Prefix Notation (Polish Notation) to maintain a minimal footprint, eliminating the need for complex operator precedence and grouping parentheses in math.
 
 ## 1. Syntax
 
@@ -16,7 +16,7 @@ Lines starting with `/` are ignored by the interpreter.
 
 ### 1.2 Values and Types
 
-Aergias supports three primary types:
+Aergia supports three primary types:
 
 * Integers: `42`, `-7`
 * Floats: `3.14`, `.5`
@@ -165,7 +165,7 @@ The block repeats as long as the condition evaluates to a non-zero value.
 ## 6. Example Program: Fibonacci Sequence
 
 ```txt
-/ Aergias Fibonacci Sequence
+/ Aergia Fibonacci Sequence
 
 > "How many numbers?"
 = limit .
