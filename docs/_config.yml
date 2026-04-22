@@ -1,4 +1,4 @@
-title: Aergia Documentation
+title: Aergia
 description: The most minimal yet still usable programming language.
 remote_theme: just-the-docs/just-the-docs
 color_scheme: dark
@@ -7,5 +7,5 @@ url: https://las-r.github.io/aergia
 baseurl: /aergia
 
 aux_links:
-  "Aergias on GitHub":
+  "GitHub":
     - https://github.com/las-r/aergia

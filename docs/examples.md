@@ -1,7 +1,9 @@
 ---
 layout: default
 title: Examples
-nav_order: 3
+nav_order: 7
+description: "Aergia syntax examples."
+parent: "Syntax"
 ---
 
 # Examples

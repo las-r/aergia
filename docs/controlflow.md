@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Operations
+title: Control Flow
 nav_order: 5
 description: "How control flow works in Aergia."
 parent: "Syntax"

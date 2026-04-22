@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Operations
+title: Comments
 nav_order: 6
 description: "How comments work in Aergia."
 parent: "Syntax"
