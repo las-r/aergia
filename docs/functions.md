@@ -8,7 +8,7 @@ parent: "Syntax"
 
 # 6. Functions
 
-## Defining Functions
+## 6.1 Defining Functions
 Functions are defined with `{name :<parameters>: body}`.
 
 ```
@@ -17,7 +17,7 @@ Functions are defined with `{name :<parameters>: body}`.
 }
 ```
 
-## Calling Functions
+## 6.2 Calling Functions
 Functions are called with `@ name :<args>:`.
 
 ```
@@ -30,7 +30,7 @@ Functions are called with `@ name :<args>:`.
 @ hello
 ```
 
-## Returning Values
+## 6.3 Returning Values
 Functions can return values with the `?` prefix. This will halt the function.
 
 ```
