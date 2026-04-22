@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Operations
+title: 4. Operations
 nav_order: 4
 description: "How operations work in Aergia."
 parent: "Syntax"
@@ -23,14 +23,14 @@ Operations can be nested:
 
 ## 4.1 Arithmetic
 
-| Op | Action   | Example  | Result |
-| -- | -------- | -------- | ------ |
-| +  | Add      | `+ 5 2`  | 7      |
-| -  | Subtract | `- 10 4` | 6      |
-| *  | Multiply | `* 3 3`  | 9      |
-| /  | Divide   | `/ 10 2` | 5      |
-| ^  | Exponent | `^ 2 3`  | 8      |
-| %  | Modulo   | `% 10 3` | 1      |
+| Op | Action            | Example  | Result |
+| -- | ----------------- | -------- | ------ |
+| +  | Add / Concatenate | `+ 5 2`  | 7      |
+| -  | Subtract          | `- 10 4` | 6      |
+| *  | Multiply          | `* 3 3`  | 9      |
+| /  | Divide            | `/ 10 2` | 5      |
+| ^  | Exponent          | `^ 2 3`  | 8      |
+| %  | Modulo            | `% 10 3` | 1      |
 
 ## 4.2 Bitwise & Logic
 

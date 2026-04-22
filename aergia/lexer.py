@@ -4,7 +4,7 @@ import re
 # made by las-r on github
 
 # constants
-TOKENPATTERN = r'"[^"]*"|==|<<|>>|<=|>=|[()\[\]+\-*/%^=&|!~<>,.\']|[\w.]+'
+TOKENPATTERN = r'"[^"]*"|==|<<|>>|<=|>=|[()\[\]{}+\-*/%^=&|!~<>:@?,.\']|[\w.]+'
 
 # preprocessor
 def preprocess(code):

@@ -9,7 +9,7 @@ def parseexpr(tokens):
         return None
     token = tokens.pop(0)
     
-    # if/while blocks
+    # if block
     if token == "(":
         cond = parseexpr(tokens)
         body = []
@@ -21,8 +21,10 @@ def parseexpr(tokens):
             tokens.pop(0)
             while tokens and tokens[0] != ")":
                 elsebody.append(parseexpr(tokens))
+            if tokens: tokens.pop(0)
         return IfNode(cond, body, elsebody)
     
+    # while block
     if token == "[":
         cond = parseexpr(tokens)
         body = []
@@ -30,6 +32,21 @@ def parseexpr(tokens):
             body.append(parseexpr(tokens))
         if tokens: tokens.pop(0)
         return WhileNode(cond, body)
+    
+    # function block
+    if token == "{":
+        name = tokens.pop(0)
+        para = []
+        if tokens and tokens[0] == ":":
+            tokens.pop(0)
+            while tokens and tokens[0] != ":":
+                para.append(tokens.pop(0))
+            if tokens: tokens.pop(0)
+        body = []
+        while tokens and tokens[0] != "}":
+            body.append(parseexpr(tokens))
+        if tokens: tokens.pop(0)
+        return FunctionNode(name, para, body)
     
     # assignments
     if token == "=":
@@ -53,6 +70,20 @@ def parseexpr(tokens):
     if token == ".": return IntInputNode()
     if token == ",": return StringInputNode()
     if token == "'": return FloatInputNode()
+    
+    # function return
+    if token == "?": return ReturnNode(parseexpr(tokens))
+    
+    # function call
+    if token == "@":
+        name = tokens.pop(0)
+        args = []
+        if tokens and tokens[0] == ":":
+            tokens.pop(0)
+            while tokens and tokens[0] != ":":
+                args.append(parseexpr(tokens))
+            if tokens: tokens.pop(0)
+        return CallNode(name, args)
     
     # string
     if token.startswith('"'): return LiteralNode(token.strip('"'))

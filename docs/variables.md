@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Variables
+title: 1. Variables
 nav_order: 1
 description: "How variables work in Aergia."
 parent: "Syntax"

@@ -1,24 +1,22 @@
 ---
 layout: default
-title: Examples
-nav_order: 7
+title: 8. Examples
+nav_order: 8
 description: "Aergia syntax examples."
 parent: "Syntax"
 ---
 
-# Examples
+# 8. Examples
 This section has a few examples of how the Aergia language can be used.
 
-## Hello World
+## 8.1 Hello World
 ```
 > "Hello, world!"
 ```
 
-## 6. Example Program: Fibonacci Sequence
+## 8.2 Fibonacci Sequence
 
 ```
-# Aergia Fibonacci Sequence
-
 > "How many numbers?"
 = limit .
 = n1 0
@@ -32,4 +30,17 @@ This section has a few examples of how the Aergia language can be used.
     = n2 temp
     = i + i 1
 ]
+```
+
+## 8.3 Factorial
+```
+{ factorial : n :
+    ( <= n 1
+        ? 1
+    )
+    ? * n @ factorial : - n 1 :
+}
+
+> "Enter n for n!:"
+> @ factorial : . :
 ```

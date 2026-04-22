@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Input and Output
+title: 3. Input and Output
 nav_order: 3
 description: "How input and output work in Aergia."
 parent: "Syntax"

@@ -1,6 +1,11 @@
 # aergia nodes
 # made by las-r on github
 
+# exceptions
+class ReturnException(Exception):
+    def __init__(self, value):
+        self.value = value
+
 # value nodes
 class LiteralNode:
     def __init__(self, value):
@@ -34,6 +39,7 @@ class OutputNode:
     
     def eval(self, env):
         print(self.child.eval(env))
+        return 0
 
 # input
 class StringInputNode:
@@ -135,3 +141,40 @@ class WhileNode:
             for node in self.body:
                 last = node.eval(env)
         return last
+    
+# function nodes
+class FunctionNode:
+    def __init__(self, name, para, body):
+        self.name = name
+        self.para = para
+        self.body = body
+    
+    def eval(self, env):
+        env[self.name] = self
+        return 0
+    
+class CallNode:
+    def __init__(self, name, args):
+        self.name = name
+        self.args = args
+
+    def eval(self, env):
+        func = env.get(self.name)
+        if not func:
+            raise Exception(f"Function {self.name} not defined")
+        fenv = env.copy() 
+        for name, argnode in zip(func.para, self.args):
+            fenv[name] = argnode.eval(env)
+        try:
+            for node in func.body:
+                node.eval(fenv)
+            return 0
+        except ReturnException as e:
+            return e.value
+        
+class ReturnNode:
+    def __init__(self, value):
+        self.value = value
+        
+    def eval(self, env):
+        raise ReturnException(self.value.eval(env))

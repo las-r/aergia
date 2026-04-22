@@ -1,12 +1,12 @@
 ---
 layout: default
-title: Comments
-nav_order: 6
+title: 7. Comments
+nav_order: 7
 description: "How comments work in Aergia."
 parent: "Syntax"
 ---
 
-# 6. Comments
+# 7. Comments
 
 Lines starting with `#` are ignored by the interpreter.
 

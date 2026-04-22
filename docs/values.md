@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Data and Values
+title: 2. Data and Values
 nav_order: 2
 description: "How data and values work in Aergia."
 parent: "Syntax"
