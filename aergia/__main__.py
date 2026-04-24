@@ -1,5 +1,4 @@
 import argparse
-import sys
 from .lexer import tokenize
 from .parser import parse
 
@@ -13,7 +12,8 @@ def main():
         description="Aergia Language Interpreter"
     )
     aparser.add_argument("filename", help="The .aer file to execute")
-    aparser.add_argument("-d", "--debug", action="store_true", help="Print tokens and AST")
+    aparser.add_argument("--version", action="version", version="Aergia v1.4.0")
+    aparser.add_argument("-d", "--debug", action="store_true", help="print tokens and abstract syntax tree")
     args = aparser.parse_args()
 
     try:

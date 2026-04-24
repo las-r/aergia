@@ -12,3 +12,6 @@ requires-python = ">=3.7"
 
 [project.scripts]
 aergia = "aergia.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["aergia*"]

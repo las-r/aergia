@@ -25,7 +25,6 @@ Here is an example:
 ```
 
 ## 2.2 Implicit Evaluation
-
 Simply stating a value or variable evaluates it. In any block, the last evaluated expression acts as the "result."
 
 ```
@@ -34,4 +33,15 @@ Simply stating a value or variable evaluates it. In any block, the last evaluate
 
 # Evaluates to "Hello"
 "Hello"
+```
+
+## 2.3 Escape Characters
+In strings, some characters that are used in Aergia will break the string and likely your program with it. To fix this, you can use escape characters with `\`.
+
+```
+# The '#' will break this line.
+= text "ABC#123"
+
+# Use escape characters!
+= text "ABC\#123"
 ```

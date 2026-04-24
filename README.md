@@ -2,7 +2,7 @@
 **Aergia** is a minimalist yet still usable programming language, depending on your definition of usable.
 
 ## Quick Start
-Just put the /aergia folder in your working directory.
+`Just put the /aergia folder in your working directory.`
 
 ## Usage
 ```
