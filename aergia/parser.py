@@ -49,6 +49,11 @@ def parseexpr(tokens):
         if tokens: tokens.pop(0)
         return FunctionNode(name, para, body)
     
+    # exit
+    if token == "```":
+        value = parseexpr(tokens)
+        return ExitNode(value)
+    
     # imports
     if token == "+>":
         file = parseexpr(tokens)
@@ -59,6 +64,11 @@ def parseexpr(tokens):
     if token == "*<":
         name = tokens.pop(0)
         return PyImportNode(name, True)
+    
+    # evaluation
+    if token == ";":
+        value = parseexpr(tokens)
+        return EvaluationNode(value)
     
     # assignments
     if token == "=":

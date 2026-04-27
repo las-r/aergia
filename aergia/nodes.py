@@ -8,6 +8,10 @@ from .lexer import tokenize
 class ReturnException(Exception):
     def __init__(self, value):
         self.value = value
+        
+class ExitException(Exception):
+    def __init__(self, value):
+        self.value = value
 
 # value nodes
 class LiteralNode:
@@ -231,3 +235,27 @@ class PyImportNode:
                             else:
                                 env[f"{self.name}_{name}_{sname}"] = sval
         return 0
+
+# low control nodes
+class EvaluationNode:
+    def __init__(self, value):
+        self.value = value
+    
+    def eval(self, env):
+        from .parser import parse
+        code = self.value.eval(env)
+        tokens = tokenize(code)
+        ast = parse(tokens)
+        last = 0
+        for node in ast:
+            if node:
+                last = node.eval(env)
+        return last
+    
+class ExitNode:
+    def __init__(self, value):
+        self.value = value
+    
+    def eval(self, env):
+        exitc = self.value.eval(env)
+        raise ExitException(exitc)
