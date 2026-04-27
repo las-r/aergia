@@ -22,7 +22,7 @@ python -m aergia <filename.aer>
 ## Updating
 ### ≥v1.5.0
 ```
-aergia --update
+aergia --ghupdate
 ```
 
 ### <v1.5.0
