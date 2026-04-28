@@ -9,7 +9,7 @@ from .parser import parse, ExitException
 
 def main():
     # constants
-    VER = "Aergia v1.5.2"
+    VER = "Aergia v1.6.0"
     REPO = "git+https://github.com/las-r/aergia.git"
     
     # arguments
