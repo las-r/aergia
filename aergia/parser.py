@@ -25,14 +25,24 @@ def parseexpr(tokens):
             if tokens: tokens.pop(0)
         return IfNode(cond, body, elsebody)
     
-    # while block
+    # while/for block
     if token == "[":
-        cond = parseexpr(tokens)
-        body = []
-        while tokens and tokens[0] != "]":
-            body.append(parseexpr(tokens))
-        if tokens: tokens.pop(0)
-        return WhileNode(cond, body)
+        if tokens and tokens[0] == "`":
+            tokens.pop(0)
+            array = parseexpr(tokens)
+            iname = tokens.pop(0)
+            body = []
+            while tokens and tokens[0] != "]":
+                body.append(parseexpr(tokens))
+            if tokens: tokens.pop(0)
+            return ForNode(array, iname, body)
+        else:
+            cond = parseexpr(tokens)
+            body = []
+            while tokens and tokens[0] != "]":
+                body.append(parseexpr(tokens))
+            if tokens: tokens.pop(0)
+            return WhileNode(cond, body)
     
     # function block
     if token == "{":
@@ -49,8 +59,22 @@ def parseexpr(tokens):
         if tokens: tokens.pop(0)
         return FunctionNode(name, para, body)
     
+    # array definition
+    if token == "<":
+        elements = []
+        while tokens and tokens[0] != ">":
+            elements.append(parseexpr(tokens))
+        if tokens: tokens.pop(0)
+        return ArrayNode(elements)
+    
+    # array index
+    if token == ":":
+        array = parseexpr(tokens)
+        index = parseexpr(tokens)
+        return IndexNode(array, index)
+    
     # exit
-    if token == "```":
+    if token == "~>":
         value = parseexpr(tokens)
         return ExitNode(value)
     
@@ -60,10 +84,11 @@ def parseexpr(tokens):
         return ImportNode(file)
     if token == "*>":
         name = tokens.pop(0)
-        return PyImportNode(name, False)
+        return PyImportNode(name, name, False)
     if token == "*<":
         name = tokens.pop(0)
-        return PyImportNode(name, True)
+        rname = tokens.pop(0)
+        return PyImportNode(name, rname, True)
     
     # evaluation
     if token == ";":

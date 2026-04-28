@@ -1,0 +1,23 @@
+*< random r
+
+= secret @r_randint : 1 100 :
+= guess 0
+= tries 0
+
+> "--- Guess the Number (1-100) ---"
+
+[ != guess secret
+    > "Enter your guess:"
+    = guess .
+    = tries + tries 1
+
+    ( << guess secret
+        > "Too low!"
+    ) (
+        ( >> guess secret
+            > "Too high!"
+        ) (
+            > + "Correct! You got it in " + tries " tries."
+        )
+    )
+]

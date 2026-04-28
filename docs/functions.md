@@ -40,7 +40,7 @@ Functions can return values with the `?` prefix. This will halt the function.
     ? - x y
 }
 
-> @ subtract 5 3
+> @subtract 5 3
 
 # Note how unlike the hello example, this needs a `>` to print.
 ```

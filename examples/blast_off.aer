@@ -1,0 +1,11 @@
+*< time t
+> "Starting countdown..."
+
+= i 3
+[ >> i 0
+    > i
+    @t_sleep : 1 :
+    = i - i 1
+]
+
+> "BLAST OFF!"
