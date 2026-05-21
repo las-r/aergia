@@ -3,14 +3,14 @@
 
 ## Installation
 ### Global Installation (pip)
-#### PyPI
-```bash
-pip install aergia-lang
-```
-
 #### GitHub
 ```bash
 pip install git+https://github.com/las-r/aergia.git
+```
+
+#### PyPI (not recommended, outdated)
+```bash
+pip install aergia-lang
 ```
 
 ### Local Installation (in a directory)
