@@ -10,7 +10,7 @@ from .tools.lethes import minifyf
 
 def main():
     # constants
-    VER = "Aergia v1.7.3"
+    VER = "Aergia v1.7.4"
     REPO = "git+https://github.com/las-r/aergia.git"
     
     # arguments
