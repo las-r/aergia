@@ -49,5 +49,5 @@ A basic program minifier.\
 Usage:  `aergia --lethes <filename.aer>`
 
 - **Otia** (unreleased, wip):\
-A basic program linter.\
+A basic program formatter.\
 Usage:  `aergia --otia <filename.aer>`
