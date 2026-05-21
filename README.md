@@ -8,7 +8,7 @@ pip install git+https://github.com/las-r/aergia.git
 ```
 
 ### Local Installation (in a directory)
-Copy the contents of `/aergia` to your working directory.
+Copy `/aergia` to your working directory.
 
 ## Usage
 ```bash
