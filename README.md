@@ -2,52 +2,57 @@
 **Aergia** is a minimalist yet still usable programming language, depending on your definition of usable.
 
 ## Installation
-### Global Installation (pip)
-#### GitHub
-```bash
-pip install git+https://github.com/las-r/aergia.git
-```
-
-#### PyPI (not recommended, outdated)
+### PyPI (stable)
+Install the latest stable release. This might not have all the bleeding-edge features.
 ```bash
 pip install aergia-lang
 ```
 
-### Local Installation (in a directory)
-Copy `/aergia` to your working directory.
+### GitHub (nightly)
+Install the latest development version right from the repo.
+```bash
+pip install git+https://github.com/las-r/aergia.git
+```
+
+### Local / Source (dev)
+If you want to modify the interpreter or contribute to development, clone the repo and install in editable mode.
+```bash
+git clone https://github.com/las-r/aergia.git
+cd aergia
+pip install -e .
+```
 
 ## Usage
 ```bash
 aergia <filename.aer>
-```
-Alternatively (for local installations):
-```bash
-python -m aergia <filename.aer>
+# Alternatively (for local installations):
+python3 -m aergia <filename.aer>
 ```
 
 ## Updating
-### GitHub
-```bash
-aergia --ghupdate
-```
-```bash
-pip install --upgrade git+https://github.com/las-r/aergia.git
-```
-
-### PyPI (not recommended, outdated)
+### PyPI
 ```bash
 pip install --upgrade aergia-lang
 ```
 
-## Syntax Documentation
-Syntax Documentation can be found [here](https://las-r.github.io/aergia/).
+### GitHub
+```bash
+aergia --ghupdate
+# Or using pip:
+pip install --upgrade git+https://github.com/las-r/aergia.git
+```
+
+## Documentation
+Documentation for Aergia can be found [here](https://las-r.github.io/aergia/).
 
 ## Tools
-Aergia is provied with a few basic tools to aid in development:
-- **Lethes**:\
-A basic program minifier.\
-Usage:  `aergia --lethes <filename.aer>`
+Aergia is provided with a few basic tools to aid in development:
+- **Lethes**: A basic program minifier.
+```bash
+aergia --lethes <filename.aer>
+```
 
-- **Otia** (unreleased, wip):\
-A basic program formatter.\
-Usage:  `aergia --otia <filename.aer>`
+- **Otia** (planned): A basic program formatter.
+```bash
+aergia --otia <filename.aer>
+```
