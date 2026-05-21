@@ -26,17 +26,17 @@ python -m aergia <filename.aer>
 ```
 
 ## Updating
-### PyPI
-```bash
-pip install --upgrade aergia-lang
-```
-
 ### GitHub
 ```bash
 aergia --ghupdate
 ```
 ```bash
 pip install --upgrade git+https://github.com/las-r/aergia.git
+```
+
+### PyPI (not recommended, outdated)
+```bash
+pip install --upgrade aergia-lang
 ```
 
 ## Syntax Documentation
