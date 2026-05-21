@@ -3,6 +3,7 @@ import subprocess
 import sys
 from .lexer import tokenize
 from .parser import parse, ExitException
+from .tools.lethes import minifyf
 
 # aergia main
 # made by las-r on github
@@ -17,10 +18,11 @@ def main():
         prog="aergia",
         description="Aergia Language Interpreter"
     )
-    aparser.add_argument("filename", nargs="?", help="the .aer file to execute")
+    aparser.add_argument("filename", nargs="?", help="the file to execute")
     aparser.add_argument("--version", action="version", version=VER)
     aparser.add_argument("-d", "--debug", action="store_true", help="print tokens and abstract syntax tree")
     aparser.add_argument("-gu", "--ghupdate", action="store_true", help="update aergia to the latest version from github")
+    aparser.add_argument("--lethes", action="store_true", help="tool to minify program")
     args = aparser.parse_args()
     
     # handle update
@@ -32,6 +34,17 @@ def main():
         except subprocess.CalledProcessError as e:
             print(f"Update failed: {e}")
             sys.exit(1)
+            
+    # handle lethes
+    if args.lethes:
+        print(f"Minifying {args.filename}...")
+        try:
+            minifyf(args.filename)
+            sys.exit(0)
+        except Exception as e:
+            print(f"Lethes failed: {e}")
+            sys.exit(1)
+                    
 
     # global environment
     env = {}

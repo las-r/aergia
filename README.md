@@ -30,5 +30,15 @@ aergia --ghupdate
 pip install --upgrade git+https://github.com/las-r/aergia.git
 ```
 
-## Documentation
-Documentation can be found [here](https://las-r.github.io/aergia/).
+## Syntax Documentation
+Syntax Documentation can be found [here](https://las-r.github.io/aergia/).
+
+## Tools
+Aergia is provied with a few basic tools to aid in development:
+- **Lethes**:\
+A basic program minifier.\
+Usage:  `aergia --lethes <filename.aer>`
+
+- **Otia** (unreleased, wip):\
+A basic program linter.\
+Usage:  `aergia --otia <filename.aer>`
