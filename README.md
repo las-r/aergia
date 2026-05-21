@@ -3,6 +3,12 @@
 
 ## Installation
 ### Global Installation (pip)
+#### PyPI
+```bash
+pip install aergia-lang
+```
+
+#### GitHub
 ```bash
 pip install git+https://github.com/las-r/aergia.git
 ```
@@ -20,13 +26,16 @@ python -m aergia <filename.aer>
 ```
 
 ## Updating
-### ≥v1.5.0
-```
-aergia --ghupdate
+### PyPI
+```bash
+pip install --upgrade aergia-lang
 ```
 
-### <v1.5.0
+### GitHub
+```bash
+aergia --ghupdate
 ```
+```bash
 pip install --upgrade git+https://github.com/las-r/aergia.git
 ```
 
