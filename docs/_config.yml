@@ -1,8 +1,12 @@
 title: Aergia Docs
 description: Documentation for the Aergia programming language.
-theme: just-the-docs
+#theme: just-the-docs
 search_enabled: true
 color_scheme: dark
+
+plugins:
+  - jekyll-remote-theme
+remote_theme: just-the-docs/just-the-docs
 
 url: https://las-r.github.io/aergia
 

@@ -4,6 +4,7 @@ gem 'wdm', '>= 0.1.0'
 
 group :jekyll_plugins do
   gem "just-the-docs", "~> 0.7"
+  gem "jekyll-remote-theme"
   gem "jekyll-default-layout"
   gem "jekyll-optional-front-matter"
   gem "jekyll-readme-index"
