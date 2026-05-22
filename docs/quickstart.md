@@ -1,3 +1,9 @@
+---
+layout: default
+title: Quickstart Guide
+nav_order: 2
+---
+
 # Quickstart
 A guide to getting Aergia up and running on your machine.
 
