@@ -2,8 +2,16 @@ title: Aergia Docs
 description: Documentation for the Aergia programming language.
 theme: just-the-docs
 search_enabled: true
+color_scheme: dark
 
 url: https://las-r.github.io/aergia
+
+gh_edit_repository: "https://github.com/las-r/aergia"
+gh_edit_branch: "main"
+gh_edit_view_mode: "tree"
+
+aux_links:
+  "GitHub": "https://github.com/las-r/aergia"
 
 kramdown:
   input: GFM
