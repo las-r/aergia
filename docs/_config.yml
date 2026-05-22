@@ -1,8 +1,9 @@
 title: Aergia Docs
 description: Documentation for the Aergia programming language.
 theme: just-the-docs
-
 search_enabled: true
+
+url: https://las-r.github.io/aergia
 
 kramdown:
   input: GFM
