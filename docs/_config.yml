@@ -1,6 +1,6 @@
 title: Aergia Docs
 description: Documentation for the Aergia programming language.
-theme: jekyll-theme-just-the-docs
+theme: just-the-docs
 
 search_enabled: true
 
