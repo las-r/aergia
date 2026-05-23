@@ -23,9 +23,6 @@ If you're making a library, you should append the name of the library to the fro
 - **Operator Prefix Spacing:** Never put a space between a prefix operator and its immediate first operand, but *do* use spaces to separate subsequent operands.
     - `+^a 2 ^b 2` is preferred over `+ ^ a 2 ^ b 2` or `+^a 2^b 2`.
     - This only applies to arithmetic operators. For comparison operators, you should have a space between every token.
-- **Sigil Spacing:** Leave a single space after the output sigil `>` and the import sigil `*<` for better visual parsing.
-    - Prefer: `> "Side A:"` over `>"Side A:"`
-    - Prefer: `*< math m` over `*<math m`
 
 ### Functions
 When defining a function, the signature and parameters should sit on the opening line. The body should be cleanly indented by 4 spaces, and the closing brace `}` should sit on its own line at the base indentation level.
