@@ -5,7 +5,7 @@ nav_order: 1
 ---
 
 <p align="center">
-  <img src="../assets/images/name.svg" alt="Aergia" width="300" />
+  <img src="https://raw.githubusercontent.com/las-r/aergia/main/assets/images/logo.svg" alt="Aergia" width="200" />
 </p>
 
 Welcome to the official documentation for Aergia, a minimal yet usable programming language.

@@ -4,7 +4,7 @@ description: Documentation for the Aergia programming language.
 search_enabled: true
 color_scheme: dark
 
-logo: "/assets/images/logo.svg"
+logo: "https://raw.githubusercontent.com/las-r/aergia/main/assets/images/docs.svg"
 
 plugins:
   - jekyll-remote-theme
@@ -22,3 +22,8 @@ aux_links:
 kramdown:
   input: GFM
   syntax_highlighter: rouge
+
+sass:
+  sass_dir: _sass
+  style: :compressed
+  quiet_deps: true
