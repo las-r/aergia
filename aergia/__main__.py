@@ -1,6 +1,7 @@
 import argparse
 import subprocess
 import sys
+import tomllib
 from .lexer import tokenize
 from .parser import parse, ExitException
 from .tools.lethes import minifyf
@@ -9,9 +10,11 @@ from .tools.lethes import minifyf
 # made by las-r on github
 
 def main():
-    # constants
-    VER = "Aergia v1.7.4"
-    REPO = "git+https://github.com/las-r/aergia.git"
+    # load toml
+    with open("pyproject.toml", "rb") as f:
+        pyproj = tomllib.load(f)
+    VER = pyproj["project"]["version"]
+    REPO = f'git+{pyproj["project"]["urls"]["Homepage"]}.git'
     
     # arguments
     aparser = argparse.ArgumentParser(
