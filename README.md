@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/images/name.svg" alt="Aergia" width="220" />
+  <img src="assets/images/name.svg" alt="Aergia" width="300" />
 </p>
 
 <p align="center">

@@ -4,7 +4,10 @@ title: Home
 nav_order: 1
 ---
 
-# Aergia
+<p align="center">
+  <img src="../assets/images/name.svg" alt="Aergia" width="300" />
+</p>
+
 Welcome to the official documentation for Aergia, a minimal yet usable programming language.
 
 Aergia's syntax is designed to be incredibly minimal, yet still somewhat readable.

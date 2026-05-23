@@ -4,6 +4,8 @@ description: Documentation for the Aergia programming language.
 search_enabled: true
 color_scheme: dark
 
+logo: "/assets/images/logo.svg"
+
 plugins:
   - jekyll-remote-theme
 remote_theme: just-the-docs/just-the-docs
