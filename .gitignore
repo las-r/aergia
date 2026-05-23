@@ -213,3 +213,6 @@ __marimo__/
 _site/
 *.lock
 .jekyll-cache/
+
+# VSCode
+**/editors/vscode/.vscode/
