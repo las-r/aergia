@@ -14,8 +14,8 @@ Aergia's syntax is designed to be incredibly minimal, yet still somewhat readabl
 ```
 
 ## Navigating the Docs
-> First timer? Jump straight into the Quickstart Guide to get the interpreter installed and ready to use in under two minutes.
+> First timer? Jump straight into the [Quickstart Guide](./quickstart.md) to get the interpreter installed and ready to use in under two minutes.
 
-If you're looking for specifics, explore these sections:
-- Language Specification
-- Style Guide
+If you're looking for other details, explore these sections / pages:
+- [Syntax](./syntax/index.md)
+- [Style Guide](./style.md)

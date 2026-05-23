@@ -6,7 +6,6 @@ nav_order: 8
 ---
 
 ## 8. Modules & System Integration
-
 Aergia code can load external resources either from separate `.aer` files or tap natively directly into Python's vast package index.
 
 * `+> expr` **Internal Import:** Parses and executes an external `.aer` source file path.
@@ -15,6 +14,7 @@ Aergia code can load external resources either from separate `.aer` files or tap
 * `; expr` **Eval Execution:** Evaluates raw string sequences directly as Aergia source tokens at runtime.
 * `~> expr` **Exit Engine:** Halts the interpreter process immediately with the status code provided by `expr`.
 
+## Examples
 ```text
 # Import local helper library
 +> "utils.aer"
@@ -27,5 +27,4 @@ Aergia code can load external resources either from separate `.aer` files or tap
 *< random rand
 # Available via custom namespace binding
 = roll rand_randint 1 6
-
 ```

@@ -6,11 +6,9 @@ nav_order: 3
 ---
 
 # 3. Mathematical & Logical Operators
-
 Because Aergia uses prefix notation, binary operations consume the next two valid parsed sub-expressions. Unary operations consume exactly one.
 
 ## Binary Operators
-
 Syntax: `[operator] [operand_1] [operand_2]`
 
 * `+` Addition / String Concatenation
@@ -21,7 +19,6 @@ Syntax: `[operator] [operand_1] [operand_2]`
 * `%` Modulo
 
 ## Comparison Operators
-
 These evaluate to `1` if the condition is true, or `0` if false.
 
 * `==` Equal to
@@ -32,19 +29,18 @@ These evaluate to `1` if the condition is true, or `0` if false.
 * `>=` Greater than or equal to
 
 ## Bitwise & Unary Operators
-
 * `&` Bitwise AND
 * `\|` Bitwise OR
 * `$` Bitwise XOR
 * `~` Bitwise NOT (Unary)
 * `!` Logical NOT (Unary: turns truthy to `0`, falsy to `1`)
 
+## Examples
 ```text
 # Prefix math examples:
-= x + 2 3        # x = 2 + 3 (Evaluates to 5)
-= y * 10 + 2 3   # y = 10 * (2 + 3) (Evaluates to 50)
+= x +2 3       # x = 2 + 3 (Evaluates to 5)
+= y *10 +2 3   # y = 10 * (2 + 3) (Evaluates to 50)
 
 # Comparisons:
 = is_equal == x 5  # assigns 1 to is_equal
-
 ```
