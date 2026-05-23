@@ -32,7 +32,7 @@ When defining a function, the signature and parameters should sit on the opening
 
 In the definition, there should be a space between the function name and its parameters, however this is not necessary when calling functions.
 
-```aergia
+```q
 {factorial :n:
     (<= n 1
         ? 1
@@ -47,7 +47,7 @@ Because Aergia conditions rely heavily on nested parentheses, clean formatting p
 1. **Simple If:** Place the condition and the truth action indented beneath it.
 2. **If-Else Chains:** Stack sequential conditions. For fallback `else` logic, wrap the final catch-all branch tightly within closing parentheses to maintain mathematical balancing structure.
 
-```aergia
+```q
 (<< guess secret
     > "Too low!"
 ) (
@@ -62,7 +62,7 @@ Because Aergia conditions rely heavily on nested parentheses, clean formatting p
 ### Loops
 Loop brackets `[...]` should open on the same line as the initialization or control flow statement. The execution block should immediately drop to an indented line, with the closing bracket `]` aligned horizontally with the start of the loop block.
 
-```aergia
+```q
 [!= guess secret
     > "Enter your guess:"
     = guess .
@@ -73,7 +73,7 @@ Loop brackets `[...]` should open on the same line as the initialization or cont
 ### Input & Capturing Values
 When asking for user input, always display the prompt string immediately *above* the assignment block rather than cramming them onto a single dense line.
 
-```aergia
+```q
 > "Side A:"
 = a '
 ```
