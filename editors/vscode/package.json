@@ -2,7 +2,7 @@
   "name": "aergia",
   "displayName": "Aergia",
   "description": "VSCode support for the Aergia language.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "publisher": "las-r",
   "license": "MIT",
   "repository": {
@@ -21,7 +21,11 @@
         "id": "aergia",
         "aliases": ["Aergia", "aergia"],
         "extensions": [".aer"],
-        "configuration": "./language-configuration.json"
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "../../assets/images/logo_vsc.svg",
+          "dark": "../../assets/images/logo_vsc.svg"
+        }
       }
     ],
     "grammars": [

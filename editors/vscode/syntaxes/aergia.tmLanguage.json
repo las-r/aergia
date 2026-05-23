@@ -4,6 +4,10 @@
   "scopeName": "source.aergia",
   "patterns": [
     {
+      "name": "comment.line.number-sign.aergia",
+      "match": "#.*$"
+    },
+    {
       "name": "string.quoted.double.aergia",
       "begin": "\"",
       "end": "\"",
@@ -18,29 +22,25 @@
       "name": "support.function.aergia",
       "match": "(@)([a-zA-Z_][\\w.]*)",
       "captures": {
-        "1": { "name": "support.function.aergia" },
-        "2": { "name": "support.function.aergia" }
+        "1": { "name": "punctuation.definition.function.aergia" },
+        "2": { "name": "support.function.name.aergia" }
       }
     },
     {
       "name": "keyword.operator.comparison.aergia",
-      "match": "(==|!=|<<|>>|<=|>=)"
-    },
-    {
-      "name": "keyword.operator.logical.arithmetic.aergia",
-      "match": "(~|!|&|\\||\\$|\\+|\\-|\\*|/|\\^)"
+      "match": "(==|!=|<=|>=|<<|>>)"
     },
     {
       "name": "keyword.operator.special.aergia",
-      "match": "(\\+>|\\*>|\\*<|:|=|@|\\?|,|\\.|')"
+      "match": "(\\+>|\\*>|\\*<)"
     },
     {
-      "name": "keyword.control.aergia",
+      "name": "keyword.operator.logical.arithmetic.aergia",
+      "match": "(~|!|&|\\||\\$|\\+|\\-|\\*|/|\\^|@|:|=|\\?|,|\\.|')"
+    },
+    {
+      "name": "punctuation.section.bracket.aergia",
       "match": "[\\[\\]\\(\\)\\{\\}]"
-    },
-    {
-      "name": "comment.line.number-sign.aergia",
-      "match": "#.*$"
     },
     {
       "name": "constant.numeric.aergia",
