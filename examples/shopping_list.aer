@@ -1,0 +1,6 @@
+= shopping_list <"bananas" "apples" "milk" "chocolate">
+
+> "These are the items in your shopping list:"
+[`shopping_list item
+    > item
+]

@@ -1,0 +1,20 @@
+> "Enter max count for FizzBuzz:"
+= max_count .
+
+= i 1
+[<= i max_count
+    (== 0 %i 15
+        > "FizzBuzz"
+    ) (
+        (== 0 %i 3
+            > "Fizz"
+        ) (
+            (== 0 %i 5
+                > "Buzz"
+            ) (
+                > i
+            )
+        )
+    )
+    = i +i 1
+]
