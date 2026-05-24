@@ -1,0 +1,26 @@
+*> builtins
+*< random r
+*< time t
+
+# settings
+= accu 3
+= maxwait 5
+
+# wait
+= wait @round:*@r_random maxwait accu:
+> "Starting the wait in 1 second..."
+@t_sleep:1:
+> ""
+> "Start!"
+@t_sleep:wait:
+> "Finish!"
+
+# user guess
+> ""
+> "Enter the amount of seconds you waited: "
+= guess '
+
+# results
+> ""
+> +"You waited for " +wait " second(s)."
+> +"You were " +@round:@abs:-wait guess: accu: " second(s) off."
