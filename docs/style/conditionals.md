@@ -1,0 +1,24 @@
+---
+layout: default
+title: 4. Conditionals & Branching
+parent: Style
+nav_order: 4
+---
+
+# 4. Conditionals & Branching
+Because Aergia conditions rely heavily on nested parentheses, clean formatting prevents "bracket blindness":
+
+1. **Simple If:** Place the condition and the truth action indented beneath it.
+2. **If-Else Chains:** Stack sequential conditions. For fallback `else` logic, wrap the final catch-all branch tightly within closing parentheses to maintain mathematical balancing structure.
+
+```q
+(<< guess secret
+    > "Too low!"
+) (
+    (>> guess secret
+        > "Too high!"
+    ) (
+        > +"Correct!"
+    )
+)
+```

@@ -21,4 +21,4 @@ Aergia's syntax is designed to be incredibly minimal, yet still somewhat readabl
 
 If you're looking for other details, explore these sections / pages:
 - [Syntax](./syntax/index.md)
-- [Style Guide](./style.md)
+- [Style Guide](./style/index.md)
