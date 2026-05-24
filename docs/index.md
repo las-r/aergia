@@ -22,3 +22,5 @@ Aergia's syntax is designed to be incredibly minimal, yet still somewhat readabl
 If you're looking for other details, explore these sections:
 - [Syntax](./syntax/index.md)
 - [Style](./style/index.md)
+
+You can find code examples [here](https://github.com/las-r/aergia/tree/main/examples).
