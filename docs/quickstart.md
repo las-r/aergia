@@ -24,15 +24,21 @@ pip install git+https://github.com/las-r/aergia.git
 If you want to modify the interpreter or contribute to development, clone the repo and install in editable mode.
 ```bash
 git clone https://github.com/las-r/aergia.git
-cd aergia
-pip install -e .
+pip install -e aergia
 ```
 
 ## Usage
+### 1. Create a file
+Create a new named `test.aer` (or whatever you feel like) and add some code. For example:
+```q
+> "Hello, Aergia!"
+```
+
+### 2. Run the interpreter
 ```bash
-aergia <filename.aer>
+aergia test.aer
 # Alternatively (for local installations):
-python3 -m aergia <filename.aer>
+python3 -m aergia test.aer
 ```
 
 ## Updating
