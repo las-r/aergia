@@ -2,6 +2,7 @@ import argparse
 import subprocess
 import sys
 import tomllib
+from pathlib import Path
 from .lexer import tokenize
 from .parser import parse, ExitException
 from .tools.lethes import minifyf
@@ -11,7 +12,9 @@ from .tools.lethes import minifyf
 
 def main():
     # load toml
-    with open("pyproject.toml", "rb") as f:
+    mdir = Path(__file__).parent.parent
+    pyprojpath = mdir / "pyproject.toml"
+    with open(pyprojpath, "rb") as f:
         pyproj = tomllib.load(f)
     VER = pyproj["project"]["version"]
     REPO = f'git+{pyproj["project"]["urls"]["Homepage"]}.git'
