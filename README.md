@@ -10,7 +10,9 @@
 Documentation for Aergia can be found [here](https://las-r.github.io/aergia/).
 
 ## IDE Support
-As of right now, the only IDE with official Aergia support is VSCode, the extension for which can be installed [here](https://github.com/las-r/aergia/releases/tag/Editors).
+Here is a list of every IDE with Aergia support:
+- [VSCode](https://github.com/las-r/aergia/releases/tag/Editors)
+- [Sublime Text](https://github.com/las-r/aergia/tree/main/editors/sublime/README.md)
 
 ## Tools
 Aergia is provided with a few basic tools to aid in development:

@@ -1,0 +1,58 @@
+%YAML 1.2
+---
+name: Aergia
+file_extensions:
+  - aergia
+  - aer
+scope: source.aergia
+
+contexts:
+  main:
+    # Comments
+    - match: '#.*$'
+      scope: comment.line.number-sign.aergia
+
+    # Strings
+    - match: '"'
+      scope: punctuation.definition.string.begin.aergia
+      push: string-double
+
+    # Support Functions (e.g., @print or @math.floor)
+    - match: '(@)([a-zA-Z_][\w.]*)'
+      scope: support.function.aergia
+      captures:
+        1: punctuation.definition.function.aergia
+        2: support.function.name.aergia
+
+    # Comparison Operators
+    - match: '==|!=|<=|>=|<<|>>'
+      scope: keyword.operator.comparison.aergia
+
+    # Special Operators
+    - match: '\+>|\*>|\*<'
+      scope: keyword.operator.special.aergia
+
+    # Logical, Arithmetic, and Multi-purpose Operators
+    - match: '~|!|&|\||\$|\+|-|\*|/|\^|@|:|=|\?|,|\.|'''
+      scope: keyword.operator.logical.arithmetic.aergia
+
+    # Brackets and Braces
+    - match: '[\[\]\(\)\{\}]'
+      scope: punctuation.section.bracket.aergia
+
+    # Numeric Constants
+    - match: '\b\d+(\.\d+)?\b'
+      scope: constant.numeric.aergia
+
+    # Variables / Identifiers
+    - match: '\b[a-zA-Z_][\w.]*\b'
+      scope: variable.other.aergia
+
+  # Handles everything inside strings until a closing quote
+  string-double:
+    - meta_scope: string.quoted.double.aergia
+    - match: '\\.'
+      scope: constant.character.escape.aergia
+    - match: '"'
+      scope: punctuation.definition.string.end.aergia
+      pop: true
