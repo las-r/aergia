@@ -18,7 +18,7 @@ Because Aergia conditions rely heavily on nested parentheses, clean formatting p
     (>> guess secret
         > "Too high!"
     ) (
-        > +"Correct!"
+        > "Correct!"
     )
 )
 ```

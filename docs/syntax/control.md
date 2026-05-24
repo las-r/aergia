@@ -37,7 +37,7 @@ Syntax (For): `[ \` array iterator_name statement1 ... ]`
 
 # For Loop iterating over an array
 = my_arr <"A" "B" "C">
-[` my_arr letter
+[`my_arr letter
     > letter
 ]
 ```
