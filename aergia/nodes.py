@@ -125,16 +125,89 @@ class ArrayNode:
         return [e.eval(env) for e in self.elements]
 
 class IndexNode:
-    def __init__(self, array_node, index_node):
-        self.array_node = array_node
-        self.index_node = index_node
+    def __init__(self, arrayn, indexn):
+        self.arrayn = arrayn
+        self.indexn = indexn
         
     def eval(self, env):
-        arr = self.array_node.eval(env)
-        idx = self.index_node.eval(env)
+        arr = self.arrayn.eval(env)
+        idx = self.indexn.eval(env)
         if not isinstance(arr, list):
-            raise TypeError(f"Object of type {type(arr)} is not indexable")
+            raise TypeError(f"Object of type {type(arr).__name__} is not indexable")
+        if not isinstance(idx, int):
+            raise TypeError(f"Object of type {type(idx).__name__} is not an integer")
         return arr[int(idx)]
+    
+class PushNode:
+    def __init__(self, arrayn, itemn):
+        self.arrayn = arrayn
+        self.itemn = itemn
+        
+    def eval(self, env):
+        arr = self.arrayn.eval(env)
+        itm = self.itemn.eval(env)
+        if not isinstance(arr, list):
+            raise TypeError(f"Object of type {type(arr).__name__} is not a list")
+        arr.append(itm)
+        return itm
+    
+class PopNode:
+    def __init__(self, arrayn):
+        self.arrayn = arrayn
+
+    def eval(self, env):
+        arr = self.arrayn.eval(env)
+        if not isinstance(arr, list):
+            raise TypeError(f"Object of type {type(arr).__name__} is not a list")
+        return arr.pop()
+    
+class PopIndexNode:
+    def __init__(self, arrayn, indexn):
+        self.arrayn = arrayn
+        self.indexn = indexn
+        
+    def eval(self, env):
+        arr = self.arrayn.eval(env)
+        idx = self.indexn.eval(env)
+        if not isinstance(arr, list):
+            raise TypeError(f"Object of type {type(arr).__name__} is not a list")
+        if not isinstance(idx, int):
+            raise TypeError(f"Object of type {type(idx).__name__} is not an integer")
+        if idx < -len(arr) or idx >= len(arr):
+            raise IndexError(f"Array index {idx} out of range (length {len(arr)})")
+        return arr.pop(idx)
+    
+class InsertNode:
+    def __init__(self, arrayn, itemn, indexn):
+        self.arrayn = arrayn
+        self.itemn = itemn
+        self.indexn = indexn
+    
+    def eval(self, env):
+        arr = self.arrayn.eval(env)
+        itm = self.itemn.eval(env)
+        idx = self.indexn.eval(env)
+        if not isinstance(arr, list):
+            raise TypeError(f"Object of type {type(arr).__name__} is not a list")
+        if not isinstance(idx, int):
+            raise TypeError(f"Object of type {type(idx).__name__} is not an integer")
+        arr.insert(idx, itm)
+        return itm
+    
+class RemoveItemNode:
+    def __init__(self, arrayn, itemn):
+        self.arrayn = arrayn
+        self.itemn = itemn
+    
+    def eval(self, env):
+        arr = self.arrayn.eval(env)
+        itm = self.itemn.eval(env)
+        if not isinstance(arr, list):
+            raise TypeError(f"Object of type {type(arr).__name__} is not a list")
+        if itm not in arr:
+            raise ValueError(f"Item '{itm}' not found in the array")
+        arr.remove(itm)
+        return itm
 
 # control flow nodes
 class IfNode:
