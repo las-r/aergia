@@ -72,23 +72,23 @@ def parseexpr(tokens):
         array = parseexpr(tokens)
         index = parseexpr(tokens)
         return IndexNode(array, index)
-    if token == ":+":
+    if token == "+:":
         array = parseexpr(tokens)
         item = parseexpr(tokens)
         return PushNode(array, item)
-    if token == ":-":
+    if token == "-:":
         array = parseexpr(tokens)
         return PopNode(array)
-    if token == ":~":
+    if token == "~:":
         array = parseexpr(tokens)
         index = parseexpr(tokens)
         return PopIndexNode(array, index)
-    if token == ":*":
+    if token == "*:":
         array = parseexpr(tokens)
         index = parseexpr(tokens)
         item = parseexpr(tokens)
         return InsertNode(array, item, index)
-    if token == ":#":
+    if token == "#:":
         array = parseexpr(tokens)
         item = parseexpr(tokens)
         return RemoveItemNode(array, item)

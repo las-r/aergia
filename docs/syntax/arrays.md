@@ -12,11 +12,11 @@ Arrays are contiguous ordered collections. Indexing is zero-based.
 | --- | --- | --- | --- |
 | `<...>` | Array Initialization | `= items <10 20 30>` | Creates a new array structure. |
 | `:` | Index Resolution | `: items 0` | Resolves to the item at the given index (`10`). |
-| `:+` | Push Item | `:+ items 40` | Appends an item to the end of the array. |
-| `:-` | Pop Item | `:- items` | Removes and returns the last element of the array. |
-| `:~` | Pop Index | `:~ items 1` | Removes and returns the element at a specific index. |
-| `:*` | Insert Item | `:* items 1 15` | Inserts an item into the array at the given index. |
-| `:#` | Remove Item | `:# items 20` | Finds and removes the first occurrence of a specific item value. |
+| `+:` | Push Item | `:+ items 40` | Appends an item to the end of the array. |
+| `-:` | Pop Item | `:- items` | Removes and returns the last element of the array. |
+| `~:` | Pop Index | `:~ items 1` | Removes and returns the element at a specific index. |
+| `*:` | Insert Item | `:* items 1 15` | Inserts an item into the array at the given index. |
+| `#:` | Remove Item | `:# items 20` | Finds and removes the first occurrence of a specific item value. |
 
 ## Examples
 ### Appending and Inserting
@@ -25,25 +25,25 @@ Arrays are contiguous ordered collections. Indexing is zero-based.
 = inventory <"sword" "shield">
 
 # Push an item to the end (Returns the pushed item)
-:+ inventory "potion"
++: inventory "potion"
 # inventory is now <"sword" "shield" "potion">
 
 # Insert an item at index 1 (Structure: :* array index item)
-:* inventory 1 "helmet"
+*: inventory 1 "helmet"
 # inventory is now <"sword" "helmet" "shield" "potion">
 ```
 
 ### Removing Elements
 ```q
 # Pop the last element off the array (Returns the popped item)
-:- inventory
+-: inventory
 # Returns "potion"; inventory is now <"sword" "helmet" "shield">
 
 # Pop an element from a specific index (Returns the popped item)
-:~ inventory 1
+~: inventory 1
 # Returns "helmet"; inventory is now <"sword" "shield">
 
 # Remove a specific item value (Returns the removed item)
-:# inventory "shield"
+#: inventory "shield"
 # Returns "shield"; inventory is now <"sword">
 ```
