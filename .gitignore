@@ -216,3 +216,6 @@ _site/
 
 # VSCode
 **/editors/vscode/.vscode/
+
+# IntelliJ
+.idea/
