@@ -1,4 +1,8 @@
 <p align="center">
+  <img src="assets/images/name.svg" alt="Aergia" width="300" />
+</p>
+
+<p align="center">
   <a href="https://pypi.org/project/aergia-lang/">
     <img src="https://img.shields.io/pypi/v/aergia-lang?style=flat-square&color=blue" alt="PyPI version" />
   </a>
@@ -8,13 +12,9 @@
   <a href="https://pypi.org/project/aergia-lang/">
     <img src="https://img.shields.io/pypi/dm/aergia-lang?style=flat-square&color=orange" alt="PyPI - Downloads" />
   </a>
-  <a href="https://pypi.org/project/aergia-lang/">
+  <a href="https://github.com/las-r/aergia/pulse">
     <img src="https://img.shields.io/github/commit-activity/m/las-r/aergia?style=flat-square&color=blueviolet" alt="GitHub - Pulse" />
   </a>
-</p>
-
-<p align="center">
-  <img src="assets/images/name.svg" alt="Aergia" width="300" />
 </p>
 
 <p align="center">
