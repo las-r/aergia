@@ -17,7 +17,7 @@
         (>> guess secret
             > "Too high!"
         ) (
-            > +"Correct, you got it in " +tries "tries!"
+            > +"Correct, you got it in " +tries " tries!"
         )
     )
 ]
