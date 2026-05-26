@@ -2,7 +2,6 @@
 ---
 name: Aergia
 file_extensions:
-  - aergia
   - aer
 scope: source.aergia
 
