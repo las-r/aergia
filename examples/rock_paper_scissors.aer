@@ -1,0 +1,47 @@
+*< random r
+
+{in :arr itm:
+    = f 0
+    [`arr a
+        (== a itm
+            = f 1
+        )
+    ]
+    ? f
+}
+
+= choices <"rock" "paper" "scissors">
+= winner ""
+
+[!winner
+    = botchoice @r_choice:choices:
+    > "Enter your move:"
+    = userchoice ,
+    [!@in:choices userchoice:
+        > "Invalid."
+        > "Enter your move:"
+        = userchoice ,
+    ]
+
+    (== botchoice "rock"
+        (== userchoice "rock" > "Draw, go again.")
+        (== userchoice "paper" = winner "user")
+        (== userchoice "scissors" = winner "bot")
+    )
+    (== botchoice "paper"
+        (== userchoice "rock" = winner "bot")
+        (== userchoice "paper" > "Draw, go again.")
+        (== userchoice "scissors" = winner "user")
+    )
+    (== botchoice "scissors"
+        (== userchoice "rock" = winner "user")
+        (== userchoice "paper" = winner "bot")
+        (== userchoice "scissors" > "Draw, go again.")
+    )
+]
+
+(== winner "user"
+    > +"You won! I chose " +botchoice +" and you chose " +userchoice "."
+) (
+    > +"I won! I chose " +botchoice +" and you chose " +userchoice "."
+)
