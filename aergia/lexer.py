@@ -6,6 +6,7 @@ import re
 # constants
 TOKENPATTERN = r'==|!=|<<|>>|<=|>=|\+>|\*>|\*<|~>|\+:|-:|~:|\*:|#:|"(?:[^"\\]|\\.)*"|[\(\)\[\]\{\}\+\-\*\/%\^=;\&\|!\~<>:@\?,.\'`]|\b[\w.]+\b'
 
+
 # preprocessor
 def preprocess(code):
     lines = code.splitlines()
@@ -13,6 +14,7 @@ def preprocess(code):
     for line in lines:
         cleaned.append(line.split("#")[0])
     return " ".join(cleaned)
+
 
 # tokenizer
 def tokenize(code):
