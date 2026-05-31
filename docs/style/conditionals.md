@@ -22,3 +22,23 @@ Because Aergia conditions rely heavily on nested parentheses, clean formatting p
     )
 )
 ```
+
+For large blocks of multiple conditionals where each block has not more than one line, it's often better for readability to use inline conditional notation.
+
+```q
+(== botchoice "rock"
+    (== userchoice "rock" > "Draw, go again.")
+    (== userchoice "paper" = winner "user")
+    (== userchoice "scissors" = winner "bot")
+)
+(== botchoice "paper"
+    (== userchoice "rock" = winner "bot")
+    (== userchoice "paper" > "Draw, go again.")
+    (== userchoice "scissors" = winner "user")
+)
+(== botchoice "scissors"
+    (== userchoice "rock" = winner "user")
+    (== userchoice "paper" = winner "bot")
+    (== userchoice "scissors" > "Draw, go again.")
+)
+```
