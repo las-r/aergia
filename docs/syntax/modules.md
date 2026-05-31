@@ -5,7 +5,7 @@ parent: Syntax
 nav_order: 8
 ---
 
-## 8. Modules & System Integration
+# 8. Modules & System Integration
 Aergia code can load external resources either from separate `.aer` files or tap natively directly into Python's vast package index.
 
 * `+> expr` **Internal Import:** Parses and executes an external `.aer` source file path.
