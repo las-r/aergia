@@ -5,6 +5,7 @@ import tomllib
 from pathlib import Path
 from .lexer import tokenize
 from .parser import parse, ExitException
+from .nodes import *
 from .tools.lethes import minifyf
 
 # aergia main
@@ -50,10 +51,15 @@ def main():
         except Exception as e:
             print(f"Lethes failed: {e}")
             sys.exit(1)
-                    
+    
+    # define inbuilt functions
+    def in_arr(arr, itm):
+        return 1 if itm in arr else 0
 
     # global environment
-    env = {}
+    env = {
+        "in_arr": in_arr,
+    }
     
     try:
         # run file
