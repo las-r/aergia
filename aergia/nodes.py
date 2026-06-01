@@ -308,16 +308,19 @@ class ImportNode:
         if file in env["__imports__"]:
             return 0
         env["__imports__"].add(file)
-        with open(file, "r") as f:
-            code = f.read()
         try:
-            tokens = tokenize(code)
-            ast = parse(tokens)
-            for node in ast:
-                if node:
-                    node.eval(env)
-        except Exception as e:
-            print(f"Aergia Error ({file}): {e}")
+            with open(file, "r") as f:
+                code = f.read()
+            try:
+                tokens = tokenize(code)
+                ast = parse(tokens)
+                for node in ast:
+                    if node:
+                        node.eval(env)
+            except Exception as e:
+                print(f"Aergia Error ({file}): {e}")
+        except FileNotFoundError:
+            print(f"Aergia Error: Module {file} not found.")
         return 0
     
 class PyImportNode:
