@@ -1,15 +1,5 @@
 *< random r
 
-{in :arr itm:
-    = f 0
-    [`arr a
-        (== a itm
-            = f 1
-        )
-    ]
-    ? f
-}
-
 = choices <"rock" "paper" "scissors">
 = winner ""
 
