@@ -7,6 +7,7 @@ from .lexer import tokenize
 from .parser import parse, ExitException
 from .nodes import *
 from .tools.lethes import minifyf
+from .tools.otia import prettifyf
 
 # aergia main
 # made by las-r on github
@@ -29,7 +30,8 @@ def main():
     aparser.add_argument("--version", action="version", version=VER)
     aparser.add_argument("-d", "--debug", action="store_true", help="print tokens and abstract syntax tree")
     aparser.add_argument("-gu", "--ghupdate", action="store_true", help="update aergia to the latest version from github")
-    aparser.add_argument("--lethes", action="store_true", help="tool to minify program")
+    aparser.add_argument("-l", "--lethes", action="store_true", help="tool to minify program")
+    aparser.add_argument("-o", "--otia", action="store_true", help="tool to prettify program")
     args = aparser.parse_args()
     
     # handle update
@@ -50,6 +52,16 @@ def main():
             sys.exit(0)
         except Exception as e:
             print(f"Lethes failed: {e}")
+            sys.exit(1)
+            
+    # handle otia
+    if args.otia:
+        print(f"Prettifying {args.filename}...")
+        try:
+            prettifyf(args.filename)
+            sys.exit(0)
+        except Exception as e:
+            print(f"Otia failed: {e}")
             sys.exit(1)
     
     # define inbuilt functions

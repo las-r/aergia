@@ -34,9 +34,13 @@ Aergia is provided with a few basic tools to aid in development:
 - **Lethes**: A basic program minifier.
 ```bash
 aergia --lethes <filename.aer>
+# or for shorthand:
+aergia --l <filename.aer>
 ```
 
-- **Otia** (planned): A basic program formatter.
+- **Otia**: A basic program prettifier.
 ```bash
 aergia --otia <filename.aer>
+# or for shorthand:
+aergia --o <filename.aer>
 ```
