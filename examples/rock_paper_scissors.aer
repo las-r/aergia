@@ -1,15 +1,5 @@
 *< random r
 
-{in :arr itm:
-    = f 0
-    [`arr a
-        (== a itm
-            = f 1
-        )
-    ]
-    ? f
-}
-
 = choices <"rock" "paper" "scissors">
 = winner ""
 
@@ -17,7 +7,7 @@
     = botchoice @r_choice:choices:
     > "Enter your move:"
     = userchoice ,
-    [!@in:choices userchoice:
+    [!@in_arr:choices userchoice:
         > "Invalid."
         > "Enter your move:"
         = userchoice ,

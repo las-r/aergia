@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://pypi.org/project/aergia-lang/">
-    <img src="https://img.shields.io/pypi/v/aergia-lang?style=flat-square&color=blue&v=1" alt="PyPI version" />
+    <img src="https://img.shields.io/pypi/v/aergia-lang?style=flat-square&color=blue&v=2" alt="PyPI version" />
   </a>
   <a href="https://pypi.org/project/aergia-lang/">
     <img src="https://img.shields.io/pypi/pyversions/aergia-lang?style=flat-square&color=success" alt="PyPI - Python Version" />
@@ -34,9 +34,13 @@ Aergia is provided with a few basic tools to aid in development:
 - **Lethes**: A basic program minifier.
 ```bash
 aergia --lethes <filename.aer>
+# or for shorthand:
+aergia --l <filename.aer>
 ```
 
-- **Otia** (planned): A basic program formatter.
+- **Otia**: A basic program prettifier.
 ```bash
 aergia --otia <filename.aer>
+# or for shorthand:
+aergia --o <filename.aer>
 ```

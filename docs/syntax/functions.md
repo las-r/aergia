@@ -5,7 +5,7 @@ parent: Syntax
 nav_order: 7
 ---
 
-## 7. Functions
+# 7. Functions
 Functions handle execution isolation, scoping transitions, and value boundaries.
 
 | Token | Mechanics | Syntax Pattern |
