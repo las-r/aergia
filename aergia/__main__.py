@@ -1,9 +1,9 @@
 import argparse
 import subprocess
 import sys
-import tomllib
 from pathlib import Path
-
+from importlib.metadata import version, PackageNotFoundError
+from typing import Any
 from .lexer import tokenize
 from .parser import parse, ExitException
 from .nodes import *
@@ -15,20 +15,20 @@ from .tools.otia import prettifyf
 
 
 def main():
-    # load toml
-    mdir = Path(__file__).parent.parent
-    pyprojpath = mdir / "pyproject.toml"
-    with open(pyprojpath, "rb") as f:
-        pyproj = tomllib.load(f)
-    VER = pyproj["project"]["version"]
-    REPO = f"git+{pyproj['project']['urls']['Homepage']}.git"
-
+    # load version and repo
+    try:
+        ver = version("aergia")
+        repo = "https://github.com/las-r/aergia"
+    except PackageNotFoundError:
+        ver = "development"
+        repo = "local"
+    
     # arguments
     aparser = argparse.ArgumentParser(
         prog="aergia", description="Aergia Language Interpreter"
     )
     aparser.add_argument("filename", nargs="?", help="the file to execute")
-    aparser.add_argument("--version", action="version", version=VER)
+    aparser.add_argument("--version", action="version", version=ver)
     aparser.add_argument("-d", "--debug", action="store_true", help="print tokens and abstract syntax tree")
     aparser.add_argument("-gu", "--ghupdate", action="store_true", help="update aergia to the latest version from github")
     aparser.add_argument("-l", "--lethes", action="store_true", help="tool to minify program")
@@ -39,9 +39,7 @@ def main():
     if args.ghupdate:
         print("Checking for updates...")
         try:
-            subprocess.check_call(
-                [sys.executable, "-m", "pip", "install", "--upgrade", REPO]
-            )
+            subprocess.check_call([sys.executable, "-m", "pip", "install", "--upgrade", repo])
             sys.exit(0)
         except subprocess.CalledProcessError as e:
             print(f"Update failed: {e}")
@@ -72,7 +70,7 @@ def main():
         return 1 if itm in arr else 0
 
     # global environment
-    env = {
+    env: dict[str, Any] = {
         "in_arr": in_arr,
     }
     
@@ -102,7 +100,7 @@ def main():
 
         # run repl
         else:
-            print(f"{VER} REPL")
+            print(f"{ver} REPL")
             env["__dir__"] = Path.cwd()
             while True:
                 line = input(";> ")
