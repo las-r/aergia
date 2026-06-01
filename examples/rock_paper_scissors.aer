@@ -7,7 +7,7 @@
     = botchoice @r_choice:choices:
     > "Enter your move:"
     = userchoice ,
-    [!@in:choices userchoice:
+    [!@in_arr:choices userchoice:
         > "Invalid."
         > "Enter your move:"
         = userchoice ,
