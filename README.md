@@ -35,12 +35,12 @@ Aergia is provided with a few basic tools to aid in development:
 ```bash
 aergia --lethes <filename.aer>
 # or for shorthand:
-aergia --l <filename.aer>
+aergia -l <filename.aer>
 ```
 
 - **Otia**: A basic program prettifier.
 ```bash
 aergia --otia <filename.aer>
 # or for shorthand:
-aergia --o <filename.aer>
+aergia -o <filename.aer>
 ```
