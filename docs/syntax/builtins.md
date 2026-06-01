@@ -2,7 +2,7 @@
 layout: default
 title: 9. Built-in Functions
 parent: Syntax
-nav_order: 8
+nav_order: 9
 ---
 
 # 9. Built-in Functions
