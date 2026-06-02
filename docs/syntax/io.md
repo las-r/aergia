@@ -16,7 +16,7 @@ Aergia provisions ultra-minimalist primitives for reading from standard input an
 | `'` | Read Float Input | Halts execution for input; returns a Float. |
 
 ## Examples
-```text
+```py
 # Printing a message
 > "What is your age?"
 

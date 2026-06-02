@@ -40,7 +40,7 @@ These evaluate to `1` if the condition is true, or `0` if false.
 * `!` Logical NOT (Unary: turns truthy to `0`, falsy to `1`)
 
 ## Examples
-```text
+```py
 # Prefix math examples:
 = x +2 3       # x = 2 + 3 (Evaluates to 5)
 = y *10 +2 3   # y = 10 * (2 + 3) (Evaluates to 50)

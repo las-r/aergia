@@ -15,7 +15,7 @@ Functions handle execution isolation, scoping transitions, and value boundaries.
 | `?` | Return Force | `? return_expr` |
 
 ## Examples
-```text
+```py
 # Define a function named 'add_nums' accepting two parameters
 {addNums :a b:
     ? +a b

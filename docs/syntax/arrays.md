@@ -21,7 +21,7 @@ Arrays are contiguous ordered collections. Indexing is zero-based.
 
 ## Examples
 ### Appending and Inserting
-```q
+```py
 # Initialize an array
 = inventory <"sword" "shield">
 
@@ -35,7 +35,7 @@ Arrays are contiguous ordered collections. Indexing is zero-based.
 ```
 
 ### Removing Elements
-```q
+```py
 # Pop the last element off the array (Returns the popped item)
 -: inventory
 # Returns "potion"; inventory is now <"sword" "helmet" "shield">

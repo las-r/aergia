@@ -15,7 +15,7 @@ Aergia code can load external resources either from separate `.aer` files or tap
 * `~> expr` **Exit Engine:** Halts the interpreter process immediately with the status code provided by `expr`.
 
 ## Examples
-```text
+```py
 # Import local helper library
 +> "utils.aer"
 
