@@ -138,6 +138,17 @@ def parseexpr(tokens):
         if token == ">": return OutputNode(child)
         return UnaryOpNode(token, child)
     
+    # short circuit logic nodes
+    if token == "&&":
+        left = parseexpr(tokens)
+        right = parseexpr(tokens)
+        return ShortCircuitANDNode(left, right)
+    
+    if token == "||":
+        left = parseexpr(tokens)
+        right = parseexpr(tokens)
+        return ShortCircuitORNode(left, right)
+    
     # input
     if token == ".": return IntInputNode()
     if token == ",": return StringInputNode()

@@ -28,11 +28,15 @@ These evaluate to `1` if the condition is true, or `0` if false.
 * `<=` Less than or equal to
 * `>=` Greater than or equal to
 
-## Bitwise & Unary Operators
+## Bitwise Operators
 * `&` Bitwise AND
 * `\|` Bitwise OR
 * `$` Bitwise XOR
 * `~` Bitwise NOT (Unary)
+
+## Logical Operators
+* `&&` Logical AND (Short-circuit)
+* `||` Logical OR (Short-circuit)
 * `!` Logical NOT (Unary: turns truthy to `0`, falsy to `1`)
 
 ## Examples

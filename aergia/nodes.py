@@ -134,6 +134,26 @@ class BinaryOpNode:
         return OPS[self.op](vl, vr)
 
 
+class ShortCircuitANDNode:
+    def __init__(self, left, right):
+        self.left = left
+        self.right = right
+
+    def eval(self, env):
+        if not self.left.eval(env):
+            return 0
+        return 1 if self.right.eval(env) else 0
+    
+class ShortCircuitORNode:
+    def __init__(self, left, right):
+        self.left = left
+        self.right = right
+
+    def eval(self, env):
+        if self.left.eval(env):
+            return 1
+        return 1 if self.right.eval(env) else 0
+
 # array nodes
 class ArrayNode:
     def __init__(self, elements):
