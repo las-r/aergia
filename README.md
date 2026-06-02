@@ -45,3 +45,7 @@ aergia --otia <filename.aer>
 # or for shorthand:
 aergia -o <filename.aer>
 ```
+
+## Contributors
+Here is a list of every person that has directly contributed to the development of Aergia, excluding myself, las-r. (Huge thanks to the people here!):
+- [lyxal](https://github.com/lyxal)
