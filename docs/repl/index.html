@@ -1,0 +1,135 @@
+---
+layout: null
+permalink: /repl/
+---
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Aergia Online REPL</title>
+        <style>
+            body {
+                font-family: sans-serif; 
+                padding: 20px; 
+            }
+            textarea { 
+                width: 100%; 
+                max-width: 600px; 
+                display: block; 
+                margin-bottom: 10px;
+            }
+            button { 
+                padding: 10px 20px; 
+                margin-right: 10px; 
+            }
+            pre { 
+                background: #1a1b26; 
+                color: #a9b1d6; 
+                padding: 15px; 
+                border-radius: 4px; 
+                max-width: 600px; 
+                max-height: 300px; 
+                overflow-y: auto; 
+            }
+        </style>
+    </head>
+
+    <body>
+        <textarea id="codeInput" rows="12">
+> "Hello, Aergia!"
+        </textarea>
+            
+        <button id="runBtn" disabled>Loading...</button>
+        <button id="stopBtn" disabled>Stop</button>
+        <pre id="consoleOut"></pre>
+
+        <script>
+            const codeInput = document.getElementById("codeInput");
+            const runBtn = document.getElementById("runBtn");
+            const stopBtn = document.getElementById("stopBtn");
+            const consoleOut = document.getElementById("consoleOut");
+            let worker = null;
+
+            const workerCode = `
+                importScripts("https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js");
+                let pyodide = null;
+
+                async function initEngine() {
+                    pyodide = await loadPyodide({
+                        stdout: (text) => { postMessage({type: "stdout", data: text}); },
+                        stderr: (text) => { postMessage({type: "stderr", data: text}); }
+                    });
+                    await pyodide.loadPackage("micropip");
+                    const micropip = pyodide.pyimport("micropip");
+                    await micropip.install("aergia-lang");
+                    postMessage({type: "status", data: "ready"});
+                }
+
+                self.onmessage = async (e) => {
+                    if (e.data.type === "start") {
+                        await initEngine();
+                    }
+                    if (e.data.type === "execute") {
+                        pyodide.globals.set("codePayload", e.data.code);
+                        try {
+                            await pyodide.runPythonAsync(\`
+import sys
+import runpy
+import time
+with open("temp.aer", "w") as f:
+    f.write(codePayload)
+sys.argv = ["aergia", "temp.aer"]
+sys.modules.pop("aergia", None)
+runpy.run_module("aergia", None, "__main__")
+                        \`);
+                    } catch (err) {
+                        postMessage({type: "stderr", data: err.message});
+                    }
+                    postMessage({type: "status", data: "complete"});
+                }
+            };
+            `;
+
+            function startWorker() {
+                const blob = new Blob([workerCode], {type: "application/javascript"});
+                worker = new Worker(URL.createObjectURL(blob));
+                
+                worker.onmessage = (e) => {
+                    if (e.data.type === "status") {
+                        if (e.data.data === "ready") {
+                            runBtn.disabled = false;
+                            runBtn.innerText = "Run Code";
+                        }
+                        if (e.data.data === "complete") {
+                            runBtn.disabled = false;
+                            stopBtn.disabled = true;
+                        }
+                    }
+                    if (e.data.type === "stdout" || e.data.type === "stderr") {
+                        consoleOut.innerText += e.data.data + "\n";
+                        consoleOut.scrollTop = consoleOut.scrollHeight;
+                    }
+                };
+
+                worker.postMessage({type: "start"});
+            }
+
+            runBtn.addEventListener("click", () => {
+                consoleOut.innerText = "";
+                runBtn.disabled = true;
+                stopBtn.disabled = false;
+                worker.postMessage({type: "execute", code: codeInput.value});
+            });
+
+            stopBtn.addEventListener("click", () => {
+                worker.terminate();
+                consoleOut.innerText += "\n[Execution Terminated By User]\n";
+                runBtn.innerText = "Reloading Engine...";
+                runBtn.disabled = true;
+                stopBtn.disabled = true;
+                startWorker();
+            });
+
+            startWorker();
+        </script>
+    </body>
+</html>

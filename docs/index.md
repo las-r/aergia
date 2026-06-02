@@ -16,6 +16,8 @@ Aergia's syntax is designed to be incredibly minimal, yet still somewhat readabl
 > "Hello, Aergia!"
 ```
 
+You can test Aergia out for yourself on the [Aergia Online REPL](https://las-r.github.io/aergia/repl/).
+
 ## Navigating the Docs
 > First timer? Jump straight into the [Quickstart Guide](./quickstart.md) to get the interpreter installed and ready to use in under two minutes.
 
