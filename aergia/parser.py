@@ -92,6 +92,11 @@ def parseexpr(tokens):
         array = parseexpr(tokens)
         item = parseexpr(tokens)
         return RemoveItemNode(array, item)
+    if token == "::":
+        array = parseexpr(tokens)
+        start = parseexpr(tokens)
+        end = parseexpr(tokens)
+        return SliceNode(array, start, end)
     
     # exit
     if token == "~>":

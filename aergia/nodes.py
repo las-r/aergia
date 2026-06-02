@@ -151,7 +151,7 @@ class IndexNode:
     def eval(self, env):
         arr = self.arrayn.eval(env)
         idx = self.indexn.eval(env)
-        if not isinstance(arr, list):
+        if not isinstance(arr, (list, str)):
             raise TypeError(f"Object of type {type(arr).__name__} is not indexable")
         if not isinstance(idx, int):
             raise TypeError(f"Object of type {type(idx).__name__} is not an integer")
@@ -232,6 +232,25 @@ class RemoveItemNode:
             raise ValueError(f"Item '{itm}' not found in the array")
         arr.remove(itm)
         return itm
+    
+
+class SliceNode:
+    def __init__(self, arrayn, startn, endn):
+        self.arrayn = arrayn
+        self.startn = startn
+        self.endn = endn
+    
+    def eval(self, env):
+        arr = self.arrayn.eval(env)
+        start = self.startn.eval(env)
+        end = self.endn.eval(env)
+        if not isinstance(arr, (list, str)):
+            raise TypeError(f"Object of type {type(arr).__name__} is not slicable")
+        if not isinstance(start, int):
+            raise TypeError(f"Object of type {type(start).__name__} is not an integer")
+        if not isinstance(end, int):
+            raise TypeError(f"Object of type {type(end).__name__} is not an integer")
+        return arr[start:end]
 
 
 # control flow nodes
