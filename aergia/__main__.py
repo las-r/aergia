@@ -68,10 +68,13 @@ def main():
     # define inbuilt functions
     def in_arr(arr, itm):
         return 1 if itm in arr else 0
+    def join(str_, arr):
+        return str_.join(arr)
 
     # global environment
     env: dict[str, Any] = {
         "in_arr": in_arr,
+        "join": join
     }
     
     try:
