@@ -1,0 +1,19 @@
+# original script written by u/ChiveSalad on r/ProgrammingLanguages
+# https://www.reddit.com/r/ProgrammingLanguages/comments/1tuwk30/comment/opfp1zq/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+
+= y 15
+[>> y 0
+    = line <>
+    = x 15
+    [>> x 0
+        = x -x 1
+        (&x y
+            *: line 0 " "
+        )
+        (&x y
+            *: line 0 "@"
+        )
+    ]
+    = y -y 1
+    > line
+]
