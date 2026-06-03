@@ -400,7 +400,6 @@ class EvaluationNode:
 
     def eval(self, env):
         from .parser import parse
-
         code = self.value.eval(env)
         tokens = tokenize(code)
         ast = parse(tokens)
