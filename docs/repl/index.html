@@ -9,11 +9,10 @@ permalink: /repl/
         <style>
             body {
                 font-family: sans-serif; 
-                padding: 20px; 
+                padding: 20px;
             }
             textarea { 
                 width: 100%; 
-                max-width: 600px; 
                 display: block; 
                 margin-bottom: 10px;
             }
@@ -26,110 +25,180 @@ permalink: /repl/
                 color: #a9b1d6; 
                 padding: 15px; 
                 border-radius: 4px; 
-                max-width: 600px; 
-                max-height: 300px; 
+                max-height: 600px;
                 overflow-y: auto; 
+                white-space: pre-wrap; /* Ensures text wraps cleanly */
+            }
+            input {
+                width: 100%; 
+                padding: 8px; 
+                box-sizing: border-box;
             }
         </style>
+        <script src="coi-serviceworker.min.js"></script>
     </head>
 
     <body>
-        <textarea id="codeInput" rows="12">
-> "Hello, Aergia!"
-        </textarea>
+        <textarea id="codeInput" rows="20">> "Hello, Aergia!"</textarea>
             
         <button id="runBtn" disabled>Loading...</button>
         <button id="stopBtn" disabled>Stop</button>
+        <div style="margin-top: 10px;">
+            <input type="text" id="cliInput" placeholder="Type input here and press Enter..." disabled />
+        </div>
         <pre id="consoleOut"></pre>
 
         <script>
-            const codeInput = document.getElementById("codeInput");
-            const runBtn = document.getElementById("runBtn");
-            const stopBtn = document.getElementById("stopBtn");
-            const consoleOut = document.getElementById("consoleOut");
-            let worker = null;
+const codeInput = document.getElementById("codeInput");
+const runBtn = document.getElementById("runBtn");
+const stopBtn = document.getElementById("stopBtn");
+const consoleOut = document.getElementById("consoleOut");
+const cliInput = document.getElementById("cliInput"); 
+let worker = null;
 
-            const workerCode = `
-                importScripts("https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js");
-                let pyodide = null;
+// Setup Shared Buffer
+const sharedBuffer = new SharedArrayBuffer(1024); 
+const sharedInt32 = new Int32Array(sharedBuffer, 0, 1);
 
-                async function initEngine() {
-                    pyodide = await loadPyodide({
-                        stdout: (text) => { postMessage({type: "stdout", data: text}); },
-                        stderr: (text) => { postMessage({type: "stderr", data: text}); }
-                    });
-                    await pyodide.loadPackage("micropip");
-                    const micropip = pyodide.pyimport("micropip");
-                    await micropip.install("aergia-lang");
-                    postMessage({type: "status", data: "ready"});
-                }
+const workerCode = `
+    importScripts("https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js");
+    let pyodide = null;
+    let sharedInt32 = null;
+    let sharedBuffer = null;
 
-                self.onmessage = async (e) => {
-                    if (e.data.type === "start") {
-                        await initEngine();
-                    }
-                    if (e.data.type === "execute") {
-                        pyodide.globals.set("codePayload", e.data.code);
-                        try {
-                            await pyodide.runPythonAsync(\`
+    async function initEngine() {
+        pyodide = await loadPyodide({
+            stdout: (text) => { postMessage({type: "stdout", data: text}); },
+            stderr: (text) => { postMessage({type: "stderr", data: text}); },
+            stdin: () => {
+                postMessage({type: "request_input"});
+                Atomics.wait(sharedInt32, 0, 0); 
+                const sharedTextBytes = new Uint8Array(sharedBuffer, 4);
+                const bytesLength = sharedTextBytes.indexOf(0); // Find null-terminator
+                const localBytes = new Uint8Array(bytesLength);
+                localBytes.set(sharedTextBytes.subarray(0, bytesLength));
+                const decoder = new TextDecoder("utf-8");
+                const userInput = decoder.decode(localBytes);
+                Atomics.store(sharedInt32, 0, 0);
+                return userInput + "\\n";
+            }
+        });
+        await pyodide.loadPackage("micropip");
+        const micropip = pyodide.pyimport("micropip");
+        await micropip.install("https://files.pythonhosted.org/packages/ab/5c/85c455c7623d36ee8ec486f3aeaa5542b811ca861421212d355233e48408/aergia_lang-1.9.4-py3-none-any.whl");
+        postMessage({type: "status", data: "ready"});
+    }
+
+    self.onmessage = async (e) => {
+        if (e.data.type === "start") {
+            sharedBuffer = e.data.buffer;
+            sharedInt32 = new Int32Array(sharedBuffer, 0, 1);
+            await initEngine();
+        }
+        if (e.data.type === "execute") {
+            pyodide.globals.set("codePayload", e.data.code);
+            try {
+                // FIX: Added a robust Python-level input patch
+                await pyodide.runPythonAsync(\`
 import sys
 import runpy
-import time
+import builtins
+
+# Explicitly override the global input to use standard reading safely
+def web_input(prompt=""):
+    if prompt:
+        sys.stdout.write(prompt)
+        sys.stdout.flush()
+    return sys.stdin.readline().rstrip('\\\\r\\\\n')
+
+builtins.input = web_input
+
 with open("temp.aer", "w") as f:
     f.write(codePayload)
+
 sys.argv = ["aergia", "temp.aer"]
 sys.modules.pop("aergia", None)
 runpy.run_module("aergia", None, "__main__")
-                        \`);
-                    } catch (err) {
-                        postMessage({type: "stderr", data: err.message});
-                    }
-                    postMessage({type: "status", data: "complete"});
-                }
-            };
-            `;
-
-            function startWorker() {
-                const blob = new Blob([workerCode], {type: "application/javascript"});
-                worker = new Worker(URL.createObjectURL(blob));
-                
-                worker.onmessage = (e) => {
-                    if (e.data.type === "status") {
-                        if (e.data.data === "ready") {
-                            runBtn.disabled = false;
-                            runBtn.innerText = "Run Code";
-                        }
-                        if (e.data.data === "complete") {
-                            runBtn.disabled = false;
-                            stopBtn.disabled = true;
-                        }
-                    }
-                    if (e.data.type === "stdout" || e.data.type === "stderr") {
-                        consoleOut.innerText += e.data.data + "\n";
-                        consoleOut.scrollTop = consoleOut.scrollHeight;
-                    }
-                };
-
-                worker.postMessage({type: "start"});
+                \`);
+            } catch (err) {
+                postMessage({type: "stderr", data: err.message});
             }
+            postMessage({type: "status", data: "complete"});
+        }
+    };
+`;
 
-            runBtn.addEventListener("click", () => {
-                consoleOut.innerText = "";
-                runBtn.disabled = true;
-                stopBtn.disabled = false;
-                worker.postMessage({type: "execute", code: codeInput.value});
-            });
-
-            stopBtn.addEventListener("click", () => {
-                worker.terminate();
-                consoleOut.innerText += "\n[Execution Terminated By User]\n";
-                runBtn.innerText = "Reloading Engine...";
-                runBtn.disabled = true;
+function startWorker() {
+    const blob = new Blob([workerCode], {type: "application/javascript"});
+    worker = new Worker(URL.createObjectURL(blob));
+    
+    worker.onmessage = (e) => {
+        if (e.data.type === "status") {
+            if (e.data.data === "ready") {
+                runBtn.disabled = false;
+                runBtn.innerText = "Run Code";
+            }
+            if (e.data.data === "complete") {
+                runBtn.disabled = false;
                 stopBtn.disabled = true;
-                startWorker();
-            });
+                cliInput.disabled = true;
+            }
+        }
+        if (e.data.type === "stdout" || e.data.type === "stderr") {
+            consoleOut.innerText += e.data.data + "\n";
+            consoleOut.scrollTop = consoleOut.scrollHeight;
+        }
+        if (e.data.type === "request_input") {
+            cliInput.disabled = false;
+            cliInput.focus();
+        }
+    };
 
-            startWorker();
+    worker.postMessage({type: "start", buffer: sharedBuffer});
+}
+
+cliInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+        const text = cliInput.value;
+        
+        // Print the typed response out to the visual terminal wrapper
+        consoleOut.innerText += text + "\n"; 
+        cliInput.value = "";
+        cliInput.disabled = true;
+
+        // Marshall the string into array bytes
+        const encoder = new TextEncoder();
+        const textBytes = encoder.encode(text);
+        const targetView = new Uint8Array(sharedBuffer, 4);
+        
+        targetView.fill(0);
+        targetView.set(textBytes);
+
+        // Notify the worker to wake up and process the stream bytes
+        Atomics.store(sharedInt32, 0, 1);
+        Atomics.notify(sharedInt32, 0, 1);
+    }
+});
+
+runBtn.addEventListener("click", () => {
+    consoleOut.innerText = "";
+    runBtn.disabled = true;
+    stopBtn.disabled = false;
+    worker.postMessage({type: "execute", code: codeInput.value});
+});
+
+stopBtn.addEventListener("click", () => {
+    worker.terminate();
+    consoleOut.innerText += "\n[Execution Terminated By User]\n";
+    runBtn.innerText = "Reloading Engine...";
+    runBtn.disabled = true;
+    stopBtn.disabled = true;
+    cliInput.disabled = true;
+    cliInput.value = "";
+    startWorker();
+});
+
+startWorker();
         </script>
     </body>
 </html>
