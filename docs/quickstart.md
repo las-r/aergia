@@ -30,14 +30,14 @@ pip install -e aergia
 ## Usage
 ### 1. Create a file
 Create a new named `test.aer` (or whatever you feel like) and add some code. For example:
-```q
+```py
 > "Hello, Aergia!"
 ```
 
 ### 2. Run the interpreter
 ```bash
 aergia test.aer
-# Alternatively (for local installations):
+# alternatively (for local installations):
 python3 -m aergia test.aer
 ```
 
@@ -50,6 +50,6 @@ pip install --upgrade aergia-lang
 ### GitHub
 ```bash
 aergia --ghupdate
-# Or using pip:
+# or using pip:
 pip install --upgrade git+https://github.com/las-r/aergia.git
 ```

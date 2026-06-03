@@ -12,7 +12,7 @@ Welcome to the official documentation for Aergia, a minimal yet usable programmi
 
 Aergia's syntax is designed to be incredibly minimal, yet still somewhat readable.
 
-```q
+```py
 > "Hello, Aergia!"
 ```
 
