@@ -27,7 +27,7 @@ permalink: /repl/
                 border-radius: 4px; 
                 max-height: 600px;
                 overflow-y: auto; 
-                white-space: pre-wrap; /* Ensures text wraps cleanly */
+                white-space: pre-wrap;
             }
             input {
                 width: 100%; 
@@ -160,13 +160,11 @@ function startWorker() {
 cliInput.addEventListener("keydown", (e) => {
     if (e.key === "Enter") {
         const text = cliInput.value;
-        
-        // Print the typed response out to the visual terminal wrapper
+    
         consoleOut.innerText += text + "\n"; 
         cliInput.value = "";
         cliInput.disabled = true;
 
-        // Marshall the string into array bytes
         const encoder = new TextEncoder();
         const textBytes = encoder.encode(text);
         const targetView = new Uint8Array(sharedBuffer, 4);
@@ -174,7 +172,6 @@ cliInput.addEventListener("keydown", (e) => {
         targetView.fill(0);
         targetView.set(textBytes);
 
-        // Notify the worker to wake up and process the stream bytes
         Atomics.store(sharedInt32, 0, 1);
         Atomics.notify(sharedInt32, 0, 1);
     }
