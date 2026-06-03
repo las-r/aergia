@@ -27,7 +27,6 @@ OPS = {
     ">=": lambda l, r: 1 if l >= r else 0,
 }
 
-
 # exceptions
 class ReturnException(Exception):
     def __init__(self, value):
@@ -38,7 +37,6 @@ class ExitException(Exception):
     def __init__(self, value):
         self.value = value
 
-
 # value nodes
 class LiteralNode:
     def __init__(self, value):
@@ -46,7 +44,6 @@ class LiteralNode:
 
     def eval(self, env):
         return self.value
-
 
 class VariableNode:
     def __init__(self, name):
@@ -56,7 +53,6 @@ class VariableNode:
         if self.name not in env:
             raise NameError(f"No variable '{self.name}' found")
         return env[self.name]
-
 
 # assignment
 class AssignNode:
@@ -69,7 +65,6 @@ class AssignNode:
         env[self.name] = value
         return value
 
-
 # output
 class OutputNode:
     def __init__(self, child):
@@ -78,7 +73,6 @@ class OutputNode:
     def eval(self, env):
         print(self.child.eval(env))
         return 0
-
 
 # input
 class StringInputNode:
@@ -96,14 +90,12 @@ class IntInputNode:
     def eval(self, env):
         return int(input())
 
-
 class FloatInputNode:
     def __init__(self):
         pass
 
     def eval(self, env):
         return float(input())
-
 
 # operation nodes
 class UnaryOpNode:
@@ -121,7 +113,6 @@ class UnaryOpNode:
         elif self.op == "~":
             return ~v
 
-
 class BinaryOpNode:
     def __init__(self, op, left, right):
         self.op = op
@@ -132,7 +123,6 @@ class BinaryOpNode:
         vl = self.left.eval(env)
         vr = self.right.eval(env)
         return OPS[self.op](vl, vr)
-
 
 class ShortCircuitANDNode:
     def __init__(self, left, right):
@@ -162,7 +152,6 @@ class ArrayNode:
     def eval(self, env):
         return [e.eval(env) for e in self.elements]
 
-
 class IndexNode:
     def __init__(self, arrayn, indexn):
         self.arrayn = arrayn
@@ -177,7 +166,6 @@ class IndexNode:
             raise TypeError(f"Object of type {type(idx).__name__} is not an integer")
         return arr[int(idx)]
 
-
 class PushNode:
     def __init__(self, arrayn, itemn):
         self.arrayn = arrayn
@@ -191,7 +179,6 @@ class PushNode:
         arr.append(itm)
         return itm
 
-
 class PopNode:
     def __init__(self, arrayn):
         self.arrayn = arrayn
@@ -201,7 +188,6 @@ class PopNode:
         if not isinstance(arr, list):
             raise TypeError(f"Object of type {type(arr).__name__} is not a list")
         return arr.pop()
-
 
 class PopIndexNode:
     def __init__(self, arrayn, indexn):
@@ -218,7 +204,6 @@ class PopIndexNode:
         if idx < -len(arr) or idx >= len(arr):
             raise IndexError(f"Array index {idx} out of range (length {len(arr)})")
         return arr.pop(idx)
-
 
 class InsertNode:
     def __init__(self, arrayn, itemn, indexn):
@@ -237,7 +222,6 @@ class InsertNode:
         arr.insert(idx, itm)
         return itm
 
-
 class RemoveItemNode:
     def __init__(self, arrayn, itemn):
         self.arrayn = arrayn
@@ -252,7 +236,6 @@ class RemoveItemNode:
             raise ValueError(f"Item '{itm}' not found in the array")
         arr.remove(itm)
         return itm
-    
 
 class SliceNode:
     def __init__(self, arrayn, startn, endn):
@@ -272,7 +255,6 @@ class SliceNode:
             raise TypeError(f"Object of type {type(end).__name__} is not an integer")
         return arr[start:end]
 
-
 # control flow nodes
 class IfNode:
     def __init__(self, cond, mainbody, elsebody=[]):
@@ -290,7 +272,6 @@ class IfNode:
                 last = node.eval(env)
         return last
 
-
 class WhileNode:
     def __init__(self, cond, body):
         self.cond = cond
@@ -302,7 +283,6 @@ class WhileNode:
             for node in self.body:
                 last = node.eval(env)
         return last
-
 
 class ForNode:
     def __init__(self, array, iname, body):
@@ -321,7 +301,6 @@ class ForNode:
                 last = node.eval(env)
         return last
 
-
 # function nodes
 class FunctionNode:
     def __init__(self, name, para, body):
@@ -332,7 +311,6 @@ class FunctionNode:
     def eval(self, env):
         env[self.name] = self
         return 0
-
 
 class CallNode:
     def __init__(self, name, args):
@@ -356,14 +334,12 @@ class CallNode:
         except ReturnException as e:
             return e.value
 
-
 class ReturnNode:
     def __init__(self, value):
         self.value = value
 
     def eval(self, env):
         raise ReturnException(self.value.eval(env))
-
 
 # import nodes
 class ImportNode:
@@ -394,7 +370,6 @@ class ImportNode:
             print(f"Aergia Error: Module {file} not found.")
         return 0
 
-
 class PyImportNode:
     def __init__(self, name, rname, closed):
         self.name = name
@@ -418,7 +393,6 @@ class PyImportNode:
                                 env[f"{self.rname}_{name}_{sname}"] = sval
         return 0
 
-
 # low control nodes
 class EvaluationNode:
     def __init__(self, value):
@@ -435,7 +409,6 @@ class EvaluationNode:
             if node:
                 last = node.eval(env)
         return last
-
 
 class ExitNode:
     def __init__(self, value):

@@ -13,7 +13,6 @@ from .tools.otia import prettifyf
 # aergia main
 # made by las-r on github
 
-
 def main():
     # load version and repo
     try:
@@ -119,7 +118,6 @@ def main():
         print(f"Aergia Error: File '{args.filename}' not found")
     except Exception as e:
         print(f"Aergia Error: {e}")
-
 
 if __name__ == "__main__":
     main()
