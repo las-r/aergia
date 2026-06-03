@@ -11,7 +11,7 @@ Because Aergia conditions rely heavily on nested parentheses, clean formatting p
 1. **Simple If:** Place the condition and the truth action indented beneath it.
 2. **If-Else Chains:** Stack sequential conditions. For fallback `else` logic, wrap the final catch-all branch tightly within closing parentheses to maintain mathematical balancing structure.
 
-```q
+```py
 (<< guess secret
     > "Too low!"
 ) (
@@ -25,7 +25,7 @@ Because Aergia conditions rely heavily on nested parentheses, clean formatting p
 
 For large blocks of multiple conditionals where each block has not more than one line, it's often better for readability to use inline conditional notation.
 
-```q
+```py
 (== botchoice "rock"
     (== userchoice "rock" > "Draw, go again.")
     (== userchoice "paper" = winner "user")

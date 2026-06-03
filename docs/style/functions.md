@@ -10,7 +10,7 @@ When defining a function, the signature and parameters should sit on the opening
 
 In the definition, there should be a space between the function name and its parameters, however this is not necessary when calling functions.
 
-```q
+```py
 {factorial :n:
     (<= n 1
         ? 1
