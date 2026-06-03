@@ -8,9 +8,7 @@ from .lexer import tokenize
 
 # constants
 OPS = {
-    "+": lambda l, r: (
-        str(l) + str(r) if isinstance(l, str) or isinstance(r, str) else l + r
-    ),
+    "+": lambda l, r: str(l) + str(r) if isinstance(l, str) or isinstance(r, str) else l + r,
     "-": operator.sub,
     "*": operator.mul,
     "/": operator.truediv,
