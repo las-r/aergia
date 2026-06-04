@@ -11,6 +11,8 @@ Control flow operations use brackets or parentheses to enclose evaluation scopes
 ## Conditionals (If & Else)
 Syntax: `( cond statement1 statement2 ... ) ( elsestatement1 ... )`
 
+Note that the else statement is mandatory, but it can be empty
+
 ### Examples
 ```py
 # If condition evaluates to true, execute the first block. 
@@ -66,7 +68,6 @@ Like conditionals, loop blocks can be evaluated inline. The value of a loop expr
 
 > result   # Outputs: 6 (1 + 2 + 3)
 
-
 # Inline For Loop capturing transformations
 = numbers <10 20 30>
 = running_total 0
@@ -79,7 +80,6 @@ Like conditionals, loop blocks can be evaluated inline. The value of a loop expr
 ]
 
 > final_value   # Outputs: 120 (The last calculation: (10 + 20 + 30) * 2 )
-
 
 # Empty or Unexecuted loops return a default boundary value of 0
 = unexecuted [<< 1 0

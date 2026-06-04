@@ -22,11 +22,10 @@ def parseexpr(tokens):
             body.append(parseexpr(tokens))
         if tokens: tokens.pop(0)
         elsebody = []
-        if tokens and tokens[0] == "(":
-            tokens.pop(0)
-            while tokens and tokens[0] != ")":
-                elsebody.append(parseexpr(tokens))
-            if tokens: tokens.pop(0)
+        tokens.pop(0)
+        while tokens and tokens[0] != ")":
+            elsebody.append(parseexpr(tokens))
+        if tokens: tokens.pop(0)
         return IfNode(cond, body, elsebody)
     
     # while/for block
