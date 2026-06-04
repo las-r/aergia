@@ -6,13 +6,13 @@
     = line <>
     = x 127
     [>> x 0
-        = x -x 1
+        =- x 1
         (&x y
             *: line 0 " "
         ) (
             *: line 0 "A"
         )
     ]
-    = y -y 1
+    =- y 1
     > @join:"" line:
 ]

@@ -9,7 +9,7 @@
 [!= guess secret
     > "Enter your guess:"
     = guess .
-    = tries +tries 1
+    =+ tries 1
 
     (<< guess secret
     > "Too low!"

@@ -5,7 +5,7 @@
         > +bottles " bottles of beer on the wall,"
         > +bottles " bottles of beer."
         > "Take one down and pass it around!"
-        = bottles -bottles 1
+        =- bottles 1
         (>> bottles 0
             > +bottles " bottles of beer on the wall."
         ) (
