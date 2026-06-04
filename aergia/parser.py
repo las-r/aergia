@@ -4,6 +4,10 @@ from .nodes import *
 # aergia parser
 # made by las-r on github
 
+# constants
+BINOPS = ["+", "-", "*", "/", "==", "!=", ">>", "<<", ">=", "<=", "^", "%", "&", "|", "$", "&&", "||"]
+UNOPS = ["!", "~"]
+
 # expression parser
 def parseexpr(tokens):
     if not tokens:
@@ -122,32 +126,48 @@ def parseexpr(tokens):
     
     # assignments
     if token == "=":
+        if tokens and tokens[0] in BINOPS:
+            op = tokens.pop(0)
+            vname = tokens[0]
+            vval = parseexpr(tokens)
+            value = parseexpr(tokens)
+            if op == "&&":
+                return AssignNode(vname, ShortCircuitANDNode(vval, value))
+            if op == "||":
+                return AssignNode(vname, ShortCircuitORNode(vval, value))
+            return AssignNode(vname, BinaryOpNode(op, vval, value))
+        if tokens and tokens[0] in UNOPS:
+            op = tokens.pop(0)
+            vname = tokens[0]
+            vval = parseexpr(tokens)
+            return AssignNode(vname, UnaryOpNode(op, vval))
         name = tokens.pop(0)
-        value = parseexpr(tokens)
-        return AssignNode(name, value)
+        val = parseexpr(tokens)
+        return AssignNode(name, val)
     
     # binary ops
-    if token in ("+", "-", "*", "/", "==", "!=", ">>", "<<", ">=", "<=", "^", "%", "&", "|", "$"):
+    if token in BINOPS:
+        if token == "&&":
+            left = parseexpr(tokens)
+            right = parseexpr(tokens)
+            return ShortCircuitANDNode(left, right)
+        if token == "||":
+            left = parseexpr(tokens)
+            right = parseexpr(tokens)
+            return ShortCircuitORNode(left, right)
         left = parseexpr(tokens)
         right = parseexpr(tokens)
         return BinaryOpNode(token, left, right)
     
     # unary ops and output
-    if token in ("!", "~", ">"):
+    if token in UNOPS:
+        left = parseexpr(tokens)
+        return UnaryOpNode(token, left)
+    
+    # output
+    if token == ">": 
         child = parseexpr(tokens)
-        if token == ">": return OutputNode(child)
-        return UnaryOpNode(token, child)
-    
-    # short circuit logic nodes
-    if token == "&&":
-        left = parseexpr(tokens)
-        right = parseexpr(tokens)
-        return ShortCircuitANDNode(left, right)
-    
-    if token == "||":
-        left = parseexpr(tokens)
-        right = parseexpr(tokens)
-        return ShortCircuitORNode(left, right)
+        return OutputNode(child)
     
     # input
     if token == ".": return IntInputNode()
