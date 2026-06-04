@@ -12,10 +12,16 @@ Variables are declared and assigned dynamically using the `=` operator followed 
 | :--- | :--- | :--- | :--- |
 | `=` | Assignment | `= variable_name expr` | Binds the result of `expr` to `variable_name` |
 
+
+
 ## Examples
 ```py
 # Assign the value 10 to standard_val
 = standard_val 10
+
+# Putting an operator directly following the `=` symbol can let you modify and reassign a value back to itself
+# Multiply standard_val by 2
+=* standard_val 2
 
 # Assign the result of a mathematical expression
 = result +5 5
