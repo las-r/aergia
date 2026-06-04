@@ -85,7 +85,7 @@ const workerCode = `
         });
         await pyodide.loadPackage("micropip");
         const micropip = pyodide.pyimport("micropip");
-        await micropip.install("https://files.pythonhosted.org/packages/ab/5c/85c455c7623d36ee8ec486f3aeaa5542b811ca861421212d355233e48408/aergia_lang-1.9.4-py3-none-any.whl");
+        await micropip.install("https://files.pythonhosted.org/packages/16/18/f3b87aa13eba5fb551fe357907bf58e2186f4285dc1440604ec67f7e82c8/aergia_lang-1.9.6-py3-none-any.whl");
         postMessage({type: "status", data: "ready"});
     }
 
