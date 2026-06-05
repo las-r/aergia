@@ -8,7 +8,8 @@ nav_order: 3
 # 3. Mathematical & Logical Operators
 Because Aergia uses prefix notation, binary operations consume the next two valid parsed sub-expressions. Unary operations consume exactly one.
 
-Syntax: `[operator] [operand_1] [operand_2]`
+Binary Syntax: `[operator] [operand_1] [operand_2]`
+Unary Syntax: `[operator] [operand]`
 
 ## Binary Operators
 * `+` Addition / String Concatenation (Auto-formats)
