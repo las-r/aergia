@@ -16,7 +16,7 @@ from .tools.otia import prettifyf
 def main():
     # load version and repo
     try:
-        ver = version("aergia")
+        ver = version("aergia-lang")
         repo = "https://github.com/las-r/aergia"
     except PackageNotFoundError:
         ver = "development"
