@@ -27,16 +27,24 @@ contexts:
     - match: '==|!=|<=|>=|<<|>>'
       scope: keyword.operator.comparison.aergia
 
-    # Special Operators
-    - match: '\+>|\*>|\*<'
-      scope: keyword.operator.special.aergia
+    # Control Operators
+    - match: '\+>|\*>|\*<|~>'
+      scope: keyword.operator.control.aergia
 
-    # Logical, Arithmetic, and Multi-purpose Operators
-    - match: '~|!|&|\||\$|\+|-|\*|/|\^|@|:|=|\?|,|\.|'''
+    # Array Manipulation Operators
+    - match: '\+:|-:|~:|\*:|#:|::'
+      scope: keyword.operator.array.aergia
+
+    # Logical Operators
+    - match: '&&|\|\|'
+      scope: keyword.operator.logical.aergia
+
+    # Miscellaneous and Arithmetic Operators
+    - match: '~|!|&|\||\$|\+|-|\*|/|%|\^|@|:|=|\?|;|<|>|,|\.|'''
       scope: keyword.operator.logical.arithmetic.aergia
 
-    # Brackets and Braces
-    - match: '[\[\]\(\)\{\}]'
+    # Brackets, Braces, and Backticks
+    - match: '[\[\]\(\)\{\}\`]'
       scope: punctuation.section.bracket.aergia
 
     # Numeric Constants
