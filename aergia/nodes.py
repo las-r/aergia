@@ -397,6 +397,30 @@ class SliceNode:
             raise
         except Exception as e:
             raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+        
+class SetIndexNode:
+    def __init__(self, arrayn, indexn, valuen):
+        self.arrayn = arrayn
+        self.indexn = indexn
+        self.valuen = valuen
+        self.line = None
+        self.col = None
+        
+    def eval(self, env):
+        try:
+            arr = self.arrayn.eval(env)
+            ind = self.indexn.eval(env)
+            val = self.valuen.eval(env)
+            if not isinstance(arr, (list)):
+                raise TypeError(f"Object of type {type(arr).__name__} is not a list")
+            if not isinstance(ind, int):
+                raise TypeError(f"Object of type {type(ind).__name__} is not an integer")
+            arr[ind] = val
+            return val
+        except AergiaRuntimeError:
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 # control flow nodes
 class IfNode:

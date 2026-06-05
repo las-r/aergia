@@ -106,6 +106,11 @@ def parseexpr(tokens):
         start = parseexpr(tokens)
         end = parseexpr(tokens)
         return track(SliceNode(array, start, end))
+    if token == "=:":
+        array = parseexpr(tokens)
+        index = parseexpr(tokens)
+        value = parseexpr(tokens)
+        return track(SetIndexNode(array, index, value))
     
     # exit
     if token == "~>":
