@@ -27,7 +27,7 @@ Documentation for Aergia can be found [here](https://las-r.github.io/aergia/).
 ## IDE Support
 Here is a list of every IDE with Aergia support:
 - [Sublime Text](https://github.com/las-r/aergia/tree/main/editors/sublime)
-- [Visual Studio Code](https://github.com/las-r/aergia/releases/tag/Editors)
+- [Visual Studio Code](https://github.com/las-r/aergia/tree/main/editors/vscode)
 - [Notepad++](https://github.com/las-r/aergia/tree/main/editors/npp)
 
 ## Tools
