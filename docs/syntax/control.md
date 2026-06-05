@@ -9,9 +9,7 @@ nav_order: 6
 Control flow operations use brackets or parentheses to enclose evaluation scopes and execution bodies.
 
 ## Conditionals (If & Else)
-Syntax: `( cond statement1 statement2 ... ) ( elsestatement1 ... )`
-
-Note that the else statement is mandatory, but it can be empty
+Syntax: `( cond statement1 statement2 ... ) -> ( elsestatement1 ... )`
 
 ### Examples
 ```py
@@ -19,7 +17,7 @@ Note that the else statement is mandatory, but it can be empty
 # The second block (else) is optional.
 (== age 18
     > "Welcome to adulthood!"
-) (
+) -> (
     > "You are not 18."
 )
 
@@ -27,7 +25,7 @@ Note that the else statement is mandatory, but it can be empty
 # The result is the last evaluated expression.
 = a 2
 = b 1
-> (<< a b "A is less than B")("A is not less than B")
+> (<< a b "A is less than B") -> ("A is not less than B")
 ```
 
 ## Loops (While & For)
