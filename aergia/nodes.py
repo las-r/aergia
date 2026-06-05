@@ -1,7 +1,6 @@
 import importlib
 import operator
-
-from .lexer import tokenize
+import re
 
 # aergia nodes
 # made by las-r on github
@@ -26,10 +25,16 @@ OPS = {
 }
 
 # exceptions
+class AergiaRuntimeError(Exception):
+    def __init__(self, message, line=None, col=None):
+        self.message = message
+        self.line = line
+        self.col = col
+        super().__init__(self.message)
+
 class ReturnException(Exception):
     def __init__(self, value):
         self.value = value
-
 
 class ExitException(Exception):
     def __init__(self, value):
@@ -39,219 +44,359 @@ class ExitException(Exception):
 class LiteralNode:
     def __init__(self, value):
         self.value = value
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        return self.value
+        if not isinstance(self.value, str):
+            return self.value
+        try:
+            from .lexer import tokenize
+            from .parser import parse
+            pattern = r'%(.*?)%'
+            def replacer(match):
+                exprcode = match.group(1).strip()
+                innertokens = tokenize(exprcode)
+                ast = parse(innertokens)
+                res = 0
+                for node in ast:
+                    if node:
+                        if hasattr(node, "line"):
+                            node.line = self.line
+                        if hasattr(node, "col"):
+                            node.col = self.col
+                        res = node.eval(env)
+                return str(res)
+            return re.sub(pattern, replacer, self.value)
+        except AergiaRuntimeError:
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(f"Interpolation Error: {e}", line=self.line, col=self.col)
 
 class VariableNode:
     def __init__(self, name):
         self.name = name
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        if self.name not in env:
-            raise NameError(f"No variable '{self.name}' found")
-        return env[self.name]
+        try:
+            if self.name not in env:
+                raise NameError(f"No variable '{self.name}' found")
+            return env[self.name]
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 # assignment
 class AssignNode:
     def __init__(self, name, child):
         self.name = name
         self.child = child
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        value = self.child.eval(env)
-        env[self.name] = value
-        return value
+        try:
+            value = self.child.eval(env)
+            env[self.name] = value
+            return value
+        except AergiaRuntimeError:
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 # output
 class OutputNode:
     def __init__(self, child):
         self.child = child
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        print(self.child.eval(env))
-        return 0
+        try:
+            print(self.child.eval(env))
+            return 0
+        except AergiaRuntimeError:
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 # input
 class StringInputNode:
     def __init__(self):
-        pass
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        return input()
+        try:
+            return input()
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 
 class IntInputNode:
     def __init__(self):
-        pass
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        return int(input())
+        try:
+            return int(input())
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 class FloatInputNode:
     def __init__(self):
-        pass
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        return float(input())
+        try:
+            return float(input())
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 # operation nodes
 class UnaryOpNode:
     def __init__(self, op, child):
         self.op = op
         self.child = child
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        v = self.child.eval(env)
-        if self.op == "!":
-            if not v:
-                return 1
-            else:
-                return 0
-        elif self.op == "~":
-            return ~v
+        try:
+            v = self.child.eval(env)
+            if self.op == "!":
+                if not v:
+                    return 1
+                else:
+                    return 0
+            elif self.op == "~":
+                return ~v
+        except AergiaRuntimeError:
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 class BinaryOpNode:
     def __init__(self, op, left, right):
         self.op = op
         self.left = left
         self.right = right
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        vl = self.left.eval(env)
-        vr = self.right.eval(env)
-        return OPS[self.op](vl, vr)
+        try:
+            vl = self.left.eval(env)
+            vr = self.right.eval(env)
+            return OPS[self.op](vl, vr)
+        except AergiaRuntimeError:
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 class ShortCircuitANDNode:
     def __init__(self, left, right):
         self.left = left
         self.right = right
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        if not self.left.eval(env):
-            return 0
-        return 1 if self.right.eval(env) else 0
+        try:
+            if not self.left.eval(env):
+                return 0
+            return 1 if self.right.eval(env) else 0
+        except AergiaRuntimeError:
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
     
 class ShortCircuitORNode:
     def __init__(self, left, right):
         self.left = left
         self.right = right
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        if self.left.eval(env):
-            return 1
-        return 1 if self.right.eval(env) else 0
+        try:
+            if self.left.eval(env):
+                return 1
+            return 1 if self.right.eval(env) else 0
+        except AergiaRuntimeError:
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 # array nodes
 class ArrayNode:
     def __init__(self, elements):
         self.elements = elements
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        return [e.eval(env) for e in self.elements]
+        try:
+            return [e.eval(env) for e in self.elements]
+        except AergiaRuntimeError:
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 class IndexNode:
     def __init__(self, arrayn, indexn):
         self.arrayn = arrayn
         self.indexn = indexn
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        arr = self.arrayn.eval(env)
-        idx = self.indexn.eval(env)
-        if not isinstance(arr, (list, str)):
-            raise TypeError(f"Object of type {type(arr).__name__} is not indexable")
-        if not isinstance(idx, int):
-            raise TypeError(f"Object of type {type(idx).__name__} is not an integer")
-        return arr[int(idx)]
+        try:
+            arr = self.arrayn.eval(env)
+            idx = self.indexn.eval(env)
+            if not isinstance(arr, (list, str)):
+                raise TypeError(f"Object of type {type(arr).__name__} is not indexable")
+            if not isinstance(idx, int):
+                raise TypeError(f"Object of type {type(idx).__name__} is not an integer")
+            return arr[int(idx)]
+        except AergiaRuntimeError:
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 class PushNode:
     def __init__(self, arrayn, itemn):
         self.arrayn = arrayn
         self.itemn = itemn
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        arr = self.arrayn.eval(env)
-        itm = self.itemn.eval(env)
-        if not isinstance(arr, list):
-            raise TypeError(f"Object of type {type(arr).__name__} is not a list")
-        arr.append(itm)
-        return itm
+        try:
+            arr = self.arrayn.eval(env)
+            itm = self.itemn.eval(env)
+            if not isinstance(arr, list):
+                raise TypeError(f"Object of type {type(arr).__name__} is not a list")
+            arr.append(itm)
+            return itm
+        except AergiaRuntimeError:
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 class PopNode:
     def __init__(self, arrayn):
         self.arrayn = arrayn
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        arr = self.arrayn.eval(env)
-        if not isinstance(arr, list):
-            raise TypeError(f"Object of type {type(arr).__name__} is not a list")
-        return arr.pop()
+        try:
+            arr = self.arrayn.eval(env)
+            if not isinstance(arr, list):
+                raise TypeError(f"Object of type {type(arr).__name__} is not a list")
+            return arr.pop()
+        except AergiaRuntimeError:
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 class PopIndexNode:
     def __init__(self, arrayn, indexn):
         self.arrayn = arrayn
         self.indexn = indexn
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        arr = self.arrayn.eval(env)
-        idx = self.indexn.eval(env)
-        if not isinstance(arr, list):
-            raise TypeError(f"Object of type {type(arr).__name__} is not a list")
-        if not isinstance(idx, int):
-            raise TypeError(f"Object of type {type(idx).__name__} is not an integer")
-        if idx < -len(arr) or idx >= len(arr):
-            raise IndexError(f"Array index {idx} out of range (length {len(arr)})")
-        return arr.pop(idx)
+        try:
+            arr = self.arrayn.eval(env)
+            idx = self.indexn.eval(env)
+            if not isinstance(arr, list):
+                raise TypeError(f"Object of type {type(arr).__name__} is not a list")
+            if not isinstance(idx, int):
+                raise TypeError(f"Object of type {type(idx).__name__} is not an integer")
+            if idx < -len(arr) or idx >= len(arr):
+                raise IndexError(f"Array index {idx} out of range (length {len(arr)})")
+            return arr.pop(idx)
+        except AergiaRuntimeError:
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 class InsertNode:
     def __init__(self, arrayn, itemn, indexn):
         self.arrayn = arrayn
         self.itemn = itemn
         self.indexn = indexn
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        arr = self.arrayn.eval(env)
-        itm = self.itemn.eval(env)
-        idx = self.indexn.eval(env)
-        if not isinstance(arr, list):
-            raise TypeError(f"Object of type {type(arr).__name__} is not a list")
-        if not isinstance(idx, int):
-            raise TypeError(f"Object of type {type(idx).__name__} is not an integer")
-        arr.insert(idx, itm)
-        return itm
+        try:
+            arr = self.arrayn.eval(env)
+            itm = self.itemn.eval(env)
+            idx = self.indexn.eval(env)
+            if not isinstance(arr, list):
+                raise TypeError(f"Object of type {type(arr).__name__} is not a list")
+            if not isinstance(idx, int):
+                raise TypeError(f"Object of type {type(idx).__name__} is not an integer")
+            arr.insert(idx, itm)
+            return itm
+        except AergiaRuntimeError:
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 class RemoveItemNode:
     def __init__(self, arrayn, itemn):
         self.arrayn = arrayn
         self.itemn = itemn
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        arr = self.arrayn.eval(env)
-        itm = self.itemn.eval(env)
-        if not isinstance(arr, list):
-            raise TypeError(f"Object of type {type(arr).__name__} is not a list")
-        if itm not in arr:
-            raise ValueError(f"Item '{itm}' not found in the array")
-        arr.remove(itm)
-        return itm
+        try:
+            arr = self.arrayn.eval(env)
+            itm = self.itemn.eval(env)
+            if not isinstance(arr, list):
+                raise TypeError(f"Object of type {type(arr).__name__} is not a list")
+            if itm not in arr:
+                raise ValueError(f"Item '{itm}' not found in the array")
+            arr.remove(itm)
+            return itm
+        except AergiaRuntimeError:
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 class SliceNode:
     def __init__(self, arrayn, startn, endn):
         self.arrayn = arrayn
         self.startn = startn
         self.endn = endn
+        self.line = None
+        self.col = None
     
     def eval(self, env):
-        arr = self.arrayn.eval(env)
-        start = self.startn.eval(env)
-        end = self.endn.eval(env)
-        if not isinstance(arr, (list, str)):
-            raise TypeError(f"Object of type {type(arr).__name__} is not slicable")
-        if not isinstance(start, int):
-            raise TypeError(f"Object of type {type(start).__name__} is not an integer")
-        if not isinstance(end, int):
-            raise TypeError(f"Object of type {type(end).__name__} is not an integer")
-        return arr[start:end]
+        try:
+            arr = self.arrayn.eval(env)
+            start = self.startn.eval(env)
+            end = self.endn.eval(env)
+            if not isinstance(arr, (list, str)):
+                raise TypeError(f"Object of type {type(arr).__name__} is not slicable")
+            if not isinstance(start, int):
+                raise TypeError(f"Object of type {type(start).__name__} is not an integer")
+            if not isinstance(end, int):
+                raise TypeError(f"Object of type {type(end).__name__} is not an integer")
+            return arr[start:end]
+        except AergiaRuntimeError:
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 # control flow nodes
 class IfNode:
@@ -259,45 +404,66 @@ class IfNode:
         self.cond = cond
         self.mainbody = mainbody
         self.elsebody = elsebody
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        last = 0
-        if self.cond.eval(env):
-            for node in self.mainbody:
-                last = node.eval(env)
-        else:
-            for node in self.elsebody:
-                last = node.eval(env)
-        return last
+        try:
+            last = 0
+            if self.cond.eval(env):
+                for node in self.mainbody:
+                    last = node.eval(env)
+            else:
+                for node in self.elsebody:
+                    last = node.eval(env)
+            return last
+        except (AergiaRuntimeError, ReturnException, ExitException):
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 class WhileNode:
     def __init__(self, cond, body):
         self.cond = cond
         self.body = body
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        last = 0
-        while self.cond.eval(env):
-            for node in self.body:
-                last = node.eval(env)
-        return last
+        try:
+            last = 0
+            while self.cond.eval(env):
+                for node in self.body:
+                    last = node.eval(env)
+            return last
+        except (AergiaRuntimeError, ReturnException, ExitException):
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 class ForNode:
     def __init__(self, array, iname, body):
         self.array = array
         self.iname = iname
         self.body = body
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        iterable = self.array.eval(env)
-        if not hasattr(iterable, "__iter__"):
-            raise TypeError(f"'{type(iterable).__name__}' object is not iterable")
-        last = 0
-        for item in iterable:
-            env[self.iname] = item
-            for node in self.body:
-                last = node.eval(env)
-        return last
+        try:
+            iterable = self.array.eval(env)
+            if not hasattr(iterable, "__iter__"):
+                raise TypeError(f"'{type(iterable).__name__}' object is not iterable")
+            last = 0
+            for item in iterable:
+                env[self.iname] = item
+                for node in self.body:
+                    last = node.eval(env)
+            return last
+        except (AergiaRuntimeError, ReturnException, ExitException):
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 # function nodes
 class FunctionNode:
@@ -305,112 +471,158 @@ class FunctionNode:
         self.name = name
         self.para = para
         self.body = body
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        env[self.name] = self
-        return 0
+        try:
+            env[self.name] = self
+            return 0
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 class CallNode:
     def __init__(self, name, args):
         self.name = name
         self.args = args
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        func = env.get(self.name)
-        if not func:
-            raise Exception(f"Function {self.name} not defined")
-        eargs = [arg.eval(env) for arg in self.args]
-        if callable(func):
-            return func(*eargs)
-        fenv = env.copy()
-        for name, val in zip(func.para, eargs):
-            fenv[name] = val
         try:
-            for node in func.body:
-                node.eval(fenv)
-            return 0
-        except ReturnException as e:
-            return e.value
+            func = env.get(self.name)
+            if not func:
+                raise Exception(f"Function {self.name} not defined")
+            eargs = [arg.eval(env) for arg in self.args]
+            if callable(func):
+                return func(*eargs)
+            fenv = env.copy()
+            for name, val in zip(func.para, eargs):
+                fenv[name] = val
+            try:
+                for node in func.body:
+                    node.eval(fenv)
+                return 0
+            except ReturnException as e:
+                return e.value
+        except (AergiaRuntimeError, ExitException):
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 class ReturnNode:
     def __init__(self, value):
         self.value = value
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        raise ReturnException(self.value.eval(env))
+        try:
+            raise ReturnException(self.value.eval(env))
+        except (AergiaRuntimeError, ReturnException):
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 # import nodes
 class ImportNode:
     def __init__(self, file):
         self.file = file
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        from .parser import parse
-
-        file = env["__dir__"] / self.file.eval(env)
-        if "__imports__" not in env:
-            env["__imports__"] = set()
-        if file in env["__imports__"]:
-            return 0
-        env["__imports__"].add(file)
         try:
-            with open(file, "r") as f:
-                code = f.read()
+            from .lexer import tokenize
+            from .parser import parse
+            file = env["__dir__"] / self.file.eval(env)
+            if "__imports__" not in env:
+                env["__imports__"] = set()
+            if file in env["__imports__"]:
+                return 0
+            env["__imports__"].add(file)
             try:
-                tokens = tokenize(code)
-                ast = parse(tokens)
-                for node in ast:
-                    if node:
-                        node.eval(env)
-            except Exception as e:
-                print(f"Aergia Error ({file}): {e}")
-        except FileNotFoundError:
-            print(f"Aergia Error: Module {file} not found.")
-        return 0
+                with open(file, "r") as f:
+                    code = f.read()
+                try:
+                    tokens = tokenize(code)
+                    ast = parse(tokens)
+                    for node in ast:
+                        if node:
+                            node.eval(env)
+                except Exception as e:
+                    print(f"Aergia Error ({file}): {e}")
+            except FileNotFoundError:
+                print(f"Aergia Error: Module {file} not found.")
+            return 0
+        except AergiaRuntimeError:
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 class PyImportNode:
     def __init__(self, name, rname, closed):
         self.name = name
         self.rname = rname
         self.closed = closed
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        module = importlib.import_module(self.name)
-        for name, value in vars(module).items():
-            if not name.startswith("_"):
-                if not self.closed:
-                    env[name] = value
-                else:
-                    env[f"{self.rname}_{name}"] = value
-                if isinstance(value, type):
-                    for sname, sval in vars(value).items():
-                        if not sname.startswith("_"):
-                            if not self.closed:
-                                env[f"{name}_{sname}"] = sval
-                            else:
-                                env[f"{self.rname}_{name}_{sname}"] = sval
-        return 0
+        try:
+            module = importlib.import_module(self.name)
+            for name, value in vars(module).items():
+                if not name.startswith("_"):
+                    if not self.closed:
+                        env[name] = value
+                    else:
+                        env[f"{self.rname}_{name}"] = value
+                    if isinstance(value, type):
+                        for sname, sval in vars(value).items():
+                            if not sname.startswith("_"):
+                                if not self.closed:
+                                    env[f"{name}_{sname}"] = sval
+                                else:
+                                    env[f"{self.rname}_{name}_{sname}"] = sval
+            return 0
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 # low control nodes
 class EvaluationNode:
     def __init__(self, value):
         self.value = value
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        from .parser import parse
-        code = self.value.eval(env)
-        tokens = tokenize(code)
-        ast = parse(tokens)
-        last = 0
-        for node in ast:
-            if node:
-                last = node.eval(env)
-        return last
+        try:
+            from .lexer import tokenize
+            from .parser import parse
+            code = self.value.eval(env)
+            tokens = tokenize(code)
+            ast = parse(tokens)
+            last = 0
+            for node in ast:
+                if node:
+                    last = node.eval(env)
+            return last
+        except (AergiaRuntimeError, ReturnException, ExitException):
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 class ExitNode:
     def __init__(self, value):
         self.value = value
+        self.line = None
+        self.col = None
 
     def eval(self, env):
-        exitc = self.value.eval(env)
-        raise ExitException(exitc)
+        try:
+            exitc = self.value.eval(env)
+            raise ExitException(exitc)
+        except (AergiaRuntimeError, ExitException):
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)

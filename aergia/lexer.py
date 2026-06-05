@@ -6,15 +6,15 @@ import re
 # constants
 TOKENPATTERN = r'==|!=|<<|>>|<=|>=|\+>|\*>|\*<|~>|\+:|-:|~:|\*:|#:|::|\&\&|\|\||"(?:[^"\\]|\\.)*"|[\(\)\[\]\{\}\+\-\*\/%\^=;\&\|!\~<>:@\?,.\'`]|\b[\w.]+\b'
 
-# preprocessor
-def preprocess(code):
-    lines = code.splitlines()
-    cleaned = []
-    for line in lines:
-        cleaned.append(line.split("#")[0])
-    return " ".join(cleaned)
-
-# tokenizer
 def tokenize(code):
-    tokens = re.findall(TOKENPATTERN, preprocess(code))
+    lines = code.splitlines()
+    tokens = []
+    for lidx, line in enumerate(lines, start=1):
+        cleaned = line.split("#")[0]
+        if not cleaned.strip():
+            continue
+        for match in re.finditer(TOKENPATTERN, cleaned):
+            token_text = match.group(0)
+            cidx = match.start() + 1
+            tokens.append((token_text, lidx, cidx))
     return tokens

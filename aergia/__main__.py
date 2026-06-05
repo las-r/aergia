@@ -105,19 +105,30 @@ def main():
             print(f"{ver} REPL")
             env["__dir__"] = Path.cwd()
             while True:
-                line = input(";> ")
-                tokens = tokenize(line)
-                ast = parse(tokens)
-                for node in ast:
-                    if node:
-                        print(node.eval(env))
+                try:
+                    line = input(";> ")
+                    tokens = tokenize(line)
+                    ast = parse(tokens)
+                    for node in ast:
+                        if node:
+                            print(node.eval(env))
+                except KeyboardInterrupt:
+                    print("\nKeyboardInterrupt (Type ~> 0 to exit)")
+                except EOFError:
+                    print("\nExiting REPL...")
+                    break
 
     except ExitException as e:
         sys.exit(e.value)
     except FileNotFoundError:
         print(f"Aergia Error: File '{args.filename}' not found")
+        sys.exit(1)
+    except AergiaRuntimeError as e:
+        print(f"Aergia Runtime Error [Line {e.line}, Col {e.col}]: {e.message}")
+        sys.exit(1)
     except Exception as e:
-        print(f"Aergia Error: {e}")
+        print(f"Fatal Aergia Interpreter Error: {e}")
+        sys.exit(1)
 
 if __name__ == "__main__":
     main()
