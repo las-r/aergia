@@ -34,6 +34,8 @@ Syntax (For):   `[ \` array iterator_name statement1 ... ]`
 
 Like conditionals, loop blocks can be evaluated inline. The value of a loop expression is determined by the last evaluated expression inside its body on its **final iteration**. If the loop condition is initially false (or the array is empty), the block returns `0`.
 
+You can break out of loop using `<<<` and continue the loop to the next iteration `>>>`. These do not change the returned result, it will still be the last evaluated expression.
+
 ### Examples
 ```py
 # While Loop example
