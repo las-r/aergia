@@ -6,4 +6,4 @@
 = b '
 
 = c @m_sqrt:+^a 2 ^b 2:
-> +"The hypotenuse is: " c
+> "The hypotenuse is: %c%"

@@ -31,7 +31,7 @@
 ]
 
 (== winner "user"
-    > +"You won! I chose " +botchoice +" and you chose " +userchoice "."
+    > "You won! I chose %botchoice% and you chose %userchoice%."
 ) (
-    > +"I won! I chose " +botchoice +" and you chose " +userchoice "."
+    > "I won! I chose %botchoice% and you chose %userchoice%."
 )

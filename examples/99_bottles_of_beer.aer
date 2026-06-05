@@ -2,12 +2,12 @@
     = bottles 99
 
     [>> bottles 0
-        > +bottles " bottles of beer on the wall,"
-        > +bottles " bottles of beer."
+        > "%bottles% bottles of beer on the wall,"
+        > "%bottles% bottles of beer."
         > "Take one down and pass it around!"
         =- bottles 1
         (>> bottles 0
-            > +bottles " bottles of beer on the wall."
+            > "%bottles% bottles of beer on the wall."
         ) (
             > "No more bottles of beer on the wall."
         )
