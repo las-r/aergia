@@ -1,6 +1,6 @@
 *< random r
 
-= choices <"rock" "paper" "scissors">
+= choices < "rock" "paper" "scissors" >
 = winner ""
 
 [!winner
