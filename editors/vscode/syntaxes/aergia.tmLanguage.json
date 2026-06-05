@@ -15,6 +15,22 @@
         {
           "name": "constant.character.escape.aergia",
           "match": "\\\\."
+        },
+        {
+          "name": "meta.interpolation.aergia",
+          "begin": "%",
+          "beginCaptures": {
+            "0": { "name": "punctuation.definition.interpolation.begin.aergia" }
+          },
+          "end": "%",
+          "endCaptures": {
+            "0": { "name": "punctuation.definition.interpolation.end.aergia" }
+          },
+          "patterns": [
+            {
+              "include": "$self"
+            }
+          ]
         }
       ]
     },
