@@ -18,6 +18,7 @@ Arrays are contiguous ordered collections. Indexing is zero-based.
 | `*:` | Insert Item | `*: items 1 15` | Inserts an item into the array at the given index. |
 | `#:` | Remove Item | `#: items 20` | Finds and removes the first occurrence of a specific item value. |
 | `::` | Slice Array | `:: items 1 3` | Slices an array between two given indexes. |
+| `=:` | Set Index | `:: items 0 15` | Sets the value at an array index. |
 
 ## Examples
 ### Appending and Inserting
