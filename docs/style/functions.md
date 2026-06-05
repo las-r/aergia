@@ -14,7 +14,7 @@ In the definition, there should be a space between the function name and its par
 {factorial :n:
     (<= n 1
         ? 1
-    )
+    )()
     ? *n @factorial:-n 1:
 }
 ```

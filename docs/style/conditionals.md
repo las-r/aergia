@@ -27,18 +27,18 @@ For large blocks of multiple conditionals where each block has not more than one
 
 ```py
 (== botchoice "rock"
-    (== userchoice "rock" > "Draw, go again.")
-    (== userchoice "paper" = winner "user")
-    (== userchoice "scissors" = winner "bot")
-)
+    (== userchoice "rock" > "Draw, go again.")()
+    (== userchoice "paper" = winner "user")()
+    (== userchoice "scissors" = winner "bot")()
+)()
 (== botchoice "paper"
-    (== userchoice "rock" = winner "bot")
-    (== userchoice "paper" > "Draw, go again.")
-    (== userchoice "scissors" = winner "user")
-)
+    (== userchoice "rock" = winner "bot")()
+    (== userchoice "paper" > "Draw, go again.")()
+    (== userchoice "scissors" = winner "user")()
+)()
 (== botchoice "scissors"
-    (== userchoice "rock" = winner "user")
-    (== userchoice "paper" = winner "bot")
-    (== userchoice "scissors" > "Draw, go again.")
-)
+    (== userchoice "rock" = winner "user")()
+    (== userchoice "paper" = winner "bot")()
+    (== userchoice "scissors" > "Draw, go again.")()
+)()
 ```
