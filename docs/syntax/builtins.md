@@ -9,3 +9,14 @@ nav_order: 9
 Aergia comes with 2 builtin functions:
 - `@in_arr:arr item:`: Returns 1 if `item` is in array `arr`, otherwise 0.
 - `@join:str arr:`: Joins array `arr` with string `str`, identical to Python `str.join(arr)`
+
+## Examples
+```py
+# Check if an item is inside an array
+= items <"apple" "banana">
+= present @in_arr:items "apple":
+
+# Join items together with a space
+= words <"Hello" "World">
+= msg @join:" " words:
+```

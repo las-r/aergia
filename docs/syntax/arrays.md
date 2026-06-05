@@ -29,7 +29,7 @@ Arrays are contiguous ordered collections. Indexing is zero-based.
 +: inventory "potion"
 # inventory is now <"sword" "shield" "potion">
 
-# Insert an item at index 1 (Structure: :* array index item)
+# Insert an item at index 1 (Structure: *: array index item)
 *: inventory 1 "helmet"
 # inventory is now <"sword" "helmet" "shield" "potion">
 ```

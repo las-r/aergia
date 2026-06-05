@@ -27,4 +27,10 @@ Aergia code can load external resources either from separate `.aer` files or tap
 *< random rand
 # Available via custom namespace binding
 = roll @rand_randint:1 6:
+
+# Evaluate code directly from a string sequence
+; "= dynamic 100"
+
+# Stop execution and exit immediately with status 0
+~> 0
 ```
