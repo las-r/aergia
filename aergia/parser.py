@@ -189,6 +189,10 @@ def parseexpr(tokens):
     if token == ",": return track(StringInputNode())
     if token == "'": return track(FloatInputNode())
     
+    # break and continue
+    if token == "<<<": return track(BreakNode())
+    if token == ">>>": return track(ContinueNode())
+    
     # function return
     if token == "?": return track(ReturnNode(parseexpr(tokens)))
     

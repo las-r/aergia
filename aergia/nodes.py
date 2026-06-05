@@ -31,6 +31,10 @@ class AergiaRuntimeError(Exception):
         self.line = line
         self.col = col
         super().__init__(self.message)
+        
+class BreakException(Exception): pass
+
+class ContinueException(Exception): pass
 
 class ReturnException(Exception):
     def __init__(self, value):
@@ -439,7 +443,7 @@ class IfNode:
                 for node in self.elsebody:
                     last = node.eval(env)
             return last
-        except (AergiaRuntimeError, ReturnException, ExitException):
+        except (AergiaRuntimeError, ReturnException, ExitException, BreakException, ContinueException):
             raise
         except Exception as e:
             raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
@@ -455,8 +459,13 @@ class WhileNode:
         try:
             last = 0
             while self.cond.eval(env):
-                for node in self.body:
-                    last = node.eval(env)
+                try:
+                    for node in self.body:
+                            last = node.eval(env)
+                except BreakException:
+                    break
+                except ContinueException:
+                    continue
             return last
         except (AergiaRuntimeError, ReturnException, ExitException):
             raise
@@ -479,13 +488,34 @@ class ForNode:
             last = 0
             for item in iterable:
                 env[self.iname] = item
-                for node in self.body:
-                    last = node.eval(env)
+                try:
+                    for node in self.body:
+                        last = node.eval(env)
+                except BreakException:
+                    break
+                except ContinueException:
+                    continue
             return last
         except (AergiaRuntimeError, ReturnException, ExitException):
             raise
         except Exception as e:
             raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+        
+class BreakNode:
+    def __init__(self):
+        self.line = None
+        self.col = None
+    
+    def eval(self, env):
+        raise BreakException()
+    
+class ContinueNode:
+    def __init__(self):
+        self.line = None
+        self.col = None 
+        
+    def eval(self, env):
+        raise ContinueException()
 
 # function nodes
 class FunctionNode:
