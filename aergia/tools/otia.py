@@ -135,7 +135,7 @@ def prettify(stream, depth, inline=False):
 
 def prettifyf(filepath):
     bpath, ext = os.path.splitext(filepath)
-    ppath = f"{bpath}.p{ext}"
+    ppath = f"{bpath}.pre{ext}"
     with open(filepath, 'r', encoding='utf-8') as f:
         ocode = f.read()  
     tokens = tokenize(ocode)

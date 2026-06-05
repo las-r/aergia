@@ -19,7 +19,7 @@ def minify(code):
 # minify file function
 def minifyf(filepath):
     bpath, ext = os.path.splitext(filepath)
-    mpath = f"{bpath}.l{ext}"
+    mpath = f"{bpath}.min{ext}"
     with open(filepath, 'r', encoding='utf-8') as f:
         ocode = f.read()
     mcode = minify(ocode)
