@@ -87,7 +87,7 @@ class VariableNode:
         except Exception as e:
             raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
-# assignment
+# assignment node
 class AssignNode:
     def __init__(self, name, child):
         self.name = name
@@ -105,7 +105,7 @@ class AssignNode:
         except Exception as e:
             raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
-# output
+# i/o nodes
 class OutputNode:
     def __init__(self, child):
         self.child = child
@@ -121,7 +121,6 @@ class OutputNode:
         except Exception as e:
             raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
-# input
 class StringInputNode:
     def __init__(self):
         self.line = None
@@ -132,7 +131,6 @@ class StringInputNode:
             return input()
         except Exception as e:
             raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
-
 
 class IntInputNode:
     def __init__(self):
@@ -612,7 +610,7 @@ class PyImportNode:
         except Exception as e:
             raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
-# low control nodes
+# system nodes
 class EvaluationNode:
     def __init__(self, value):
         self.value = value

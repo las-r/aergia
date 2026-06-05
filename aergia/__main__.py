@@ -117,7 +117,8 @@ def main():
                 except EOFError:
                     print("\nExiting REPL...")
                     break
-
+    
+    # error catching
     except ExitException as e:
         sys.exit(e.value)
     except FileNotFoundError:
