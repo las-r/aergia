@@ -1,13 +1,4 @@
-# Aergia
-**Aergia** is a minimalist yet still usable programming language, depending on your definition of usable.
+# Aergia Support for VSCode
+This extension adds syntax highlighting and some basic autocomplete configurations for the Aergia programming in Visual Studio Code.
 
-## Quick Start
-Just put the /aergia folder in your working directory.
-
-## Usage
-```
-python -m aergia <filename.aer>
-```
-
-## Documentation
-[las-r.github.io/aergia/](https://las-r.github.io/aergia/)
+That's about it.

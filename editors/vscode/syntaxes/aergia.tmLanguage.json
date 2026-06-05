@@ -31,16 +31,24 @@
       "match": "(==|!=|<=|>=|<<|>>)"
     },
     {
-      "name": "keyword.operator.special.aergia",
-      "match": "(\\+>|\\*>|\\*<)"
+      "name": "keyword.operator.control.aergia",
+      "match": "(\\+>|\\*>|\\*<|~>)"
     },
     {
-      "name": "keyword.operator.logical.arithmetic.aergia",
-      "match": "(~|!|&|\\||\\$|\\+|\\-|\\*|/|\\^|@|:|=|\\?|,|\\.|')"
+      "name": "keyword.operator.array.aergia",
+      "match": "(\\+:|-:|~:|\\*:|#:|::)"
+    },
+    {
+      "name": "keyword.operator.logical.aergia",
+      "match": "(&&|\\|\\|)"
+    },
+    {
+      "name": "keyword.operator.misc.aergia",
+      "match": "(~|!|&|\\||\\$|\\+|-|\\*|/|%|\\^|@|:|=|;|\\?|<|>|,|\\.|')"
     },
     {
       "name": "punctuation.section.bracket.aergia",
-      "match": "[\\[\\]\\(\\)\\{\\}]"
+      "match": "[\\[\\]\\(\\)\\{\\}\\`]"
     },
     {
       "name": "constant.numeric.aergia",
