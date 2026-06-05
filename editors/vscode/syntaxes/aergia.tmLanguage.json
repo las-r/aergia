@@ -43,12 +43,16 @@
       }
     },
     {
-      "name": "keyword.operator.comparison.aergia",
-      "match": "(==|!=|<=|>=|<<|>>)"
+      "name": "keyword.operator.control.aergia",
+      "match": "(\\+>|\\*>|\\*<|~>|<<<|>>>)"
     },
     {
-      "name": "keyword.operator.control.aergia",
-      "match": "(\\+>|\\*>|\\*<|~>)"
+      "name": "keyword.operator.arithmetic.aergia",
+      "match": "(~|&|\\||\\$|\\+|-|\\*|/|%|\\^)"
+    },
+    {
+      "name": "keyword.operator.comparison.aergia",
+      "match": "(==|!=|<=|>=|<<|>>)"
     },
     {
       "name": "keyword.operator.array.aergia",
@@ -56,11 +60,11 @@
     },
     {
       "name": "keyword.operator.logical.aergia",
-      "match": "(&&|\\|\\|)"
+      "match": "(&&|\\|\\||!)"
     },
     {
       "name": "keyword.operator.misc.aergia",
-      "match": "(~|!|&|\\||\\$|\\+|-|\\*|/|%|\\^|@|:|=|;|\\?|<|>|,|\\.|')"
+      "match": "(@|:|=|;|\\?|<|>|,|\\.|')"
     },
     {
       "name": "punctuation.section.bracket.aergia",
