@@ -21,7 +21,7 @@ Aergia code can load external resources either from separate `.aer` files or tap
 
 # Native Open Python Import
 *> math
-= root_val @math_sqrt:16:  # Access via module name underscore convention
+= root_val @sqrt:16:  # Access via global env
 
 # Closed Python Import
 *< random rand
