@@ -28,10 +28,15 @@ def parseexpr(tokens):
             body.append(parseexpr(tokens))
         if tokens: tokens.pop(0)
         elsebody = []
-        tokens.pop(0)
-        while tokens and tokens[0][0] != ")":
-            elsebody.append(parseexpr(tokens))
-        if tokens: tokens.pop(0)
+        if tokens and tokens[0][0] == "->":
+            tokens.pop(0)
+            if tokens and tokens[0][0] == "(":
+                tokens.pop(0)
+                while tokens and tokens[0][0] != ")":
+                    elsebody.append(parseexpr(tokens))
+                if tokens: tokens.pop(0)
+            else:
+                raise SyntaxError("Expected '(' after '->' operator")
         return track(IfNode(cond, body, elsebody))
     
     # while/for block
