@@ -13,10 +13,10 @@
 
     (<< guess secret
     > "Too low!"
-    ) (
+    ) -> (
         (>> guess secret
             > "Too high!"
-        ) (
+        ) -> (
             > "Correct, you got it in %tries% tries!"
         )
     )

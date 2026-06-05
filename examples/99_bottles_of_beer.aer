@@ -8,7 +8,7 @@
         =- bottles 1
         (>> bottles 0
             > "%bottles% bottles of beer on the wall."
-        ) (
+        ) -> (
             > "No more bottles of beer on the wall."
         )
     ]
