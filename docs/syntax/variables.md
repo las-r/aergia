@@ -12,8 +12,6 @@ Variables are declared and assigned dynamically using the `=` operator followed 
 | :--- | :--- | :--- | :--- |
 | `=` | Assignment | `= variable_name expr` | Binds the result of `expr` to `variable_name` |
 
-
-
 ## Examples
 ```py
 # Assign the value 10 to standard_val
