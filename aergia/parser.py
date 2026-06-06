@@ -102,7 +102,7 @@ def parseexpr(tokens):
         index = parseexpr(tokens)
         item = parseexpr(tokens)
         return track(InsertNode(array, item, index))
-    if token == "#:":
+    if token == "$:":
         array = parseexpr(tokens)
         item = parseexpr(tokens)
         return track(RemoveItemNode(array, item))
