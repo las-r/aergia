@@ -46,6 +46,6 @@ Arrays are contiguous ordered collections. Indexing is zero-based.
 # Returns "helmet"; inventory is now <"sword" "shield">
 
 # Remove a specific item value (Returns the removed item)
-#: inventory "shield"
+$: inventory "shield"
 # Returns "shield"; inventory is now <"sword">
 ```
