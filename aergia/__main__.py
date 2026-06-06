@@ -83,8 +83,8 @@ def main():
             with open(args.filename, "r") as f:
                 code = f.read()
 
-            SOURCE_DIRECTORY = Path(args.filename).parent
-            env["__dir__"] = SOURCE_DIRECTORY
+            # path
+            env["__dir__"] = Path(args.filename).parent
 
             # create tokens and tree
             tokens = tokenize(code)
