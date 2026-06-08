@@ -11,6 +11,17 @@ permalink: /repl/
                 font-family: sans-serif; 
                 padding: 20px;
             }
+            .header-container {
+                margin-bottom: 20px;
+            }
+            h1 {
+                margin: 0 0 5px 0;
+                font-size: 1.8rem;
+            }
+            .version-badge {
+                font-size: 0.9rem;
+                color: #666;
+            }
             textarea { 
                 width: 100%; 
                 display: block; 
@@ -39,6 +50,11 @@ permalink: /repl/
     </head>
 
     <body>
+        <div class="header-container">
+            <h1>Aergia Online REPL</h1>
+            <div class="version-badge">Aergia Version: <span id="versionLabel">checking...</span></div>
+        </div>
+
         <textarea id="codeInput" rows="20">> "Hello, Aergia!"</textarea>
             
         <button id="runBtn" disabled>Loading...</button>
@@ -54,6 +70,7 @@ const runBtn = document.getElementById("runBtn");
 const stopBtn = document.getElementById("stopBtn");
 const consoleOut = document.getElementById("consoleOut");
 const cliInput = document.getElementById("cliInput"); 
+const versionLabel = document.getElementById("versionLabel");
 let worker = null;
 
 // Setup Shared Buffer
@@ -85,8 +102,23 @@ const workerCode = `
         });
         await pyodide.loadPackage("micropip");
         const micropip = pyodide.pyimport("micropip");
-        await micropip.install("https://files.pythonhosted.org/packages/87/68/e7d5d7e95b71d95da8a1fd28ed45be2b37df6e459f24038e6f32709126bf/aergia_lang-1.10.1-py3-none-any.whl");
-        postMessage({type: "status", data: "ready"});
+        await micropip.install("aergia-lang");
+
+        // Fetch installed version safely via importlib.metadata
+        let version = "unknown";
+        try {
+            version = pyodide.runPython(\`
+import importlib.metadata
+importlib.metadata.version("aergia-lang")
+            \`);
+        } catch(e) {
+            // Fallback if metadata is tricky
+            try {
+                version = pyodide.runPython("import aergia; aergia.__version__");
+            } catch(p) {}
+        }
+
+        postMessage({type: "status", data: "ready", version: version});
     }
 
     self.onmessage = async (e) => {
@@ -98,13 +130,11 @@ const workerCode = `
         if (e.data.type === "execute") {
             pyodide.globals.set("codePayload", e.data.code);
             try {
-                // FIX: Added a robust Python-level input patch
                 await pyodide.runPythonAsync(\`
 import sys
 import runpy
 import builtins
 
-# Explicitly override the global input to use standard reading safely
 def web_input(prompt=""):
     if prompt:
         sys.stdout.write(prompt)
@@ -137,6 +167,10 @@ function startWorker() {
             if (e.data.data === "ready") {
                 runBtn.disabled = false;
                 runBtn.innerText = "Run Code";
+                // Update the UI version string received from Pyodide
+                if (e.data.version) {
+                    versionLabel.innerText = "v" + e.data.version;
+                }
             }
             if (e.data.data === "complete") {
                 runBtn.disabled = false;
@@ -188,6 +222,7 @@ stopBtn.addEventListener("click", () => {
     worker.terminate();
     consoleOut.innerText += "\n[Execution Terminated By User]\n";
     runBtn.innerText = "Reloading Engine...";
+    versionLabel.innerText = "reloading...";
     runBtn.disabled = true;
     stopBtn.disabled = true;
     cliInput.disabled = true;
