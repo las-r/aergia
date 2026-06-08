@@ -9,11 +9,12 @@ def minify(code):
     tokens = tokenize(code)
     minifiedtokens = []
     for i, token in enumerate(tokens):
+        tokent = token[0]
         if i > 0:
-            prevtoken = tokens[i - 1]
-            if prevtoken.isalnum() and token.isalnum():
+            prevtokent = tokens[i - 1][0]
+            if prevtokent.isalnum() and tokent.isalnum():
                 minifiedtokens.append(" ")
-        minifiedtokens.append(token)
+        minifiedtokens.append(tokent)
     return "".join(minifiedtokens)
 
 # minify file function

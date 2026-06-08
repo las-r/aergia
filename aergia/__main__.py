@@ -17,7 +17,7 @@ def main():
     # load version and repo
     try:
         ver = version("aergia-lang")
-        repo = "https://github.com/las-r/aergia"
+        repo = "git+https://github.com/las-r/aergia"
     except PackageNotFoundError:
         ver = "development"
         repo = "local"
@@ -56,6 +56,7 @@ def main():
             
     # handle otia
     if args.otia:
+        print(f"Aergia Warning: Otia is currently outdated and will not work properly with modern Aergia versions.")
         print(f"Prettifying {args.filename}...")
         try:
             prettifyf(args.filename)
