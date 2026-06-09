@@ -126,6 +126,16 @@ def main():
         sys.exit(1)
     except AergiaRuntimeError as e:
         print(f"Aergia Runtime Error [Line {e.line}, Col {e.col}]: {e.message}")
+        if args.filename and e.line:
+            try:
+                with open(args.filename, "r") as f:
+                    lines = f.readlines()
+                    if 0 < e.line <= len(lines):
+                        error_line = lines[e.line - 1].rstrip()
+                        print(f"    {error_line}")
+                        print(f"    {' ' * (e.col - 1)}^")
+            except Exception:
+                pass
         sys.exit(1)
     except Exception as e:
         print(f"Fatal Aergia Interpreter Error: {e}")

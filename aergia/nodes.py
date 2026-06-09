@@ -26,7 +26,7 @@ OPS = {
 
 # exceptions
 class AergiaRuntimeError(Exception):
-    def __init__(self, message, line=None, col=None):
+    def __init__(self, message, line, col):
         self.message = message
         self.line = line
         self.col = col
