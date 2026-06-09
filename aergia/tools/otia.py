@@ -54,16 +54,13 @@ def prettify(stream, depth, inline=False):
         x = prettify(stream, depth, inline=True)
         y = prettify(stream, depth, inline=True)
         res = f"{token}{x} {y}"
-    elif token in AUNOPS:
+    elif token in AUNOPS + CUNOPS:
         x = prettify(stream, depth, inline=True)
         res = f"{token}{x}"
     elif token in CBINOPS:
         x = prettify(stream, depth, inline=True)
         y = prettify(stream, depth, inline=True)
         res = f"{token} {x} {y}"
-    elif token in CUNOPS:
-        x = prettify(stream, depth, inline=True)
-        res = f"{token} {x}"
         
     # arrays
     elif token == "<":
