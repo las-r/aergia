@@ -53,7 +53,8 @@ coverage.xml
 cover/
 *.aer
 !examples/*.aer
-!aergia/lib/*.aer
+!aergia/lib/
+!aergia/lib/**/*
 
 # Translations
 *.mo
