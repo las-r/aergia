@@ -39,7 +39,7 @@ aergia --lethes <filename.aer>
 aergia -l <filename.aer>
 ```
 
-- **Otia**: A basic program prettifier. (CURRENTLY OUTDATED AS OF VER 1.10.0)
+- **Otia**: A basic program prettifier.
 ```bash
 aergia --otia <filename.aer>
 # or for shorthand:
