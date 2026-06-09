@@ -10,7 +10,7 @@ Arrays are contiguous ordered collections. Indexing is zero-based.
 
 | Token | Structure | Example | Description |
 | --- | --- | --- | --- |
-| `<...>` | Array Initialization | `= items <10 20 30>` | Creates a new array structure. |
+| `< ... >` | Array Initialization | `= items < 10 20 30 >` | Creates a new array structure. |
 | `:` | Index Resolution | `: items 0` | Resolves to the item at the given index (`10`). |
 | `+:` | Push Item | `+: items 40` | Appends an item to the end of the array. |
 | `-:` | Pop Item | `-: items` | Removes and returns the last element of the array. |
@@ -24,7 +24,7 @@ Arrays are contiguous ordered collections. Indexing is zero-based.
 ### Appending and Inserting
 ```py
 # Initialize an array
-= inventory <"sword" "shield">
+= inventory < "sword" "shield" >
 
 # Push an item to the end (Returns the pushed item)
 +: inventory "potion"
