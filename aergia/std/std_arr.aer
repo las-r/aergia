@@ -1,11 +1,34 @@
 # standard array library
 # by las-r
+# with functions from lyxal
 
-{in_arr :arr itm:
+{arr_in :arr itm:
     [`arr aitm
         (== aitm itm
             ? 1
         )
     ]
     ? 0
+}
+
+# by lyxal
+{arr_map :lst fn:
+    = output <>
+    = fn +"{ f :x:" +fn "} @f:arg:"
+    [`lst arg
+        +: output ; fn
+    ] 
+    ? output
+}
+
+# by lyxal
+{arr_filter :lst fn:
+    = output <>
+    = fn +"{ f :x:" +fn "} @f:arg:"
+    [`lst arg
+        (; fn
+            +: output arg
+        )
+    ]
+    ? output
 }

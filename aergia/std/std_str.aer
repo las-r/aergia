@@ -1,7 +1,7 @@
 # standard string library
 # by las-r
 
-{join :str arr:
+{str_join :str arr:
     = out ""
     [`arr itm
         =+ out +itm str
