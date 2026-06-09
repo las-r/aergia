@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://pypi.org/project/aergia-lang/">
-    <img src="https://img.shields.io/pypi/v/aergia-lang?style=flat-square&color=blue&v=7" alt="PyPI version" />
+    <img src="https://img.shields.io/pypi/v/aergia-lang?style=flat-square&color=blue&v=8" alt="PyPI version" />
   </a>
   <a href="https://pypi.org/project/aergia-lang/">
     <img src="https://img.shields.io/pypi/pyversions/aergia-lang?style=flat-square&color=success" alt="PyPI - Python Version" />
