@@ -587,7 +587,14 @@ class ImportNode:
         try:
             from .lexer import tokenize
             from .parser import parse
-            file = env["__dir__"] / self.file.eval(env)
+            filename = self.file.eval(env)
+            file = env["__dir__"] / filename
+            if not file.exists() and "__stdlib__" in env:
+                fbfile = env["__stdlib__"] / filename
+                if fbfile.exists():
+                    file = fbfile
+            if not file.exists():
+                raise AergiaRuntimeError(f"Could not resolve file path: '{filename}'", line=self.line, col=self.col)
             if "__imports__" not in env:
                 env["__imports__"] = set()
             if file in env["__imports__"]:

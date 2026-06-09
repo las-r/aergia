@@ -63,17 +63,10 @@ def main():
         except Exception as e:
             print(f"Otia failed: {e}")
             sys.exit(1)
-    
-    # define inbuilt functions
-    def in_arr(arr, itm):
-        return 1 if itm in arr else 0
-    def join(str_, arr):
-        return str_.join(arr)
 
     # global environment
     env: dict[str, Any] = {
-        "in_arr": in_arr,
-        "join": join
+        "__stdlib__": Path(__file__).parent / "std"
     }
     
     try:

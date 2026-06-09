@@ -1,0 +1,11 @@
+# standard array library
+# by las-r
+
+{in_arr :arr itm:
+    [`arr aitm
+        (== aitm itm
+            ? 1
+        )
+    ]
+    ? 0
+}
