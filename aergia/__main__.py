@@ -56,7 +56,6 @@ def main():
             
     # handle otia
     if args.otia:
-        print(f"Aergia Warning: Otia is currently outdated and will not work properly with modern Aergia versions.")
         print(f"Prettifying {args.filename}...")
         try:
             prettifyf(args.filename)

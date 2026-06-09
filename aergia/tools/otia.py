@@ -7,7 +7,7 @@ from ..lexer import tokenize
 # token stream
 class TokenStream:
     def __init__(self, tokens):
-        self.tokens = [t.value if hasattr(t, 'value') else t for t in tokens if (t.value if hasattr(t, 'value') else t).strip()]
+        self.tokens = [t[0] for t in tokens if t and isinstance(t, tuple) and t[0].strip()]
         self.i = 0
         
     def get(self):
@@ -29,9 +29,9 @@ AUNOPS = ["~"]
 CBINOPS = ["==", "!=", "<<", ">>", "<=", ">=", "&&", "||"]
 CUNOPS = ["!"]
 ZCMDS = [".", ",", "'"]
-UCMDS = ["-:", "+>", "*>", ";", "~>", ">", "?", "return"]
-BCMDS = ["=", ":", "+:", "~:", "#:", "*<", "`"]
-TCMDS = ["*:"]
+UCMDS = ["-:", "+>", "*>", ";", "~>", ">", "?", "<<<", ">>>"]
+BCMDS = [":", "+:", "~:", "$:", "*<", "`"]
+TCMDS = ["*:", "::", "=:"]
 BSTART = {"(": ")", "[": "]", "{": "}"}
 
 # functions
@@ -68,7 +68,7 @@ def prettify(stream, depth, inline=False):
     # arrays
     elif token == "<":
         items = parselist(stream, ">", depth)
-        res = f"<{items}>"
+        res = f"< {items} >"
         
     # commands
     elif token in ZCMDS:
@@ -85,6 +85,20 @@ def prettify(stream, depth, inline=False):
     elif token in UCMDS:
         a = prettify(stream, depth, inline=True)
         res = f"{token} {a}"
+        
+    # assignments
+    elif token == "=":
+        a = prettify(stream, depth, inline=True)
+        if a in ABINOPS + CBINOPS:
+            b = prettify(stream, depth, inline=True)
+            c = prettify(stream, depth, inline=True)
+            res = f"={a} {b} {c}"
+        elif a in AUNOPS + CUNOPS:
+            b = prettify(stream, depth, inline=True)
+            res = f"={a} {b}"
+        else:
+            b = prettify(stream, depth, inline=True)
+            res = f"= {a} {b}"
         
     # function calls
     elif token == "@":
@@ -123,8 +137,29 @@ def prettify(stream, depth, inline=False):
             res = f"{{{header}\n{inner_str}{ind}}}"
         else:
             res = f"{token}{header}\n{inner_str}{ind}{end}"
-            
-    else: res = token
+        if token == "(" and not inline:
+            if stream.can_push() and stream.get() == "->":
+                stream.push()
+                if stream.can_push() and stream.get() == "(":
+                    stream.push()
+                    else_body_lines = []
+                    while stream.can_push() and stream.get() != ")":
+                        inner = prettify(stream, depth + 1, inline=False)
+                        if inner.strip():
+                            else_body_lines.append(inner)  
+                    if stream.can_push() and stream.get() == ")":
+                        stream.push()
+                    elseinnerstr = "".join(else_body_lines)
+                    elseblock = f"(\n{elseinnerstr}{ind})"
+                else:
+                    elseblock = prettify(stream, depth, inline=False).strip()
+                res = f"{res.rstrip()} -> {elseblock}"
+                if res.endswith("\n"):
+                    res = res[:-1]
+    
+    # fallback
+    else: 
+        res = token
 
     # return
     if inline:
