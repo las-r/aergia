@@ -16,5 +16,5 @@
         )
     ]
     =- y 1
-    > @join:"" line:
+    > @str_join:"" line:
 ]
