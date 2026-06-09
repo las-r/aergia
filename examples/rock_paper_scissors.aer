@@ -1,3 +1,4 @@
++> "std_arr.aer"
 *< random r
 
 = choices < "rock" "paper" "scissors" >
