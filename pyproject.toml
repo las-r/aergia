@@ -4,14 +4,23 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "aergia-lang"
-version = "1.12.0"
+version = "1.12.1"
 description = "The Aergia programming language"
 authors = [{ name = "las-r" }]
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.11"
-dependencies = []
-keywords = ["interpreter", "programming-language", "esoteric-language", "esolang", "aergia", "aergia-lang"]
+dependencies = [
+    "pyreadline3; platform_system == 'Windows'",
+]
+keywords = [
+    "interpreter", 
+    "programming-language", 
+    "esoteric-language", 
+    "esolang", 
+    "aergia", 
+    "aergia-lang",
+]
 
 classifiers = [
     "Programming Language :: Python :: 3",

@@ -105,11 +105,18 @@ def main():
                     for node in ast:
                         if node:
                             print(node.eval(env))
-                except KeyboardInterrupt:
-                    print("\nKeyboardInterrupt (Type ~> 0 to exit)")
                 except EOFError:
                     print("\nExiting REPL...")
                     break
+                except KeyboardInterrupt:
+                    print("KeyboardInterrupt (Type ~> 0 to exit)")
+                except ExitException as e:
+                    print(f"Exiting with code {e.value}...")
+                    sys.exit(e.value)
+                except AergiaRuntimeError as e:
+                    print(f"Aergia Runtime Error: {e.message}")
+                except Exception as e:
+                    print(f"Fatal Aergia Interpreter Error: {e}")
     
     # error catching
     except ExitException as e:
