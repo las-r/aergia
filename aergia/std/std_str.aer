@@ -57,3 +57,33 @@
     ]
     ? found
 }
+
+{str_reverse :str:
+    = out <>
+    [`str chr
+        *: out 0 chr
+    ]
+    ? @str_join:out "":
+}
+
+{str_ltrim :str:
+    = out ""
+    = start 0
+    = end 0
+    [`str chr
+        (!start
+            (!= chr " "
+                = start 1
+            )
+        ) -> (
+            =+ out chr
+        )
+    ]
+    ? out
+}
+{str_rtrim :str: 
+    ? @str_ltrim:@str_reverse:str::
+}
+{str_trim :str:
+    ? @str_ltrim:@str_rtrim:str::
+}
