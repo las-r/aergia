@@ -2,7 +2,7 @@
 # by las-r
 # with functions from lyxal
 
-{arr_in :arr itm:
+{arr_has :arr itm:
     [`arr aitm
         (== aitm itm
             ? 1
@@ -11,24 +11,64 @@
     ? 0
 }
 
-# by lyxal
-{arr_map :lst fn:
-    = output <>
-    = fn +"{ f :x:" +fn "} @f:arg:"
-    [`lst arg
-        +: output ; fn
-    ] 
-    ? output
+{arr_reverse :arr:
+    = out <>
+    [`arr itm
+        *: out 0 itm
+    ]
+    ? out
+}
+
+{arr_index :arr tar:
+    = idx 0
+    [`arr itm
+        (== itm tar
+            ? idx
+        )
+        =+ idx 1
+    ]
+    ? -0 1
 }
 
 # by lyxal
-{arr_filter :lst fn:
-    = output <>
+{arr_map :arr fn:
+    = out <>
     = fn +"{ f :x:" +fn "} @f:arg:"
-    [`lst arg
+    [`arr arg
+        +: out ; fn
+    ] 
+    ? out
+}
+
+# by lyxal
+{arr_filter :arr fn:
+    = out <>
+    = fn +"{ f :x:" +fn "} @f:arg:"
+    [`arr arg
         (; fn
-            +: output arg
+            +: out arg
         )
     ]
-    ? output
+    ? out
+}
+
+# based off lyxal
+{arr_reduce :arr ini fn:
+    = acc ini
+    = fn +"{ f :x y:" +fn "} @f:acc curr:"
+    [`arr curr
+        = acc ; fn
+    ]
+    ? acc
+}
+
+# based off lyxal
+{arr_iota :n:
+    = out <>
+    = i 0
+    [<< i n
+        +: out i
+        =+ i 1
+    ]
+    ? out
 }

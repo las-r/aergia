@@ -1,10 +1,59 @@
 # standard string library
 # by las-r
 
-{str_join :str arr:
+{str_join :arr del:
     = out ""
+    = first 1
     [`arr itm
-        =+ out +itm str
+        (== first 1
+            = out itm
+            = first 0
+        ) -> (
+            =+ out +del itm
+        )
     ]
     ? out
+}
+
+{str_split :str del:
+    = out < >
+    = cur ""
+    [`str chr
+        (!= delim ""
+            (== char delim
+                +: out cur
+                = cur ""
+            ) -> (
+                =+ cur char
+            )
+        ) -> (
+            =+ out char
+        )
+    ]
+    +: out cur
+    ? out
+}
+
+{str_has :str seq:
+    = matchidx 0
+    = found 0
+    [`str chr
+        = target ""
+        = idxcheck 0
+        [`seq schr
+            (== idxcheck matchidx
+                = target schr
+            )
+            =+ idxcheck 1
+        ]
+        (== chr target
+            =+ matchidx 1
+        ) -> (
+            = matchidx 0
+        )
+        (== target ""
+            = found 1
+        )
+    ]
+    ? found
 }
