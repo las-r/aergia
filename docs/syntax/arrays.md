@@ -19,6 +19,7 @@ Arrays are contiguous ordered collections. Indexing is zero-based.
 | `$:` | Remove Item | `$: items 20` | Finds and removes the first occurrence of a specific item value. |
 | `::` | Slice Array | `:: items 1 3` | Slices an array between two given indexes. |
 | `=:` | Set Index | `=: items 0 15` | Sets the value at an array index. |
+| `..` | Range Initialization | `.. 0 10 1` | Creates a range list based on a start, end, and step value. |
 
 ## Examples
 ### Appending and Inserting
