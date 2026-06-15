@@ -160,6 +160,12 @@ def parseexpr(tokens):
         val = parseexpr(tokens)
         return track(AssignNode(name, val))
     
+    # super assignment
+    if token == "=?":
+        name = tokens.pop(0)[0]
+        cons = parseexpr(tokens)
+        return track(SuperNode(name, cons))
+    
     # binary ops
     if token in BINOPS:
         if token == "&&":
@@ -214,11 +220,12 @@ def parseexpr(tokens):
         return track(LiteralNode(unescaped))
     
     # number and variable
+    clean = '-' + token[1:] if token.startswith('_') and len(token) > 1 else token
     try:
-        val = float(token)
+        val = float(clean)
         return track(LiteralNode(int(val) if val.is_integer() else val))
     except ValueError:
-        return track(VariableNode(token))
+        return track(VariableNode(token))  # Falls back to original token if it's an identifier
 
 # tree maker
 def parse(tokens):

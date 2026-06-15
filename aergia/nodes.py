@@ -1,5 +1,6 @@
 import importlib
 import operator
+import random
 import re
 
 # aergia nodes
@@ -43,6 +44,62 @@ class ReturnException(Exception):
 class ExitException(Exception):
     def __init__(self, value):
         self.value = value
+        
+# types
+class Super:
+    def __init__(self, name, consn):
+        self.name = name
+        self.consn = consn
+        self.value = None
+
+    def collapse(self, env):
+        from .lexer import tokenize
+        from .parser import parse
+        cons = self.consn.eval(env)
+        if not isinstance(cons, str):
+            cons = str(cons)
+        tokens = tokenize(cons)
+        consast = parse(tokens)
+        foundnum = [float(n) for n in re.findall(r'\b\d+(?:\.\d+)?\b', cons)]
+        if foundnum:
+            low_bound = int(min(foundnum)) - 5
+            high_bound = int(max(foundnum)) + 5
+        else:
+            low_bound, high_bound = -100, 100
+        valid = []
+        testenv = env.copy()
+        for candidate in range(low_bound, high_bound + 1):
+            testenv[self.name] = candidate
+            passed = True
+            for node in consast:
+                if node:
+                    if node.eval(testenv) == 0:
+                        passed = False
+                        break
+            if passed:
+                valid.append(candidate)
+        if not valid:
+            for _ in range(200):
+                candidate = random.uniform(low_bound, high_bound)
+                testenv[self.name] = candidate
+                passed = True
+                for node in consast:
+                    if node and node.eval(testenv) == 0:
+                        passed = False
+                        break
+                if passed:
+                    valid.append(candidate)
+        if not valid:
+            raise AergiaRuntimeError(
+                f"Super Collapse Error: No valid values found matching constraints '{cons}' for '{self.name}'",
+                line=self.consn.line, col=self.consn.col
+            )
+        self.value = random.choice(valid)
+        self.coll = True
+        env[self.name] = self.value
+
+    def __repr__(self):
+        return f"<Super Value '{self.name}' (uncollapsed constraints)>"
 
 # value nodes
 class LiteralNode:
@@ -87,6 +144,9 @@ class VariableNode:
         try:
             if self.name not in env:
                 raise NameError(f"No variable '{self.name}' found")
+            val = env[self.name]
+            if isinstance(val, Super):
+                val.collapse(env)
             return env[self.name]
         except Exception as e:
             raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
@@ -104,6 +164,24 @@ class AssignNode:
             value = self.child.eval(env)
             env[self.name] = value
             return value
+        except AergiaRuntimeError:
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+
+# super node  
+class SuperNode:
+    def __init__(self, name, constraints):
+        self.name = name
+        self.constraints = constraints
+        self.line = None
+        self.col = None
+
+    def eval(self, env):
+        try:
+            sv = Super(self.name, self.constraints)
+            env[self.name] = sv
+            return 0
         except AergiaRuntimeError:
             raise
         except Exception as e:
