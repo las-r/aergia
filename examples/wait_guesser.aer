@@ -22,5 +22,5 @@
 
 # results
 > ""
-> +"You waited for %wait second(s)."
+> +"You waited for %wait% second(s)."
 > "You were %@round:@abs:-wait guess: accu:% second(s) off."
