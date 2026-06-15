@@ -10,6 +10,7 @@ nav_order: 5
 > Here is a look at what is currently in development and what is planned for Aergia.
 
 ### In Active Development
+- **Tool fixes (`tools/`)**
 - **Standard libraries (`std/`)**
     - `std_arr.aer`: Array-related utilities
     - `std_str.aer`: String-related utilities
@@ -20,3 +21,4 @@ nav_order: 5
 ### What I'm Always Trying to Improve
 - **Errors**: Making error messages as clear and unambiguous as possible.
 - **Syntax**: Making syntax as intuitive as possible and removing any possible conflicts.
+- **Features**: Adding more features to Aergia to make the language more powerful.
