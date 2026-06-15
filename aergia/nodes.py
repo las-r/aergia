@@ -501,6 +501,27 @@ class SetIndexNode:
             raise
         except Exception as e:
             raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+        
+# range node
+class RangeNode:
+    def __init__(self, startn, endn, incn):
+        self.startn = startn
+        self.endn = endn
+        self.incn = incn
+        self.line = None
+        self.col = None
+        
+    def eval(self, env):
+        start = self.startn.eval(env)
+        end = self.endn.eval(env)
+        inc = self.incn.eval(env)
+        if not isinstance(start, int):
+            raise TypeError(f"Object of type {type(start).__name__} is not an integer")
+        if not isinstance(end, int):
+            raise TypeError(f"Object of type {type(end).__name__} is not an integer")
+        if not isinstance(inc, int):
+            raise TypeError(f"Object of type {type(inc).__name__} is not an integer")
+        return list(range(start, end, inc))
 
 # control flow nodes
 class IfNode:

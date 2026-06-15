@@ -117,6 +117,13 @@ def parseexpr(tokens):
         value = parseexpr(tokens)
         return track(SetIndexNode(array, index, value))
     
+    # range
+    if token == "..":
+        start = parseexpr(tokens)
+        end = parseexpr(tokens)
+        inc = parseexpr(tokens)
+        return track(RangeNode(start, end, inc))
+    
     # exit
     if token == "~>":
         value = parseexpr(tokens)
