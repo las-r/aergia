@@ -72,7 +72,7 @@
     },
     {
       "name": "constant.numeric.aergia",
-      "match": "\\b\\d+(\\.\\d+)?\\b"
+      "match": "\\b_?\\d+(\\.\\d+)?\\b"
     },
     {
       "name": "variable.other.aergia",
