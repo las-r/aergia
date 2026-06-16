@@ -28,10 +28,11 @@ ABINOPS = ["+", "-", "*", "/", "^", "%", "&", "|", "$"]
 AUNOPS = ["~"]
 CBINOPS = ["==", "!=", "<<", ">>", "<=", ">=", "&&", "||"]
 CUNOPS = ["!"]
-ZCMDS = [".", ",", "'"]
-UCMDS = ["-:", "+>", "*>", ";", "~>", ">", "?", "<<<", ">>>"]
+ZCMDS = [".", ",", "'", "<<<", ">>>"]
+UCMDS = ["-:", "+>", "*>", ";", "~>", ">", "?"]
 BCMDS = [":", "+:", "~:", "$:", "*<", "`"]
-TCMDS = ["*:", "::", "=:"]
+TCMDS = ["*:", "::", "=:", ".."]
+ACMDS = ["=", "=?"]
 BSTART = {"(": ")", "[": "]", "{": "}"}
 
 # functions
@@ -84,7 +85,7 @@ def prettify(stream, depth, inline=False):
         res = f"{token} {a}"
         
     # assignments
-    elif token == "=":
+    elif token in ACMDS:
         a = prettify(stream, depth, inline=True)
         if a in ABINOPS + CBINOPS:
             b = prettify(stream, depth, inline=True)
