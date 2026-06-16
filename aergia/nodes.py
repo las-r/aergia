@@ -55,53 +55,67 @@ class Super:
         self.value = None
 
     def collapse(self, env):
-        from .lexer import tokenize
-        from .parser import parse
-        cons = self.consn.eval(env)
-        if not isinstance(cons, str):
-            cons = str(cons)
-        tokens = tokenize(cons)
-        consast = parse(tokens)
-        foundnum = [float(n) for n in re.findall(r'\b\d+(?:\.\d+)?\b', cons)]
+        def find_literals(node):
+            nums = []
+            if not node:
+                return nums
+            if isinstance(node, LiteralNode) and isinstance(node.value, (int, float)):
+                nums.append(node.value)
+            for attr in ["left", "right", "child", "elements", "mainbody", "elsebody", "cond"]:
+                if hasattr(node, attr):
+                    val = getattr(node, attr)
+                    if isinstance(val, list):
+                        for item in val:
+                            nums.extend(find_literals(item))
+                    else:
+                        nums.extend(find_literals(val))
+            return nums
+        foundnum = find_literals(self.consn)
         if foundnum:
-            low_bound = int(min(foundnum)) - 5
-            high_bound = int(max(foundnum)) + 5
+            lowb = int(min(foundnum)) - 5
+            highb = int(max(foundnum)) + 5
         else:
-            low_bound, high_bound = -100, 100
-        valid = []
+            lowb, highb = -100, 100
+        if (highb - lowb) > 2**16:
+            raise AergiaRuntimeError(
+                f"Constraints are too loose for '{self.name}' (explicit range exceeds 2^16)",
+                line=self.consn.line, col=self.consn.col
+            )
         testenv = env.copy()
-        for candidate in range(low_bound, high_bound + 1):
+        probe_offset = 2**16 + 1
+        testenv[self.name] = lowb - probe_offset
+        if self.consn.eval(testenv) != 0:
+            raise AergiaRuntimeError(
+                f"Constraints are too loose for '{self.name}' (unbounded negative space detected)",
+                line=self.consn.line, col=self.consn.col
+            )
+        testenv[self.name] = highb + probe_offset
+        if self.consn.eval(testenv) != 0:
+            raise AergiaRuntimeError(
+                f"Constraints are too loose for '{self.name}' (unbounded positive space detected)",
+                line=self.consn.line, col=self.consn.col
+            )
+        valid = []
+        for candidate in range(lowb, highb + 1):
             testenv[self.name] = candidate
-            passed = True
-            for node in consast:
-                if node:
-                    if node.eval(testenv) == 0:
-                        passed = False
-                        break
-            if passed:
+            if self.consn.eval(testenv) != 0:
                 valid.append(candidate)
         if not valid:
             for _ in range(200):
-                candidate = random.uniform(low_bound, high_bound)
+                candidate = random.uniform(lowb, highb)
                 testenv[self.name] = candidate
-                passed = True
-                for node in consast:
-                    if node and node.eval(testenv) == 0:
-                        passed = False
-                        break
-                if passed:
+                if self.consn.eval(testenv) != 0:
                     valid.append(candidate)
         if not valid:
             raise AergiaRuntimeError(
-                f"Super Collapse Error: No valid values found matching constraints '{cons}' for '{self.name}'",
+                f"Constraints are too tight. No possible value found matching constraints for '{self.name}'",
                 line=self.consn.line, col=self.consn.col
             )
         self.value = random.choice(valid)
-        self.coll = True
         env[self.name] = self.value
 
     def __repr__(self):
-        return f"<Super Value '{self.name}' (uncollapsed constraints)>"
+        return f"<Supervalue '{self.name}' (uncollapsed constraints)>"
 
 # value nodes
 class LiteralNode:
