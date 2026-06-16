@@ -33,13 +33,13 @@ Here is a list of every IDE with Aergia support:
 ## Tools
 Aergia is provided with a few basic tools to aid in development:
 - [**Agathos**](https://las-r.github.io/aergia/packages.html#agathos): A package manager.
-- **Lethes** (OUTDATED AS OF v1.13.0): A basic program minifier.
+- **Lethes**: A basic program minifier.
 ```bash
 aergia --lethes <filename.aer>
 # or for shorthand:
 aergia -l <filename.aer>
 ```
-- **Otia** (OUTDATED AS OF v1.13.0): A basic program prettifier.
+- **Otia**: A basic program prettifier.
 ```bash
 aergia --otia <filename.aer>
 # or for shorthand:
