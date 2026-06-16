@@ -11,6 +11,7 @@ Variables are declared and assigned dynamically using the `=` operator followed 
 | Token | Operation | Syntax Pattern | Description |
 | :--- | :--- | :--- | :--- |
 | `=` | Assignment | `= variable_name expr` | Binds the result of `expr` to `variable_name` |
+| `=?` | Super Assignment | `=? variable_name constraint` | Defines a supervalue `variable_name` |
 
 ## Examples
 ```py
