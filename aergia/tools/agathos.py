@@ -42,6 +42,9 @@ def install(repourl, icache=None):
         shutil.rmtree(temppath, onerror=remreadonly)
     try:
         subprocess.check_call(["git", "clone", repourl, str(temppath)])
+        gitpath = temppath / ".git"
+        if gitpath.exists():
+            shutil.rmtree(gitpath, onerror=remreadonly)
         manifestpath = temppath / "aerpkg.json"
         if not manifestpath.exists():
             raise Exception("No aerpkg.json found in the repository.")
