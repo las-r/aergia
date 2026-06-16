@@ -7,11 +7,11 @@ nav_order: 6
 # Roadmap
 > Hello! I'm las_r, the developer of Aergia. This programming language is mostly a hobby project, but I still love to see the things people create with it. Because of this, I'll often add or replace features spontaneously as new ideas come up. 
 >
-> Here is a look at what is currently in development and what is planned for Aergia.
+> Here is a look at what is currently in development and what is planned for Aergia. (~~Strikedthrough~~ items have been completed, but not released.)
 
 ### In Active Development
 - **Tool fixes (`tools/`)**
-    - `agathos.py`: Add automatic dependency installation.
+    - ~~`agathos.py`: Add automatic dependency installation.~~
     - `lethes.py`: Fix edge-cases involving tokenization.
     - `otia.py`: Add missing tokens and fix edge-cases.
 
