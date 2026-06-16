@@ -70,7 +70,7 @@ def main():
             print(f"Otia failed: {e}")
             sys.exit(1)
             
-    # handle lib
+    # handle agathos
     if args.libget:
         try:
             agathos.install(args.libget)
