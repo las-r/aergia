@@ -37,7 +37,7 @@ def main():
     aparser.add_argument("-o", "--otia", action="store_true", help="prettify program")
     aparser.add_argument("-lg", "--libget", help="install a package from a github url")
     aparser.add_argument("-lr", "--librem", help="remove an installed package by name")
-    aparser.add_argument("-ll", "--libls", help="list installed packages")
+    aparser.add_argument("-ll", "--libls", action="store_true", help="list installed packages")
     args = aparser.parse_args()
 
     # handle update
