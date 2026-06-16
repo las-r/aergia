@@ -1,7 +1,9 @@
 import importlib
+import json
 import operator
 import random
 import re
+from pathlib import Path
 
 # aergia nodes
 # made by las-r on github
@@ -686,33 +688,50 @@ class ImportNode:
         try:
             from .lexer import tokenize
             from .parser import parse
+            import json
             filename = self.file.eval(env)
             file = env["__dir__"] / filename
             if not file.exists() and "__stdlib__" in env:
                 fbfile = env["__stdlib__"] / filename
                 if fbfile.exists():
                     file = fbfile
+            if not file.exists() and "__lib__" in env:
+                libdir = env["__lib__"]
+                pkgdir = libdir / filename
+                if pkgdir.is_dir():
+                    manifestpath = pkgdir / "aerproject.json"
+                    srcfolder = ""
+                    if manifestpath.exists():
+                        try:
+                            with open(manifestpath, "r") as f:
+                                data = json.load(f)
+                                srcfolder = data.get("src", "")
+                        except (json.JSONDecodeError, KeyError):
+                            pass
+                    candidate = pkgdir / srcfolder / "main.aer"
+                    if candidate.exists():
+                        file = candidate
             if not file.exists():
-                raise AergiaRuntimeError(f"Could not resolve file path: '{filename}'", line=self.line, col=self.col)
+                raise AergiaRuntimeError(f"Could not resolve import: '{filename}'", line=self.line, col=self.col)
+            file = file.resolve()
             if "__imports__" not in env:
                 env["__imports__"] = set()
             if file in env["__imports__"]:
                 return 0
             env["__imports__"].add(file)
-            try:
-                with open(file, "r") as f:
-                    code = f.read()
-                try:
-                    tokens = tokenize(code)
-                    ast = parse(tokens)
-                    for node in ast:
-                        if node:
-                            node.eval(env)
-                except Exception as e:
-                    print(f"Aergia Error ({file}): {e}")
-            except FileNotFoundError:
-                print(f"Aergia Error: Module {file} not found.")
-            return 0
+            with open(file, "r") as f:
+                code = f.read()
+            tokens = tokenize(code)
+            ast = parse(tokens)
+            olddir = env.get("__dir__")
+            env["__dir__"] = file.parent
+            last = 0
+            for node in ast:
+                if node:
+                    last = node.eval(env)
+            if olddir is not None:
+                env["__dir__"] = olddir
+            return last
         except AergiaRuntimeError:
             raise
         except Exception as e:

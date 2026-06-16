@@ -4,11 +4,14 @@ import sys
 from pathlib import Path
 from importlib.metadata import version, PackageNotFoundError
 from typing import Any
+
 from .lexer import tokenize
 from .parser import parse, ExitException
-from .nodes import *
-from .tools.lethes import minifyf
-from .tools.otia import prettifyf
+from .nodes import AergiaRuntimeError
+
+from .tools import agathos
+from .tools import lethes
+from .tools import otia
 
 # aergia main
 # made by las-r on github
@@ -30,8 +33,11 @@ def main():
     aparser.add_argument("--version", action="version", version=ver)
     aparser.add_argument("-d", "--debug", action="store_true", help="print tokens and abstract syntax tree")
     aparser.add_argument("-gu", "--ghupdate", action="store_true", help="update aergia to the latest version from github")
-    aparser.add_argument("-l", "--lethes", action="store_true", help="tool to minify program")
-    aparser.add_argument("-o", "--otia", action="store_true", help="tool to prettify program")
+    aparser.add_argument("-l", "--lethes", action="store_true", help="minify program")
+    aparser.add_argument("-o", "--otia", action="store_true", help="prettify program")
+    aparser.add_argument("-lg", "--libget", help="install a package from a github url")
+    aparser.add_argument("-lr", "--librem", help="remove an installed package by name")
+    aparser.add_argument("-ll", "--libls", help="list installed packages")
     args = aparser.parse_args()
 
     # handle update
@@ -48,7 +54,7 @@ def main():
     if args.lethes:
         print(f"Minifying {args.filename}...")
         try:
-            minifyf(args.filename)
+            lethes.minifyf(args.filename)
             sys.exit(0)
         except Exception as e:
             print(f"Lethes failed: {e}")
@@ -58,15 +64,39 @@ def main():
     if args.otia:
         print(f"Prettifying {args.filename}...")
         try:
-            prettifyf(args.filename)
+            otia.prettifyf(args.filename)
             sys.exit(0)
         except Exception as e:
             print(f"Otia failed: {e}")
             sys.exit(1)
+            
+    # handle lib
+    if args.libget:
+        try:
+            agathos.install(args.libget)
+            sys.exit(0)
+        except Exception as e:
+            print(f"Agathos failed: {e}")
+            sys.exit(1)
+    if args.librem:
+        try:
+            agathos.remove(args.librem)
+            sys.exit(0)
+        except Exception as e:
+            print(f"Agathos failed: {e}")
+            sys.exit(1)
+    if args.libls:
+        try:
+            agathos.listpackages()
+            sys.exit(0)
+        except Exception as e:
+            print(f"Agathos failed: {e}")
+            sys.exit(1)
 
     # global environment
     env: dict[str, Any] = {
-        "__stdlib__": Path(__file__).parent / "std"
+        "__stdlib__": Path(__file__).parent / "std",
+        "__lib__": Path(__file__).parent / "lib"
     }
     
     try:
