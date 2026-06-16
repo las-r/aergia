@@ -1,4 +1,5 @@
 import os
+import re
 from ..lexer import tokenize
 
 # aergia minifier
@@ -7,15 +8,22 @@ from ..lexer import tokenize
 # minify function
 def minify(code):
     tokens = tokenize(code)
-    minifiedtokens = []
-    for i, token in enumerate(tokens):
-        tokent = token[0]
-        if i > 0:
-            prevtokent = tokens[i - 1][0]
-            if prevtokent.isalnum() and tokent.isalnum():
-                minifiedtokens.append(" ")
-        minifiedtokens.append(tokent)
-    return "".join(minifiedtokens)
+    if not tokens:
+        return ""
+    minified = [tokens[0][0]]
+    for i in range(1, len(tokens)):
+        prev = minified[-1]
+        cur = tokens[i][0]
+        if (prev.isalnum() or '_' in prev or '.' in prev) and (cur.isalnum() or '_' in cur or '.' in cur):
+            minified.append(" ")
+            minified.append(cur)
+            continue
+        combined = prev + cur
+        testtokens = tokenize(combined)
+        if len(testtokens) != 2 or testtokens[0][0] != prev:
+            minified.append(" ")
+        minified.append(cur)
+    return "".join(minified)
 
 # minify file function
 def minifyf(filepath):
