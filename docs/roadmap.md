@@ -11,14 +11,14 @@ nav_order: 6
 
 ### In Active Development
 - **Tool fixes (`tools/`)**
-- **Standard libraries (`std/`)**
-    - `std_arr.aer`: Array-related utilities
-    - `std_str.aer`: String-related utilities
+    - `agathos.py`: Add automatic dependency installation.
+    - `lethes.py`: Fix edge-cases involving tokenization.
+    - `otia.py`: Add missing tokens and fix edge-cases.
 
 ### Future Plans
-- **Module / package manager**: A lightweight, decentralized workflow tool to let devs share and install third-party Aergia libraries through GitHub.
+None as of right now. I'll add stuff to here as ideas pop up.
 
 ### What I'm Always Trying to Improve
-- **Errors**: Making error messages as clear and unambiguous as possible.
+- **Documentation**: Writing documentation to be clear and readable, with proper examples.
 - **Syntax**: Making syntax as intuitive as possible and removing any possible conflicts.
-- **Features**: Adding more features to Aergia to make the language more powerful.
+- **Featureset**: Adding more features to Aergia to make the language more powerful.
