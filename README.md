@@ -32,7 +32,7 @@ Here is a list of every IDE with Aergia support:
 
 ## Tools
 Aergia is provided with a few basic tools to aid in development:
-- **Agathos**: A package manager.
+- [**Agathos**](https://las-r.github.io/aergia/packages.html#agathos): A package manager.
 - **Lethes** (OUTDATED AS OF v1.13.0): A basic program minifier.
 ```bash
 aergia --lethes <filename.aer>
