@@ -699,7 +699,7 @@ class ImportNode:
                 libdir = env["__lib__"]
                 pkgdir = libdir / filename
                 if pkgdir.is_dir():
-                    manifestpath = pkgdir / "aerproject.json"
+                    manifestpath = pkgdir / "aerpkg.json"
                     srcfolder = ""
                     if manifestpath.exists():
                         try:

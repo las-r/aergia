@@ -25,7 +25,7 @@ def validate(manifest):
     required = ["name", "author", "version", "dependencies", "src"]
     for field in required:
         if field not in manifest:
-            raise ValueError(f"Missing mandatory field in aerproject.json: {field}")
+            raise ValueError(f"Missing mandatory field in aerpkg.json: {field}")
 
 # user functions
 def install(repourl):
@@ -36,9 +36,9 @@ def install(repourl):
         shutil.rmtree(temppath, onerror=remreadonly)
     try:
         subprocess.check_call(["git", "clone", repourl, str(temppath)])
-        manifestpath = temppath / "aerproject.json"
+        manifestpath = temppath / "aerpkg.json"
         if not manifestpath.exists():
-            raise Exception("No aerproject.json found in the repository.")
+            raise Exception("No aerpkg.json found in the repository.")
         with open(manifestpath, "r") as f:
             manifest = json.load(f)
             validate(manifest)
@@ -69,7 +69,7 @@ def listpackages():
     print(f"{'NAME':<20} | {'AUTHOR':<15} | {'VERSION':<10}")
     print("-" * 50)
     for pkg in pkgs:
-        manifestpath = pkg / "aerproject.json"
+        manifestpath = pkg / "aerpkg.json"
         if manifestpath.exists():
             with open(manifestpath, "r") as f:
                 data = json.load(f)
