@@ -23,5 +23,5 @@ Aergia dynamically determines types at runtime from four base literal formats:
 = greeting "Welcome to %name%!"
 
 # Declaring a supervalue x constrained between -100 and 100
-=? x "&& >> x _100 << x 100"
+=? x && >> x _100 << x 100
 ```
