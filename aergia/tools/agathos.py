@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os
 import shutil
@@ -12,26 +13,31 @@ from pathlib import Path
 LIBSDIR = Path(__file__).resolve().parent.parent / "lib"
 
 # helpers
-def remreadonly(func, path, excinfo):
-    os.chmod(path, stat.S_IWRITE)
-    func(path)
-
 def init():
     if not LIBSDIR.exists():
         LIBSDIR.mkdir(parents=True)
-
-# check manifest
+        
 def validate(manifest):
     required = ["name", "author", "version", "dependencies", "src"]
     for field in required:
         if field not in manifest:
             raise ValueError(f"Missing mandatory field in aerpkg.json: {field}")
+        
+def remreadonly(func, path, excinfo):
+    os.chmod(path, stat.S_IWRITE)
+    func(path)
 
 # user functions
-def install(repourl):
+def install(repourl, icache=None):
+    if icache is None:
+        icache = set()
+    if repourl in icache:
+        return
+    icache.add(repourl)
     init()
     print(f"Installing {repourl}...")
-    temppath = LIBSDIR / "temp"
+    hashurl = hashlib.sha224(repourl.encode("utf-8")).hexdigest()
+    temppath = LIBSDIR / f"temp_{hashurl}"
     if temppath.exists(): 
         shutil.rmtree(temppath, onerror=remreadonly)
     try:
@@ -42,6 +48,8 @@ def install(repourl):
         with open(manifestpath, "r") as f:
             manifest = json.load(f)
             validate(manifest)
+        for url in manifest["dependencies"]:
+            install(url, icache)
         finalpath = LIBSDIR / manifest["name"]
         if finalpath.exists(): 
             shutil.rmtree(finalpath, onerror=remreadonly)
@@ -51,6 +59,7 @@ def install(repourl):
         if temppath.exists(): 
             shutil.rmtree(temppath, onerror=remreadonly)
         print(f"Installation failed: {e}")
+        raise e
 
 def remove(pkgname):
     pkgpath = LIBSDIR / pkgname
