@@ -1,8 +1,10 @@
 import argparse
+import json
 import subprocess
 import sys
-from pathlib import Path
+import urllib.request
 from importlib.metadata import version, PackageNotFoundError
+from pathlib import Path
 from typing import Any
 
 from .lexer import tokenize
@@ -12,25 +14,54 @@ from .nodes import AergiaRuntimeError
 from .tools import agathos
 from .tools import lethes
 from .tools import otia
-
+ 
 # aergia main
 # made by las-r on github
 
+# helpers
+def latestpypi(timeout=1.5):
+    """Fetches the latest package version from PyPI safely with a timeout."""
+    try:
+        url = f"https://pypi.org/pypi/aergia-lang/json"
+        req = urllib.request.Request(url, headers={"User-Agent": "AergiaCLI"})
+        with urllib.request.urlopen(req, timeout=timeout) as response:
+            data = json.loads(response.read().decode())
+            return data["info"]["version"]
+    except Exception:
+        return "unknown"
+
+def verstring():
+    try:
+        current = version("aergia-lang")
+    except PackageNotFoundError:
+        current = "DEV"
+    latest = latestpypi()
+    return f"v{current} (PyPI: v{latest})"
+
+# argparse actions
+class CustomVersion(argparse.Action):
+    def __init__(self, **kwargs):
+        super().__init__(nargs=0, **kwargs)
+    def __call__(self, parser, namespace, values, option_string=None):
+        print(verstring())
+        sys.exit(0)
+
+# main
 def main():
     # load version and repo
     try:
         ver = version("aergia-lang")
         repo = "git+https://github.com/las-r/aergia"
     except PackageNotFoundError:
-        ver = "development"
-        repo = "local"
+        ver = "DEV"
+        repo = "LOCAL"
     
     # arguments
     aparser = argparse.ArgumentParser(
         prog="aergia", description="Aergia Language Interpreter"
     )
     aparser.add_argument("filename", nargs="?", help="the file to execute")
-    aparser.add_argument("--version", action="version", version=ver)
+    aparser.add_argument("-v", "--version", action=CustomVersion, help="show program's version number and exit")
     aparser.add_argument("-d", "--debug", action="store_true", help="print tokens and abstract syntax tree")
     aparser.add_argument("-gu", "--ghupdate", action="store_true", help="update aergia to the latest version from github")
     aparser.add_argument("-l", "--lethes", action="store_true", help="minify program")
