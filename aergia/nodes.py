@@ -685,6 +685,9 @@ class CallNode:
             if callable(func):
                 return func(*eargs)
             fenv = func.capturedenv.copy() if hasattr(func, "capturedenv") else env.copy()
+            if hasattr(func, "para"):
+                for param, arg in zip(func.para, eargs):
+                    fenv[param] = arg
             body = func.body if hasattr(func, "body") else func.ret
             if not isinstance(body, list):
                 body = [body]
