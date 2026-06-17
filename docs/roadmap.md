@@ -10,10 +10,7 @@ nav_order: 6
 > Here is a look at what is currently in development and what is planned for Aergia. (~~Strikedthrough~~ items have been completed, but not released.)
 
 ### In Active Development
-- **Tool fixes (`tools/`)**
-    - ~~`agathos.py`: Add automatic dependency installation.~~
-    - `lethes.py`: Fix edge-cases involving tokenization.
-    - `otia.py`: Add missing tokens and fix edge-cases.
+None as of right now. I'll add stuff to here as ideas pop up.
 
 ### Future Plans
 None as of right now. I'll add stuff to here as ideas pop up.
