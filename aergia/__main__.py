@@ -1,5 +1,6 @@
 import argparse
 import json
+import linecache
 import subprocess
 import sys
 import urllib.request
@@ -20,7 +21,6 @@ from .tools import otia
 
 # helpers
 def latestpypi(timeout=1.5):
-    """Fetches the latest package version from PyPI safely with a timeout."""
     try:
         url = f"https://pypi.org/pypi/aergia-lang/json"
         req = urllib.request.Request(url, headers={"User-Agent": "AergiaCLI"})
@@ -37,6 +37,18 @@ def verstring():
         current = "DEV"
     latest = latestpypi()
     return f"v{current} (PyPI: v{latest})"
+
+def traceback(e, defaultf="<unknown>"):
+    frames = getattr(e, "frames", []) or [(defaultf, e.line, e.col)]
+    print("Aergia Traceback:")
+    for filepath, line, col in reversed(frames):
+        print(f"    \"{filepath}\", line {line}, col {col}")
+        if filepath and filepath not in ("<dynamic code>", "<repl>"):
+            errline = linecache.getline(str(filepath), line).rstrip()
+            if errline:
+                print(f"        {errline}")
+                print(f"        {' ' * (col - 1)}^")
+    print(f"Aergia Runtime Error [Line {e.line}, Col {e.col}]: {e.message}")
 
 # argparse actions
 class CustomVersion(argparse.Action):
@@ -138,7 +150,8 @@ def main():
                 code = f.read()
 
             # path
-            env["__dir__"] = Path(args.filename).parent
+            env["__file__"] = Path(args.filename).resolve()
+            env["__dir__"] = env["__file__"].parent
 
             # create tokens and tree
             tokens = tokenize(code)
@@ -157,6 +170,7 @@ def main():
         # run repl
         else:
             print(f"{ver} REPL")
+            env["__file__"] = "<repl>"
             env["__dir__"] = Path.cwd()
             while True:
                 try:
@@ -175,7 +189,7 @@ def main():
                     print(f"Exiting with code {e.value}...")
                     sys.exit(e.value)
                 except AergiaRuntimeError as e:
-                    print(f"Aergia Runtime Error: {e.message}")
+                    traceback(e, defaultf="<repl>")
                 except Exception as e:
                     print(f"Fatal Aergia Interpreter Error: {e}")
     
@@ -186,17 +200,7 @@ def main():
         print(f"Aergia Error: File '{args.filename}' not found")
         sys.exit(1)
     except AergiaRuntimeError as e:
-        print(f"Aergia Runtime Error [Line {e.line}, Col {e.col}]: {e.message}")
-        if args.filename and e.line:
-            try:
-                with open(args.filename, "r") as f:
-                    lines = f.readlines()
-                    if 0 < e.line <= len(lines):
-                        error_line = lines[e.line - 1].rstrip()
-                        print(f"    {error_line}")
-                        print(f"    {' ' * (e.col - 1)}^")
-            except Exception:
-                pass
+        traceback(e, defaultf=args.filename)
         sys.exit(1)
     except Exception as e:
         print(f"Fatal Aergia Interpreter Error: {e}")

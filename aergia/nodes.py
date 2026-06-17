@@ -33,6 +33,7 @@ class AergiaRuntimeError(Exception):
         self.message = message
         self.line = line
         self.col = col
+        self.frames = []
         super().__init__(self.message)
         
 class BreakException(Exception): pass
@@ -679,27 +680,38 @@ class CallNode:
         try:
             func = self.target.eval(env)
             if not func:
-                raise Exception("Target is not a valid function")
+                raise AergiaRuntimeError("Target is not a valid function", line=self.line, col=self.col)
             eargs = [arg.eval(env) for arg in self.args]
             if callable(func):
                 return func(*eargs)
             fenv = func.capturedenv.copy() if hasattr(func, "capturedenv") else env.copy()
-            for name, val in zip(func.para, eargs):
-                fenv[name] = val
             body = func.body if hasattr(func, "body") else func.ret
             if not isinstance(body, list):
                 body = [body]
             try:
                 last = 0
                 for node in body:
-                    last = node.eval(fenv)
+                    if node:
+                        last = node.eval(fenv)
                 return last
             except ReturnException as e:
                 return e.value
-        except (AergiaRuntimeError, ExitException):
+            except AergiaRuntimeError as e:
+                if not e.frames:
+                    e.frames.append((fenv.get("__file__"), e.line, e.col))
+                raise e
+        except AergiaRuntimeError as e:
+            if not e.frames:
+                e.frames.append((env.get("__file__"), e.line, e.col))
+            else:
+                e.frames.append((env.get("__file__"), self.line, self.col))
+            raise e
+        except ExitException:
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            err = AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            err.frames = [(env.get("__file__"), self.line, self.col)]
+            raise err
 
 class ReturnNode:
     def __init__(self, value):
@@ -761,19 +773,40 @@ class ImportNode:
                 code = f.read()
             tokens = tokenize(code)
             ast = parse(tokens)
+            oldfile = env.get("__file__")
             olddir = env.get("__dir__")
+            env["__file__"] = file
             env["__dir__"] = file.parent
             last = 0
-            for node in ast:
-                if node:
-                    last = node.eval(env)
-            if olddir is not None:
-                env["__dir__"] = olddir
+            try:
+                for node in ast:
+                    if node:
+                        last = node.eval(env)
+            except AergiaRuntimeError as e:
+                if not e.frames:
+                    e.frames.append((file, e.line, e.col))
+                raise e
+            finally:
+                if oldfile is not None:
+                    env["__file__"] = oldfile
+                if olddir is not None:
+                    env["__dir__"] = olddir
             return last
-        except AergiaRuntimeError:
+        except AergiaRuntimeError as e:
+            if not e.frames:
+                e.frames.append((env.get("__file__"), e.line, e.col))
+            else:
+                if 'oldfile' in locals() and oldfile:
+                    e.frames.append((oldfile, self.line, self.col))
+                else:
+                    e.frames.append((env.get("__file__"), self.line, self.col))
+            raise e
+        except ExitException:
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            err = AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            err.frames = [(env.get("__file__"), self.line, self.col)]
+            raise err
 
 class PyImportNode:
     def __init__(self, name, rname, closed):
@@ -818,14 +851,27 @@ class EvaluationNode:
             tokens = tokenize(code)
             ast = parse(tokens)
             last = 0
-            for node in ast:
-                if node:
-                    last = node.eval(env)
+            try:
+                for node in ast:
+                    if node:
+                        last = node.eval(env)
+            except AergiaRuntimeError as e:
+                if not e.frames:
+                    e.frames.append(("<dynamic code>", e.line, e.col))
+                raise e
             return last
-        except (AergiaRuntimeError, ReturnException, ExitException):
+        except AergiaRuntimeError as e:
+            if not e.frames:
+                e.frames.append((env.get("__file__"), e.line, e.col))
+            else:
+                e.frames.append((env.get("__file__"), self.line, self.col))
+            raise e
+        except (ReturnException, ExitException):
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            err = AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            err.frames = [(env.get("__file__"), self.line, self.col)]
+            raise err
 
 class ExitNode:
     def __init__(self, value):
