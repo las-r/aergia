@@ -60,18 +60,30 @@ def parseexpr(tokens):
     
     # function block
     if token == "{":
-        name = tokens.pop(0)[0]
-        para = []
         if tokens and tokens[0][0] == ":":
             tokens.pop(0)
+            para = []
             while tokens and tokens[0][0] != ":":
                 para.append(tokens.pop(0)[0])
             if tokens: tokens.pop(0)
-        body = []
-        while tokens and tokens[0][0] != "}":
-            body.append(parseexpr(tokens))
-        if tokens: tokens.pop(0)
-        return track(FunctionNode(name, para, body))
+            body = []
+            while tokens and tokens[0][0] != "}":
+                body.append(parseexpr(tokens))
+            if tokens: tokens.pop(0)
+            return track(AnonymousFunctionNode(para, body))
+        else:
+            name = tokens.pop(0)[0]
+            para = []
+            if tokens and tokens[0][0] == ":":
+                tokens.pop(0)
+                while tokens and tokens[0][0] != ":":
+                    para.append(tokens.pop(0)[0])
+                if tokens: tokens.pop(0)
+            body = []
+            while tokens and tokens[0][0] != "}":
+                body.append(parseexpr(tokens))
+            if tokens: tokens.pop(0)
+            return track(FunctionNode(name, para, body))
     
     # array definition
     if token == "<":
@@ -211,14 +223,14 @@ def parseexpr(tokens):
     
     # function call
     if token == "@":
-        name = tokens.pop(0)[0]
+        target = parseexpr(tokens)
         args = []
         if tokens and tokens[0][0] == ":":
             tokens.pop(0)
             while tokens and tokens[0][0] != ":":
                 args.append(parseexpr(tokens))
             if tokens: tokens.pop(0)
-        return track(CallNode(name, args))
+        return track(CallNode(target, args))
     
     # string
     if token.startswith('"'):

@@ -623,6 +623,7 @@ class BreakNode:
     
     def eval(self, env):
         raise BreakException()
+        
     
 class ContinueNode:
     def __init__(self):
@@ -643,33 +644,56 @@ class FunctionNode:
 
     def eval(self, env):
         try:
+            self.capturedenv = env.copy()
             env[self.name] = self
             return 0
+        except AergiaRuntimeError:
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+        
+class AnonymousFunctionNode:
+    def __init__(self, para, ret):
+        self.para = para
+        self.ret = ret
+        self.line = None
+        self.col = None
+        
+    def eval(self, env):
+        try:
+            self.capturedenv = env.copy()
+            return self
+        except AergiaRuntimeError:
+            raise
         except Exception as e:
             raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 class CallNode:
-    def __init__(self, name, args):
-        self.name = name
+    def __init__(self, target, args):
+        self.target = target
         self.args = args
         self.line = None
         self.col = None
 
     def eval(self, env):
         try:
-            func = env.get(self.name)
+            func = self.target.eval(env)
             if not func:
-                raise Exception(f"Function {self.name} not defined")
+                raise Exception("Target is not a valid function")
             eargs = [arg.eval(env) for arg in self.args]
             if callable(func):
                 return func(*eargs)
-            fenv = env.copy()
+            fenv = func.capturedenv.copy() if hasattr(func, "capturedenv") else env.copy()
             for name, val in zip(func.para, eargs):
                 fenv[name] = val
+            body = func.body if hasattr(func, "body") else func.ret
+            if not isinstance(body, list):
+                body = [body]
             try:
-                for node in func.body:
-                    node.eval(fenv)
-                return 0
+                last = 0
+                for node in body:
+                    last = node.eval(fenv)
+                return last
             except ReturnException as e:
                 return e.value
         except (AergiaRuntimeError, ExitException):
