@@ -43,7 +43,7 @@ def traceback(e, defaultf="<unknown>"):
     print("Aergia Traceback:")
     for filepath, line, col in reversed(frames):
         print(f"    \"{filepath}\", line {line}, col {col}")
-        if filepath and filepath not in ("<dynamic code>", "<repl>"):
+        if line and filepath and filepath not in ("<dynamic code>", "<repl>"):
             errline = linecache.getline(str(filepath), line).rstrip()
             if errline:
                 print(f"        {errline}")
