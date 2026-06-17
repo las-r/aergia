@@ -1,6 +1,6 @@
 # standard array library
 # by las-r
-# with functions from lyxal
+# with some functions based off lyxal
 
 {arr_has :arr itm:
     [`arr aitm
@@ -27,25 +27,23 @@
         )
         =+ idx 1
     ]
-    ? -0 1
+    ? _1
 }
 
-# by lyxal
-{arr_map :arr fn:
+# based off lyxal
+{arr_map :arr f:
     = out <>
-    = fn +"{ f :x:" +fn "} @f:arg:"
     [`arr arg
-        +: out ; fn
+        +: out @f:arg:
     ] 
     ? out
 }
 
-# by lyxal
-{arr_filter :arr fn:
+# based off lyxal
+{arr_filter :arr f:
     = out <>
-    = fn +"{ f :x:" +fn "} @f:arg:"
     [`arr arg
-        (; fn
+        (@f:arg:
             +: out arg
         )
     ]
