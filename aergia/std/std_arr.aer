@@ -51,13 +51,12 @@
 }
 
 # based off lyxal
-{arr_reduce :arr ini fn:
-    = acc ini
-    = fn +"{ f :x y:" +fn "} @f:acc curr:"
-    [`arr curr
-        = acc ; fn
+{arr_reduce :arr ini f:
+    = out ini
+    [`arr cur
+        = out @f:out cur:
     ]
-    ? acc
+    ? out
 }
 
 # based off lyxal
