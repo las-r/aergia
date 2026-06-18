@@ -3,23 +3,23 @@
 </p>
 
 <p align="center">
-  <a href="https://pypi.org/project/aergia-lang/">
-    <img src="https://img.shields.io/pypi/v/aergia-lang?style=flat-square&color=blue&v=13" alt="PyPI version" />
-  </a>
-  <a href="https://pypi.org/project/aergia-lang/">
-    <img src="https://img.shields.io/pypi/dm/aergia-lang?style=flat-square&color=orange" alt="PyPI - Downloads" />
-  </a>
-  <a href="https://github.com/las-r/aergia/stargazers">
-    <img src="https://img.shields.io/github/stars/las-r/aergia?style=flat-square&color=yellow" alt="GitHub Stars" />
-  </a>
-  <a href="https://github.com/las-r/aergia">
-    <img src="https://img.shields.io/github/languages/code-size/las-r/aergia?style=flat-square&color=success" alt="GitHub Code Size" />
+  <a href="https://github.com/las-r/aergia/actions/workflows/test.yml">
+    <img src="https://github.com/las-r/aergia/actions/workflows/test.yml/badge.svg?event=push" alt="Build Status">
   </a>
   <a href="https://github.com/las-r/aergia/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/las-r/aergia?style=flat-square&color=lightgrey" alt="License" />
+    <img src="https://img.shields.io/github/license/las-r/aergia?color=lightgrey" alt="License" />
+  </a>
+  <a href="https://pypi.org/project/aergia-lang/">
+    <img src="https://img.shields.io/pypi/dm/aergia-lang?color=orange" alt="PyPI - Downloads" />
   </a>
   <a href="https://github.com/las-r/aergia/pulse">
-    <img src="https://img.shields.io/github/commit-activity/m/las-r/aergia?style=flat-square&color=blueviolet" alt="GitHub - Pulse" />
+    <img src="https://img.shields.io/github/commit-activity/m/las-r/aergia?color=blueviolet" alt="GitHub - Pulse" />
+  </a>
+  <a href="https://pypi.org/project/aergia-lang/">
+    <img src="https://img.shields.io/pypi/v/aergia-lang?color=blue" alt="PyPI version" />
+  </a>
+  <a href="https://github.com/las-r/aergia">
+    <img src="https://img.shields.io/github/languages/code-size/las-r/aergia?color=success" alt="GitHub Code Size" />
   </a>
 </p>
 
