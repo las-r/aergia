@@ -6,9 +6,21 @@ from .nodes import *
 # aergia parser
 # made by las-r on github
 
-# constants
+# arithmetic and logical operators
 BINOPS = ["+", "-", "*", "/", "==", "!=", ">>", "<<", ">=", "<=", "^", "%", "&", "|", "$", "&&", "||"]
 UNOPS = ["!", "~"]
+
+# array operators
+ARROPS = {
+    ":": (IndexNode, 2),
+    "+:": (PushNode, 2),
+    "-:": (PopNode, 1),
+    "~:": (PopIndexNode, 2),
+    "*:": (lambda a, idx, itm: InsertNode(a, itm, idx), 3), # Reorder parameter structure layout
+    "$:": (RemoveItemNode, 2),
+    "::": (SliceNode, 3),
+    "=:": (SetIndexNode, 3)
+}
 
 # expression parser
 def parseexpr(tokens):
@@ -87,49 +99,17 @@ def parseexpr(tokens):
             if tokens: tokens.popleft()
             return track(FunctionNode(name, para, body))
     
-    # array definition
+    # arrays
     if token == "<":
         elements = []
         while tokens and tokens[0][0] != ">":
             elements.append(parseexpr(tokens))
         if tokens: tokens.popleft()
         return track(ArrayNode(elements))
-    
-    # other array tokens
-    if token == ":":
-        array = parseexpr(tokens)
-        index = parseexpr(tokens)
-        return track(IndexNode(array, index))
-    if token == "+:":
-        array = parseexpr(tokens)
-        item = parseexpr(tokens)
-        return track(PushNode(array, item))
-    if token == "-:":
-        array = parseexpr(tokens)
-        return track(PopNode(array))
-    if token == "~:":
-        array = parseexpr(tokens)
-        index = parseexpr(tokens)
-        return track(PopIndexNode(array, index))
-    if token == "*:":
-        array = parseexpr(tokens)
-        index = parseexpr(tokens)
-        item = parseexpr(tokens)
-        return track(InsertNode(array, item, index))
-    if token == "$:":
-        array = parseexpr(tokens)
-        item = parseexpr(tokens)
-        return track(RemoveItemNode(array, item))
-    if token == "::":
-        array = parseexpr(tokens)
-        start = parseexpr(tokens)
-        end = parseexpr(tokens)
-        return track(SliceNode(array, start, end))
-    if token == "=:":
-        array = parseexpr(tokens)
-        index = parseexpr(tokens)
-        value = parseexpr(tokens)
-        return track(SetIndexNode(array, index, value))
+    if token in ARROPS:
+        node, arity = ARROPS[token]
+        args = [parseexpr(tokens) for _ in range(arity)]
+        return track(node(*args))
     
     # range
     if token == "..":
@@ -137,11 +117,6 @@ def parseexpr(tokens):
         end = parseexpr(tokens)
         inc = parseexpr(tokens)
         return track(RangeNode(start, end, inc))
-    
-    # exit
-    if token == "~>":
-        value = parseexpr(tokens)
-        return track(ExitNode(value))
     
     # imports
     if token == "+>":
@@ -154,6 +129,11 @@ def parseexpr(tokens):
         name = tokens.popleft()[0]
         rname = tokens.popleft()[0]
         return track(PyImportNode(name, rname, True))
+    
+    # exit
+    if token == "~>":
+        value = parseexpr(tokens)
+        return track(ExitNode(value))
     
     # evaluation
     if token == ";":

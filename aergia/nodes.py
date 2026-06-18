@@ -38,9 +38,11 @@ class AergiaRuntimeError(Exception):
         self.frames = []
         super().__init__(self.message)
         
-class BreakException(Exception): pass
+class BreakException(Exception): 
+    pass
 
-class ContinueException(Exception): pass
+class ContinueException(Exception): 
+    pass
 
 class ReturnException(Exception):
     def __init__(self, value):
@@ -131,7 +133,8 @@ class Super:
             lowb = int(min(foundnum)) - 5
             highb = int(max(foundnum)) + 5
         else:
-            lowb, highb = -100, 100
+            lowb = -100
+            highb = 100
         if (highb - lowb) > 2**16:
             raise AergiaRuntimeError(
                 f"Constraints are too loose for '{self.name}' (explicit range exceeds 2^16)",
@@ -360,7 +363,10 @@ class ShortCircuitANDNode:
         try:
             if not self.left.eval(env):
                 return 0
-            return 1 if self.right.eval(env) else 0
+            if self.right.eval(env):
+                return 1
+            else:
+                return 0
         except AergiaRuntimeError:
             raise
         except Exception as e:
@@ -377,7 +383,10 @@ class ShortCircuitORNode:
         try:
             if self.left.eval(env):
                 return 1
-            return 1 if self.right.eval(env) else 0
+            if self.right.eval(env):
+                return 1
+            else:
+                return 0
         except AergiaRuntimeError:
             raise
         except Exception as e:
@@ -597,10 +606,10 @@ class RangeNode:
 
 # control flow nodes
 class IfNode:
-    def __init__(self, cond, mainbody, elsebody=[]):
+    def __init__(self, cond, mainbody, elsebody=None):
         self.cond = cond
         self.mainbody = mainbody
-        self.elsebody = elsebody
+        self.elsebody = elsebody if elsebody is not None else []
         self.line = None
         self.col = None
 
@@ -632,7 +641,7 @@ class WhileNode:
             while self.cond.eval(env):
                 try:
                     for node in self.body:
-                            last = node.eval(env)
+                        last = node.eval(env)
                 except BreakException:
                     break
                 except ContinueException:
@@ -680,7 +689,6 @@ class BreakNode:
     def eval(self, env):
         raise BreakException()
         
-    
 class ContinueNode:
     def __init__(self):
         self.line = None
@@ -739,11 +747,17 @@ class CallNode:
             eargs = [arg.eval(env) for arg in self.args]
             if callable(func):
                 return func(*eargs)
-            fenv = func.capturedenv.copy() if hasattr(func, "capturedenv") else env.copy()
+            if hasattr(func, "capturedenv"):
+                fenv = func.capturedenv.copy()
+            else:
+                fenv = env.copy()
             if hasattr(func, "para"):
                 for param, arg in zip(func.para, eargs):
                     fenv[param] = arg
-            body = func.body if hasattr(func, "body") else func.ret
+            if hasattr(func, "body"):
+                body = func.body
+            else:
+                body = func.ret
             if not isinstance(body, list):
                 body = [body]
             try:
