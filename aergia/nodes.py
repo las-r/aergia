@@ -3,7 +3,9 @@ import json
 import operator
 import random
 import re
+from collections.abc import MutableMapping
 from pathlib import Path
+from typing import Any, Iterator
 
 # aergia nodes
 # made by las-r on github
@@ -49,29 +51,49 @@ class ExitException(Exception):
         self.value = value
         
 # environment
-class Environment:
+class Environment(MutableMapping):
     def __init__(self, bindings=None, parent=None):
         self.bindings = bindings if bindings is not None else {}
         self.parent = parent
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: str) -> Any:
         if key in self.bindings:
             return self.bindings[key]
         if self.parent is not None:
             return self.parent[key]
         raise KeyError(f"No variable '{key}' found")
 
-    def __setitem__(self, key, value):
+    def __setitem__(self, key: str, value: Any) -> None:
         self.bindings[key] = value
 
-    def __contains__(self, key):
+    def __delitem__(self, key: str) -> None:
+        if key in self.bindings:
+            del self.bindings[key]
+        elif self.parent is not None:
+            del self.parent[key]
+        else:
+            raise KeyError(f"No variable '{key}' found")
+
+    def __contains__(self, key: object) -> bool:
         if key in self.bindings:
             return True
         if self.parent is not None:
             return key in self.parent
         return False
 
-    def get(self, key, default=None):
+    def __iter__(self) -> Iterator[str]:
+        seen = set(self.bindings.keys())
+        for k in self.bindings:
+            yield k
+        if self.parent is not None:
+            for k in self.parent:
+                if k not in seen:
+                    yield k
+
+    def __len__(self) -> int:
+        return len(list(self.__iter__()))
+
+    def get(self, key: str, default: Any = None) -> Any:
         if key in self.bindings:
             return self.bindings[key]
         if self.parent is not None:
