@@ -1,14 +1,14 @@
-+> "std_arr.aer"
++< "std_arr.aer" arr
 *< random r
 
 = choices < "rock" "paper" "scissors" >
 = winner ""
 
 [!winner
-    = botchoice @r_choice:choices:
+    = botchoice @r.choice:choices:
     > "Enter your move:"
     = userchoice ,
-    [!@arr_has:choices userchoice:
+    [!@arr.has:choices userchoice:
         > "Invalid."
         > "Enter your move:"
         = userchoice ,

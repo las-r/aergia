@@ -1,4 +1,4 @@
-*> builtins
+*< builtins py
 *< random r
 *< time t
 
@@ -7,12 +7,12 @@
 = maxwait 5
 
 # wait
-= wait @round:*@r_random maxwait accu:
+= wait @py.round:*@r.random maxwait accu:
 > "Starting the wait in 1 second..."
-@t_sleep:1:
+@t.sleep:1:
 > ""
 > "Start!"
-@t_sleep:wait:
+@t.sleep:wait:
 > "Finish!"
 
 # user guess
@@ -23,4 +23,4 @@
 # results
 > ""
 > +"You waited for %wait% second(s)."
-> "You were %@round:@abs:-wait guess: accu:% second(s) off."
+> "You were %@py.round:@py.abs:-wait guess: accu:% second(s) off."

@@ -1,6 +1,6 @@
 *< random r
 
-= secret @r_randint:1 100:
+= secret @r.randint:1 100:
 = guess 0
 = tries 0
 

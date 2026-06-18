@@ -5,7 +5,7 @@
 = i 3
 [>> i 0
     > i
-    @t_sleep:1:
+    @t.sleep:1:
     =- i 1
 ]
 
