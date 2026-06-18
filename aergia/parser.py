@@ -1,4 +1,6 @@
 import re
+from collections import deque
+
 from .nodes import *
 
 # aergia parser
@@ -12,7 +14,7 @@ UNOPS = ["!", "~"]
 def parseexpr(tokens):
     if not tokens:
         return None
-    token, line, col = tokens.pop(0)
+    token, line, col = tokens.popleft()
     
     # tracking helper
     def track(node):
@@ -26,15 +28,15 @@ def parseexpr(tokens):
         body = []
         while tokens and tokens[0][0] != ")":
             body.append(parseexpr(tokens))
-        if tokens: tokens.pop(0)
+        if tokens: tokens.popleft()
         elsebody = []
         if tokens and tokens[0][0] == "->":
-            tokens.pop(0)
+            tokens.popleft()
             if tokens and tokens[0][0] == "(":
-                tokens.pop(0)
+                tokens.popleft()
                 while tokens and tokens[0][0] != ")":
                     elsebody.append(parseexpr(tokens))
-                if tokens: tokens.pop(0)
+                if tokens: tokens.popleft()
             else:
                 raise SyntaxError("Expected '(' after '->' operator")
         return track(IfNode(cond, body, elsebody))
@@ -42,47 +44,47 @@ def parseexpr(tokens):
     # while/for block
     if token == "[":
         if tokens and tokens[0][0] == "`":
-            tokens.pop(0)
+            tokens.popleft()
             array = parseexpr(tokens)
-            iname = tokens.pop(0)[0]
+            iname = tokens.popleft()[0]
             body = []
             while tokens and tokens[0][0] != "]":
                 body.append(parseexpr(tokens))
-            if tokens: tokens.pop(0)
+            if tokens: tokens.popleft()
             return track(ForNode(array, iname, body))
         else:
             cond = parseexpr(tokens)
             body = []
             while tokens and tokens[0][0] != "]":
                 body.append(parseexpr(tokens))
-            if tokens: tokens.pop(0)
+            if tokens: tokens.popleft()
             return track(WhileNode(cond, body))
     
     # function block
     if token == "{":
         if tokens and tokens[0][0] == ":":
-            tokens.pop(0)
+            tokens.popleft()
             para = []
             while tokens and tokens[0][0] != ":":
-                para.append(tokens.pop(0)[0])
-            if tokens: tokens.pop(0)
+                para.append(tokens.popleft()[0])
+            if tokens: tokens.popleft()
             body = []
             while tokens and tokens[0][0] != "}":
                 body.append(parseexpr(tokens))
-            if tokens: tokens.pop(0)
+            if tokens: tokens.popleft()
             return track(AnonymousFunctionNode(para, body))
         else:
-            name = tokens.pop(0)[0]
+            name = tokens.popleft()[0]
             para = []
             if tokens and tokens[0][0] == ":":
-                tokens.pop(0)
+                tokens.popleft()
                 while tokens and tokens[0][0] != ":":
-                    para.append(tokens.pop(0)[0])
-                if tokens: tokens.pop(0)
+                    para.append(tokens.popleft()[0])
+                if tokens: tokens.popleft()
             body = []
             while tokens and tokens[0][0] != "}":
                 body.append(parseexpr(tokens))
-            if tokens: tokens.pop(0)
+            if tokens: tokens.popleft()
             return track(FunctionNode(name, para, body))
     
     # array definition
@@ -90,7 +92,7 @@ def parseexpr(tokens):
         elements = []
         while tokens and tokens[0][0] != ">":
             elements.append(parseexpr(tokens))
-        if tokens: tokens.pop(0)
+        if tokens: tokens.popleft()
         return track(ArrayNode(elements))
     
     # other array tokens
@@ -146,11 +148,11 @@ def parseexpr(tokens):
         file = parseexpr(tokens)
         return track(ImportNode(file))
     if token == "*>":
-        name = tokens.pop(0)[0]
+        name = tokens.popleft()[0]
         return track(PyImportNode(name, name, False))
     if token == "*<":
-        name = tokens.pop(0)[0]
-        rname = tokens.pop(0)[0]
+        name = tokens.popleft()[0]
+        rname = tokens.popleft()[0]
         return track(PyImportNode(name, rname, True))
     
     # evaluation
@@ -161,7 +163,7 @@ def parseexpr(tokens):
     # assignments
     if token == "=":
         if tokens and tokens[0][0] in BINOPS:
-            op = tokens.pop(0)[0]
+            op = tokens.popleft()[0]
             vname = tokens[0][0]
             vval = parseexpr(tokens)
             value = parseexpr(tokens)
@@ -171,17 +173,17 @@ def parseexpr(tokens):
                 return track(AssignNode(vname, track(ShortCircuitORNode(vval, value))))
             return track(AssignNode(vname, track(BinaryOpNode(op, vval, value))))
         if tokens and tokens[0][0] in UNOPS:
-            op = tokens.pop(0)[0]
+            op = tokens.popleft()[0]
             vname = tokens[0][0]
             vval = parseexpr(tokens)
             return track(AssignNode(vname, track(UnaryOpNode(op, vval))))
-        name = tokens.pop(0)[0]
+        name = tokens.popleft()[0]
         val = parseexpr(tokens)
         return track(AssignNode(name, val))
     
     # super assignment
     if token == "=?":
-        name = tokens.pop(0)[0]
+        name = tokens.popleft()[0]
         cons = parseexpr(tokens)
         return track(SuperNode(name, cons))
     
@@ -226,10 +228,10 @@ def parseexpr(tokens):
         target = parseexpr(tokens)
         args = []
         if tokens and tokens[0][0] == ":":
-            tokens.pop(0)
+            tokens.popleft()
             while tokens and tokens[0][0] != ":":
                 args.append(parseexpr(tokens))
-            if tokens: tokens.pop(0)
+            if tokens: tokens.popleft()
         return track(CallNode(target, args))
     
     # string
@@ -244,10 +246,11 @@ def parseexpr(tokens):
         val = float(clean)
         return track(LiteralNode(int(val) if val.is_integer() else val))
     except ValueError:
-        return track(VariableNode(token))  # Falls back to original token if it's an identifier
+        return track(VariableNode(token))
 
 # tree maker
 def parse(tokens):
+    tokens = deque(tokens)
     ast = []
     while tokens:
         node = parseexpr(tokens)
