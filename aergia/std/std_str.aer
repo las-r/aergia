@@ -19,15 +19,15 @@
     = out < >
     = cur ""
     [`str chr
-        (!= delim ""
-            (== char delim
+        (!= del ""
+            (== chr del
                 +: out cur
                 = cur ""
             ) -> (
-                =+ cur char
+                =+ cur chr
             )
         ) -> (
-            =+ out char
+            =+ out chr
         )
     ]
     +: out cur
