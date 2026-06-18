@@ -3,6 +3,7 @@ import json
 import linecache
 import subprocess
 import sys
+import urllib.error
 import urllib.request
 from importlib.metadata import version, PackageNotFoundError
 from pathlib import Path
@@ -27,7 +28,7 @@ def latestpypi(timeout=1.5):
         with urllib.request.urlopen(req, timeout=timeout) as response:
             data = json.loads(response.read().decode())
             return data["info"]["version"]
-    except Exception:
+    except (json.JSONDecodeError, urllib.error.URLError):
         return "unknown"
 
 def verstring():
