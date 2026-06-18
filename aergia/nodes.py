@@ -801,8 +801,10 @@ class ReturnNode:
 
 # import nodes
 class ImportNode:
-    def __init__(self, file):
+    def __init__(self, file, rname, closed):
         self.file = file
+        self.rname = rname
+        self.closed = closed
         self.line = None
         self.col = None
 
@@ -845,33 +847,31 @@ class ImportNode:
                 code = f.read()
             tokens = tokenize(code)
             ast = parse(tokens)
-            oldfile = env.get("__file__")
-            olddir = env.get("__dir__")
-            env["__file__"] = file
-            env["__dir__"] = file.parent
+            menv = env.copy()
+            menv["__file__"] = file
+            menv["__dir__"] = file.parent
             last = 0
             try:
                 for node in ast:
                     if node:
-                        last = node.eval(env)
+                        last = node.eval(menv)
             except AergiaRuntimeError as e:
                 if not e.frames:
                     e.frames.append((file, e.line, e.col))
                 raise e
-            finally:
-                if oldfile is not None:
-                    env["__file__"] = oldfile
-                if olddir is not None:
-                    env["__dir__"] = olddir
+            for key, val in menv.bindings.items():
+                if key in ("__file__", "__dir__", "__imports__"):
+                    continue
+                if self.closed:
+                    env[f"{self.rname}.{key}"] = val
+                else:
+                    env[key] = val
             return last
         except AergiaRuntimeError as e:
             if not e.frames:
                 e.frames.append((env.get("__file__"), e.line, e.col))
             else:
-                if 'oldfile' in locals() and oldfile:
-                    e.frames.append((oldfile, self.line, self.col))
-                else:
-                    e.frames.append((env.get("__file__"), self.line, self.col))
+                e.frames.append((env.get("__file__"), self.line, self.col))
             raise e
         except ExitException:
             raise
@@ -896,14 +896,14 @@ class PyImportNode:
                     if not self.closed:
                         env[name] = value
                     else:
-                        env[f"{self.rname}_{name}"] = value
+                        env[f"{self.rname}.{name}"] = value
                     if isinstance(value, type):
                         for sname, sval in vars(value).items():
                             if not sname.startswith("_"):
                                 if not self.closed:
-                                    env[f"{name}_{sname}"] = sval
+                                    env[f"{name}.{sname}"] = sval
                                 else:
-                                    env[f"{self.rname}_{name}_{sname}"] = sval
+                                    env[f"{self.rname}.{name}.{sname}"] = sval
             return 0
         except Exception as e:
             raise AergiaRuntimeError(str(e), line=self.line, col=self.col)

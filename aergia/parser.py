@@ -121,7 +121,11 @@ def parseexpr(tokens):
     # imports
     if token == "+>":
         file = parseexpr(tokens)
-        return track(ImportNode(file))
+        return track(ImportNode(file, None, False))
+    if token == "+<":
+        file = parseexpr(tokens)
+        rname = rname = tokens.popleft()[0]
+        return track(ImportNode(file, rname, True))
     if token == "*>":
         name = tokens.popleft()[0]
         return track(PyImportNode(name, name, False))
