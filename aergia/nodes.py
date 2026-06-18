@@ -1,4 +1,5 @@
 import importlib
+import json
 import operator
 import random
 import re
@@ -810,7 +811,6 @@ class ImportNode:
         try:
             from .lexer import tokenize
             from .parser import parse
-            import json
             filename = self.file.eval(env)
             file = env["__dir__"] / filename
             if not file.exists() and "__stdlib__" in env:
