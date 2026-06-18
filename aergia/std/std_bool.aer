@@ -1,0 +1,10 @@
+= true 1
+= false 0
+
+{is_bool :val:
+    (|| == val 0 == val 1
+        ? true
+    ) -> (
+        ? false
+    )
+}

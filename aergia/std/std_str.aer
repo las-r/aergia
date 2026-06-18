@@ -1,7 +1,7 @@
 # standard string library
 # by las-r
 
-{str_join :arr del:
+{join :arr del:
     = out ""
     = first 1
     [`arr itm
@@ -15,7 +15,7 @@
     ? out
 }
 
-{str_split :str del:
+{split :str del:
     = out < >
     = cur ""
     [`str chr
@@ -34,7 +34,7 @@
     ? out
 }
 
-{str_has :str seq:
+{has :str seq:
     = matchidx 0
     = found 0
     [`str chr
@@ -58,7 +58,7 @@
     ? found
 }
 
-{str_reverse :str:
+{reverse :str:
     = out <>
     [`str chr
         *: out 0 chr
@@ -66,7 +66,7 @@
     ? @str_join:out "":
 }
 
-{str_ltrim :str:
+{ltrim :str:
     = out ""
     = start 0
     = end 0
@@ -81,9 +81,9 @@
     ]
     ? out
 }
-{str_rtrim :str: 
+{rtrim :str: 
     ? @str_ltrim:@str_reverse:str::
 }
-{str_trim :str:
+{trim :str:
     ? @str_ltrim:@str_rtrim:str::
 }
