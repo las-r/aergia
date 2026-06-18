@@ -15,7 +15,9 @@ jobs:
           python-version: '3.14'
 
       - name: Install dependencies
-        run: pip install pytest
+        run: |
+          pip install pytest
+          pip install -e .
 
       - name: Run tests
         run: pytest
