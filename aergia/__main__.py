@@ -77,7 +77,7 @@ def runfile(filename, env, debug=False):
 
 # repl runner
 def runrepl(env, ver):
-    print(f"{ver} REPL")
+    print(f"v{ver} REPL")
     env["__file__"] = "<repl>"
     env["__dir__"] = Path.cwd()
     while True:
