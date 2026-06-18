@@ -48,6 +48,39 @@ class ExitException(Exception):
     def __init__(self, value):
         self.value = value
         
+# environment
+class Environment:
+    def __init__(self, bindings=None, parent=None):
+        self.bindings = bindings if bindings is not None else {}
+        self.parent = parent
+
+    def __getitem__(self, key):
+        if key in self.bindings:
+            return self.bindings[key]
+        if self.parent is not None:
+            return self.parent[key]
+        raise KeyError(f"No variable '{key}' found")
+
+    def __setitem__(self, key, value):
+        self.bindings[key] = value
+
+    def __contains__(self, key):
+        if key in self.bindings:
+            return True
+        if self.parent is not None:
+            return key in self.parent
+        return False
+
+    def get(self, key, default=None):
+        if key in self.bindings:
+            return self.bindings[key]
+        if self.parent is not None:
+            return self.parent.get(key, default)
+        return default
+
+    def copy(self):
+        return Environment(parent=self)
+        
 # types
 class Super:
     def __init__(self, name, consn):

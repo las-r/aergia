@@ -11,7 +11,7 @@ from typing import Any
 
 from .lexer import tokenize
 from .parser import parse, ExitException
-from .nodes import AergiaRuntimeError
+from .nodes import AergiaRuntimeError, Environment
 
 from .tools import agathos
 from .tools import lethes
@@ -138,10 +138,10 @@ def main():
             sys.exit(1)
 
     # global environment
-    env: dict[str, Any] = {
+    env = Environment({
         "__stdlib__": Path(__file__).parent / "std",
         "__lib__": Path(__file__).parent / "lib"
-    }
+    })
     
     try:
         # run file
