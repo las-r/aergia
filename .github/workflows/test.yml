@@ -1,4 +1,4 @@
-name: Run Aergia Tests
+name: run tests
 
 on: [push, pull_request]
 
