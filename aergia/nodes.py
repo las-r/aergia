@@ -166,7 +166,7 @@ class Super:
         self.value = None
 
     def collapse(self, env):
-        def find_literals(node):
+        def findliterals(node):
             nums = []
             if not node:
                 return nums
@@ -177,11 +177,11 @@ class Super:
                     val = getattr(node, attr)
                     if isinstance(val, list):
                         for item in val:
-                            nums.extend(find_literals(item))
+                            nums.extend(findliterals(item))
                     else:
-                        nums.extend(find_literals(val))
+                        nums.extend(findliterals(val))
             return nums
-        foundnum = find_literals(self.consn)
+        foundnum = findliterals(self.consn)
         if foundnum:
             lowb = int(min(foundnum)) - 5
             highb = int(max(foundnum)) + 5
