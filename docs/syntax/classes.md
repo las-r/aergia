@@ -12,7 +12,7 @@ Every instantiated class receives its own isolated state environment, automatica
 
 | Token | Mechanics | Syntax Pattern |
 | --- | --- | --- |
-| `{` | Class Blueprint Declaration | `{ClassName :p1 p2: ...}` |
+| ``{` `` | Class Blueprint Declaration | ``{`ClassName :p1 p2: ...}`` |
 | `->` | Member Read / Method Extraction | `-> object property` |
 | `=>` | Member Property Mutation | `=> object property value` |
 | `@` | Object Instantiation | `= instance @ClassName:args:` |
@@ -24,7 +24,7 @@ Inside the class block body, you initialize instance attributes and define metho
 
 ```py
 # Define a Person class blueprint with a constructor accepting name and age
-{Person :name age:
+{`Person :name age:
     # Bind constructor values to instance fields
     => this name name
     => this age age
