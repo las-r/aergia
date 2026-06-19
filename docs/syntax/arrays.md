@@ -1,28 +1,30 @@
 ---
 layout: default
-title: 5. Arrays & Indexing
+title: 5. Arrays & Maps
 parent: Syntax
 nav_order: 5
 ---
 
-# 5. Arrays & Indexing
-Arrays are contiguous ordered collections. Indexing is zero-based.
+# 5. Arrays & Maps
+Arrays are contiguous, ordered collections with zero-based indexing. Maps are collections of key-value pairs that link unique keys to specific values. Both collections share a unified set of core operators.
 
-| Token | Structure | Example | Description |
+| Token | Structure | Array Behavior | Map Behavior |
 | --- | --- | --- | --- |
-| `< ... >` | Array Initialization | `= items < 10 20 30 >` | Creates a new array structure. |
-| `:` | Index Resolution | `: items 0` | Resolves to the item at the given index (`10`). |
-| `+:` | Push Item | `+: items 40` | Appends an item to the end of the array. |
-| `-:` | Pop Item | `-: items` | Removes and returns the last element of the array. |
-| `~:` | Pop Index | `~: items 1` | Removes and returns the element at a specific index. |
-| `*:` | Insert Item | `*: items 1 15` | Inserts an item into the array at the given index. |
-| `$:` | Remove Item | `$: items 20` | Finds and removes the first occurrence of a specific item value. |
-| `::` | Slice Array | `:: items 1 3` | Slices an array between two given indexes. |
-| `=:` | Set Index | `=: items 0 15` | Sets the value at an array index. |
-| `..` | Range Initialization | `.. 0 10 1` | Creates a range list based on a start, end, and step value. |
+| `< ... >` | Array Initialization | Creates an ordered array (e.g., `= arr < 10 20 >`). | N/A |
+| ``<` ... >`` | Map Initialization | N/A | Creates a key/value paired map (e.g., ``= map <` "a" 1 "b" 2 >``). |
+| `:` | Key / Index Resolution | Resolves to the item at a numerical index. | Resolves to the value associated with the given key. |
+| `+:` | Push / Merge Item | Appends an item to the end of the array. | Merges another map, or associates a `< key value >` pair. |
+| `-:` | Pop Element | Removes and returns the last element. | Removes and returns the last added pair as a `< key value >` array. |
+| `~:` | Pop Specific Key/Index | Removes and returns the element at a numerical index. | Removes and returns the value of a specific key. |
+| `*:` | Insert / Map Pair | Inserts an item into the array at a numerical index. | Maps a key to a value (equivalent to `=:` behavior). |
+| `$:` | Remove by Value/Key | Finds and removes the first occurrence of a specific value. | Deletes a key-value pair matching the given key. |
+| `::` | Slice Collection | Slices an array between two indexes. | *Not supported* (Raises a type error). |
+| `=:` | Set Index/Key | Sets the value at a specific numerical index. | Sets or updates the value associated with a key. |
+| `..` | Range Initialization | Creates a range list based on a start, end, and step. | *Not supported*. |
 
 ## Examples
-### Appending and Inserting
+
+### Arrays
 ```py
 # Initialize an array
 = inventory < "sword" "shield" >
@@ -34,19 +36,40 @@ Arrays are contiguous ordered collections. Indexing is zero-based.
 # Insert an item at index 1 (Structure: *: array index item)
 *: inventory 1 "helmet"
 # inventory is now <"sword" "helmet" "shield" "potion">
+
+# Pop the last element off the array (Returns "potion")
+-: inventory
+# inventory is now <"sword" "helmet" "shield">
+
+# Pop an element from a specific index (Returns "helmet")
+~: inventory 1
+# inventory is now <"sword" "shield">
+
+# Remove a specific item value (Returns "shield")
+$: inventory "shield"
+# inventory is now <"sword">
 ```
 
-### Removing Elements
+### Maps
 ```py
-# Pop the last element off the array (Returns the popped item)
--: inventory
-# Returns "potion"; inventory is now <"sword" "helmet" "shield">
+# Accessing a value by its key
+= status : user "status"
 
-# Pop an element from a specific index (Returns the popped item)
-~: inventory 1
-# Returns "helmet"; inventory is now <"sword" "shield">
+# Assigning or updating a key-value pair
+=: user "score" 100
+*: user "level" 5
 
-# Remove a specific item value (Returns the removed item)
-$: inventory "shield"
-# Returns "shield"; inventory is now <"sword">
+# Pushing a key-value pair or merging maps
++: user < "guild" "Warriors" >
+
+# Removing map elements by key (Returns the removed value)
+~: user "score" 
+# Removes the "score" pair and returns 100
+
+# Deleting a key without returning its value
+$: user "level"
+
+# Popping the last added pair (Returns a < key value > array)
+= last_pair -: user
+# last_pair becomes < "guild" "Warriors" >
 ```
