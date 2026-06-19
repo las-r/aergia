@@ -1,0 +1,11 @@
+{`Person :name age:
+    => this name name
+    => this age age
+
+    {greet :this:
+        > "Hello, %name%! You are %age% years old."
+    }
+}
+
+= kane @Person:"Kane Pixels" 20:
+@-> kane greet
