@@ -417,10 +417,10 @@ class IndexNode:
         try:
             arr = self.arrayn.eval(env)
             idx = self.indexn.eval(env)
+            if isinstance(arr, dict):
+                return arr[idx]
             if not isinstance(arr, (list, str)):
                 raise TypeError(f"Object of type {type(arr).__name__} is not indexable")
-            if not isinstance(idx, int):
-                raise TypeError(f"Object of type {type(idx).__name__} is not an integer")
             return arr[int(idx)]
         except AergiaRuntimeError:
             raise
@@ -438,8 +438,16 @@ class PushNode:
         try:
             arr = self.arrayn.eval(env)
             itm = self.itemn.eval(env)
+            if isinstance(arr, dict):
+                if isinstance(itm, dict):
+                    arr.update(itm)
+                elif isinstance(itm, (list, tuple)) and len(itm) == 2:
+                    arr[itm[0]] = itm[1]
+                else:
+                    raise TypeError("To push to a dictionary, the item must be another dictionary or a [key, value] pair")
+                return itm
             if not isinstance(arr, list):
-                raise TypeError(f"Object of type {type(arr).__name__} is not a list")
+                raise TypeError(f"Object of type {type(arr).__name__} is not a list or dictionary")
             arr.append(itm)
             return itm
         except AergiaRuntimeError:
@@ -456,8 +464,12 @@ class PopNode:
     def eval(self, env):
         try:
             arr = self.arrayn.eval(env)
+            if isinstance(arr, dict):
+                if not arr:
+                    raise KeyError("popitem(): dictionary is empty")
+                return list(arr.popitem())
             if not isinstance(arr, list):
-                raise TypeError(f"Object of type {type(arr).__name__} is not a list")
+                raise TypeError(f"Object of type {type(arr).__name__} is not a list or dictionary")
             return arr.pop()
         except AergiaRuntimeError:
             raise
@@ -475,8 +487,12 @@ class PopIndexNode:
         try:
             arr = self.arrayn.eval(env)
             idx = self.indexn.eval(env)
+            if isinstance(arr, dict):
+                if idx not in arr:
+                    raise KeyError(f"Key '{idx}' not found in the dictionary")
+                return arr.pop(idx)
             if not isinstance(arr, list):
-                raise TypeError(f"Object of type {type(arr).__name__} is not a list")
+                raise TypeError(f"Object of type {type(arr).__name__} is not a list or dictionary")
             if not isinstance(idx, int):
                 raise TypeError(f"Object of type {type(idx).__name__} is not an integer")
             if idx < -len(arr) or idx >= len(arr):
@@ -500,8 +516,11 @@ class InsertNode:
             arr = self.arrayn.eval(env)
             itm = self.itemn.eval(env)
             idx = self.indexn.eval(env)
+            if isinstance(arr, dict):
+                arr[idx] = itm
+                return itm
             if not isinstance(arr, list):
-                raise TypeError(f"Object of type {type(arr).__name__} is not a list")
+                raise TypeError(f"Object of type {type(arr).__name__} is not a list or dictionary")
             if not isinstance(idx, int):
                 raise TypeError(f"Object of type {type(idx).__name__} is not an integer")
             arr.insert(idx, itm)
@@ -522,8 +541,13 @@ class RemoveItemNode:
         try:
             arr = self.arrayn.eval(env)
             itm = self.itemn.eval(env)
+            if isinstance(arr, dict):
+                if itm not in arr:
+                    raise KeyError(f"Key '{itm}' not found in the dictionary")
+                del arr[itm]
+                return itm
             if not isinstance(arr, list):
-                raise TypeError(f"Object of type {type(arr).__name__} is not a list")
+                raise TypeError(f"Object of type {type(arr).__name__} is not a list or dictionary")
             if itm not in arr:
                 raise ValueError(f"Item '{itm}' not found in the array")
             arr.remove(itm)
@@ -547,7 +571,7 @@ class SliceNode:
             start = self.startn.eval(env)
             end = self.endn.eval(env)
             if not isinstance(arr, (list, str)):
-                raise TypeError(f"Object of type {type(arr).__name__} is not slicable")
+                raise TypeError(f"Object of type {type(arr).__name__} is not sliceable")
             if not isinstance(start, int):
                 raise TypeError(f"Object of type {type(start).__name__} is not an integer")
             if not isinstance(end, int):
@@ -571,8 +595,11 @@ class SetIndexNode:
             arr = self.arrayn.eval(env)
             ind = self.indexn.eval(env)
             val = self.valuen.eval(env)
-            if not isinstance(arr, (list)):
-                raise TypeError(f"Object of type {type(arr).__name__} is not a list")
+            if isinstance(arr, dict):
+                arr[ind] = val
+                return val
+            if not isinstance(arr, list):
+                raise TypeError(f"Object of type {type(arr).__name__} is not a list or dictionary")
             if not isinstance(ind, int):
                 raise TypeError(f"Object of type {type(ind).__name__} is not an integer")
             arr[ind] = val
@@ -581,7 +608,7 @@ class SetIndexNode:
             raise
         except Exception as e:
             raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
-        
+
 # range node
 class RangeNode:
     def __init__(self, startn, endn, incn):
@@ -602,6 +629,19 @@ class RangeNode:
         if not isinstance(inc, int):
             raise TypeError(f"Object of type {type(inc).__name__} is not an integer")
         return list(range(start, end, inc))
+    
+# map node
+class MapNode:
+    def __init__(self, pairs):
+        self.pairs = pairs
+        self.line = None
+        self.col = None
+
+    def eval(self, env):
+        try:
+            return {k.eval(env): v.eval(env) for k, v in self.pairs}
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 # control flow nodes
 class IfNode:

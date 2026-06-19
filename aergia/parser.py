@@ -99,13 +99,25 @@ def parseexpr(tokens):
             if tokens: tokens.popleft()
             return track(FunctionNode(name, para, body))
     
-    # arrays
+    # arrays/maps
     if token == "<":
-        elements = []
-        while tokens and tokens[0][0] != ">":
-            elements.append(parseexpr(tokens))
-        if tokens: tokens.popleft()
-        return track(ArrayNode(elements))
+        if tokens and tokens[0][0] == "`":
+            tokens.popleft()
+            pairs = []
+            while tokens and tokens[0][0] != ">":
+                key = parseexpr(tokens)
+                val = parseexpr(tokens)
+                pairs.append((key, val))
+            if tokens: tokens.popleft()
+            return track(MapNode(pairs))
+        else:
+            elements = []
+            while tokens and tokens[0][0] != ">":
+                elements.append(parseexpr(tokens))
+            if tokens: tokens.popleft()
+            return track(ArrayNode(elements))
+    
+    # array operators
     if token in ARROPS:
         node, arity = ARROPS[token]
         args = [parseexpr(tokens) for _ in range(arity)]
