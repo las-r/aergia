@@ -1,11 +1,11 @@
 ---
 layout: default
-title: 9. Standard Libraries
+title: 10. Standard Libraries
 parent: Syntax
-nav_order: 9
+nav_order: 10
 ---
 
-# 9. Standard Libraries
+# 10. Standard Libraries
 Aergia comes with 3 standard libraries:
 - `std_arr.aer`: Array utils
 - `std_bool.aer`: Boolean utils
