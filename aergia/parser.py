@@ -72,8 +72,12 @@ def parseexpr(tokens):
             if tokens: tokens.popleft()
             return track(WhileNode(cond, body))
     
-    # function block
+    # function/class block
     if token == "{":
+        isclass = False
+        if tokens and tokens[0][0] == "`":
+            tokens.popleft()
+            isclass = True
         if tokens and tokens[0][0] == ":":
             tokens.popleft()
             para = []
@@ -97,7 +101,10 @@ def parseexpr(tokens):
             while tokens and tokens[0][0] != "}":
                 body.append(parseexpr(tokens))
             if tokens: tokens.popleft()
-            return track(FunctionNode(name, para, body))
+            if isclass:
+                return track(ClassNode(name, para, body))
+            else:
+                return track(FunctionNode(name, para, body))
     
     # arrays/maps
     if token == "<":
@@ -229,6 +236,19 @@ def parseexpr(tokens):
                 args.append(parseexpr(tokens))
             if tokens: tokens.popleft()
         return track(CallNode(target, args))
+    
+    # object member get
+    if token == "->":
+        obj = parseexpr(tokens)
+        mem = tokens.popleft()[0]
+        return track(GetMemberNode(obj, mem))
+    
+    # object member get
+    if token == "=>":
+        obj = parseexpr(tokens)
+        mem = tokens.popleft()[0]
+        val = parseexpr(tokens)
+        return track(SetMemberNode(obj, mem, val))
     
     # string
     if token.startswith('"'):

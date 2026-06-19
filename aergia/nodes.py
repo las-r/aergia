@@ -104,6 +104,60 @@ class Environment(MutableMapping):
     def copy(self):
         return Environment(parent=self)
         
+# object helpers
+class CustomClass:
+    def __init__(self, name, para, body, defenv):
+        self.name = name
+        self.para = para
+        self.body = body
+        self.defenv = defenv
+
+    def __call__(self, *eargs):
+        instance = CustomInstance(self)
+        instance_env = Environment(parent=self.defenv)
+        instance.env = instance_env
+        instance_env["this"] = instance
+        for param, arg in zip(self.para, eargs):
+            instance_env[param] = arg
+        for node in self.body:
+            if node:
+                node.eval(instance_env)
+        return instance
+
+    def __repr__(self):
+        return f"<class {self.name}>"
+
+class CustomInstance:
+    def __init__(self, customclass):
+        self.customclass = customclass
+        self.env = Environment()
+
+    def __repr__(self):
+        return f"<instance of class {self.customclass.name}>"
+
+class BoundMethod:
+    def __init__(self, instance, funcn):
+        self.instance = instance
+        self.funcn = funcn
+
+    def __call__(self, *args):
+        fullargs = [self.instance] + list(args)
+        fenv = Environment(parent=self.instance.env)
+        if hasattr(self.funcn, "para"):
+            for param, arg in zip(self.funcn.para, fullargs):
+                fenv[param] = arg
+        body = self.funcn.body if hasattr(self.funcn, "body") else self.funcn.ret
+        if not isinstance(body, list):
+            body = [body]
+        try:
+            last = 0
+            for node in body:
+                if node:
+                    last = node.eval(fenv)
+            return last
+        except ReturnException as e:
+            return e.value
+
 # types
 class Super:
     def __init__(self, name, consn):
@@ -837,6 +891,58 @@ class ReturnNode:
             raise
         except Exception as e:
             raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+
+# object nodes
+class ClassNode:
+    def __init__(self, name, para, body):
+        self.name = name
+        self.para = para
+        self.body = body
+        self.line = None
+        self.col = None
+
+    def eval(self, env):
+        class_ = CustomClass(self.name, self.para, self.body, env)
+        env[self.name] = class_
+        return 0
+
+class GetMemberNode:
+    def __init__(self, objn, propname):
+        self.objn = objn
+        self.propname = propname
+        self.line = None
+        self.col = None
+
+    def eval(self, env):
+        obj = self.objn.eval(env)
+        if isinstance(obj, CustomInstance):
+            val = obj.env.get(self.propname)
+            if isinstance(val, (FunctionNode, AnonymousFunctionNode)):
+                return BoundMethod(obj, val)
+            return val
+        if isinstance(obj, dict):
+            return obj[self.propname]
+        return getattr(obj, self.propname)
+
+class SetMemberNode:
+    def __init__(self, objn, propname, valn):
+        self.objn = objn
+        self.propname = propname
+        self.valn = valn
+        self.line = None
+        self.col = None
+
+    def eval(self, env):
+        obj = self.objn.eval(env)
+        val = self.valn.eval(env)
+        if isinstance(obj, CustomInstance):
+            obj.env[self.propname] = val
+            return val
+        if isinstance(obj, dict):
+            obj[self.propname] = val
+            return val
+        setattr(obj, self.propname, val)
+        return val
 
 # import nodes
 class ImportNode:
