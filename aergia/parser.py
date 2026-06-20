@@ -18,6 +18,16 @@ ARROPS = {
     "=:": (SetIndexNode, 3)
 }
 
+# escape character map
+ESCAPEMAP = {'n': '\n', 't': '\t', 'r': '\r', '\\': '\\', '"': '"'}
+
+# helpers
+def repesc(match: re.Match[str]):
+    char = match.group(1)
+    if char is not None:
+        return ESCAPEMAP.get(char, char)
+    return ""
+
 # expression parser
 def parseexpr(tokens):
     if not tokens:
@@ -249,7 +259,7 @@ def parseexpr(tokens):
     # string
     if token.startswith('"'):
         content = token[1:-1]
-        unescaped = re.sub(r'\\(.)', r'\1', content)
+        unescaped = re.sub(r'\\(.)', repesc, content)
         return track(LiteralNode(unescaped))
     
     # number and variable
