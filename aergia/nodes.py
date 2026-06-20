@@ -72,7 +72,12 @@ class Environment(MutableMapping):
         raise KeyError(f"No variable '{key}' found")
 
     def __setitem__(self, key: str, value: Any) -> None:
-        self.bindings[key] = value
+        if key in self.bindings:
+            self.bindings[key] = value
+        elif self.parent is not None and key in self.parent:
+            self.parent[key] = value
+        else:
+            self.bindings[key] = value
 
     def __delitem__(self, key: str) -> None:
         if key in self.bindings:
@@ -125,7 +130,7 @@ class CustomClass:
         instance.env = instance_env
         instance_env["this"] = instance
         for param, arg in zip(self.para, eargs):
-            instance_env[param] = arg
+            instance_env.bindings[param] = arg
         for node in self.body:
             if node:
                 node.eval(instance_env)
@@ -152,7 +157,7 @@ class BoundMethod:
         fenv = Environment(parent=self.instance.env)
         if hasattr(self.funcn, "para"):
             for param, arg in zip(self.funcn.para, fullargs):
-                fenv[param] = arg
+                fenv.bindings[param] = arg
         body = self.funcn.body if hasattr(self.funcn, "body") else self.funcn.ret
         if not isinstance(body, list):
             body = [body]
@@ -854,7 +859,7 @@ class CallNode:
                 fenv = env.copy()
             if hasattr(func, "para"):
                 for param, arg in zip(func.para, eargs):
-                    fenv[param] = arg
+                    fenv.bindings[param] = arg
             if hasattr(func, "body"):
                 body = func.body
             else:
