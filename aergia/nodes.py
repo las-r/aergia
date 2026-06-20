@@ -10,8 +10,8 @@ from typing import Any, Iterator
 # made by las-r on github
 
 # constants
-OPS = {
-    "+": lambda l, r: str(l) + str(r) if isinstance(l, str) or isinstance(r, str) else l + r,
+BINOPS = {
+    "+": operator.add,
     "-": operator.sub,
     "*": operator.mul,
     "/": operator.truediv,
@@ -26,6 +26,13 @@ OPS = {
     ">>": lambda l, r: 1 if l > r else 0,
     "<=": lambda l, r: 1 if l <= r else 0,
     ">=": lambda l, r: 1 if l >= r else 0,
+}
+UNOPS = {
+    "~": operator.inv,
+    "!": operator.not_,
+    "=,": str,
+    "=.": int,
+    "='": float,
 }
 
 # exceptions
@@ -375,13 +382,10 @@ class UnaryOpNode:
     def eval(self, env):
         try:
             v = self.child.eval(env)
-            if self.op == "!":
-                if not v:
-                    return 1
-                else:
-                    return 0
-            elif self.op == "~":
-                return ~v
+            if self.op in UNOPS:
+                return UNOPS[self.op](v)
+            else:
+                raise SyntaxError(f"'{self.op}' is not a valid operator.")
         except AergiaRuntimeError:
             raise
         except Exception as e:
@@ -399,7 +403,10 @@ class BinaryOpNode:
         try:
             vl = self.left.eval(env)
             vr = self.right.eval(env)
-            return OPS[self.op](vl, vr)
+            if self.op in BINOPS:
+                return BINOPS[self.op](vl, vr)
+            else:
+                raise SyntaxError(f"'{self.op}' is not a valid operator.")
         except AergiaRuntimeError:
             raise
         except Exception as e:

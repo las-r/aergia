@@ -6,10 +6,6 @@ from .nodes import *
 # aergia parser
 # made by las-r on github
 
-# arithmetic and logical operators
-BINOPS = ["+", "-", "*", "/", "==", "!=", ">>", "<<", ">=", "<=", "^", "%", "&", "|", "$", "&&", "||"]
-UNOPS = ["!", "~"]
-
 # array operators
 ARROPS = {
     ":": (IndexNode, 2),
