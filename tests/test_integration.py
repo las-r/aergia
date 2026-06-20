@@ -1,6 +1,7 @@
+import pytest
 from aergia.lexer import tokenize
 from aergia.parser import parse
-from aergia.nodes import Environment
+from aergia.nodes import AergiaRuntimeError, Environment
 
 def run_aergia(code):
     """
@@ -59,4 +60,60 @@ def test_if_logic_flow(capsys):
     run_aergia(code)
     captured = capsys.readouterr()
     assert captured.out.strip() == "Correct"
+
+def test_unary_type_casting(capsys):
+    """Exercises type mutations using standard unary conversions."""
+    code = """
+    = numeric_str "123"
+    = actual_int =. numeric_str
+    = actual_float =' numeric_str
+    = back_to_str =, actual_int
     
+    > +actual_int 7
+    > +actual_float 0.5
+    """
+    run_aergia(code)
+    captured = capsys.readouterr()
+    assert captured.out.strip().split() == ["130", "123.5"]
+
+def test_lexical_scoping_and_closures():
+    """Guarantees child lexical scopes protect local boundaries from dirtying up parent environments."""
+    code = """
+    = global_var 100
+    {local_scope
+        = global_var 42
+        = shadow_var 999
+    }
+    @local_scope
+    """
+    env = run_aergia(code)
+    assert env["global_var"] == 42  # Explicit re-assignment changes parent value
+    assert "shadow_var" not in env  # Enclosed local scope definitions must drop out
+
+def test_recursive_function_execution(capsys):
+    """Runs a classic recursive implementation to confirm standard stack execution patterns."""
+    code = """
+    {fib :n:
+        (<= n 1
+            ? n
+        ) -> (
+            ? +@fib:-n 1: @fib:-n 2:
+        )
+    }
+    = result @fib:6:
+    > result
+    """
+    env = run_aergia(code)
+    assert env["result"] == 8
+    captured = capsys.readouterr()
+    assert captured.out.strip() == "8"
+
+def test_runtime_error_traceback():
+    """Asserts that runtime environment faults trigger proper diagnostics."""
+    code = """
+    = a 10
+    = b 0
+    = broken /a b
+    """
+    with pytest.raises(AergiaRuntimeError, match="division by zero"):
+        run_aergia(code)

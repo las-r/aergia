@@ -1,3 +1,4 @@
+import pytest
 from aergia.lexer import tokenize
 
 def test_tokenize_literals_and_variables():
@@ -43,3 +44,25 @@ def test_tokenize_arrays_and_punctuation():
     token_strings = [t[0] for t in tokens]
     
     assert token_strings == ['<', '1', '2', '>', ';', '@', 'func', ':', '+', 'arg', '3', 'arg2', ':']
+    
+def test_tokenize_hash_inside_string():
+    """Verifies that comment symbols inside string literals are not stripped."""
+    code = '= color "#FF0000"  # This is a real comment'
+    tokens = tokenize(code)
+    token_strings = [t[0] for t in tokens]
+    
+    assert '#FF0000"' in token_strings[2]
+    assert 'comment' not in token_strings
+
+def test_tokenize_numeric_bases():
+    """Ensures hex and binary literal notations are isolated cleanly."""
+    code = "0x1A 0b1010"
+    tokens = tokenize(code)
+    token_strings = [t[0] for t in tokens]
+    
+    assert token_strings == ['0x1A', '0b1010']
+
+def test_tokenize_lexical_error():
+    """Confirms that invalid/mismatched characters cause the tokenizer to fail immediately."""
+    with pytest.raises(ValueError, match="Unexpected character"):
+        tokenize("= x 10 \\")  # Stray backslash outside string causes a failure
