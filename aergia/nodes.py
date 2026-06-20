@@ -331,8 +331,9 @@ class OutputNode:
 
     def eval(self, env):
         try:
-            print(self.child.eval(env))
-            return 0
+            val = self.child.eval(env)
+            print(val)
+            return val
         except AergiaRuntimeError:
             raise
         except Exception as e:
