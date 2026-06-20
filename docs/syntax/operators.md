@@ -11,7 +11,7 @@ Because Aergia uses prefix notation, binary operations consume the next two vali
 Binary Syntax: `[operator] [operand_1] [operand_2]`
 Unary Syntax: `[operator] [operand]`
 
-## Binary Operators
+### Arithmetic Operators
 * `+` Addition / String Concatenation (Auto-formats)
 * `-` Subtraction
 * `*` Multiplication
@@ -19,14 +19,15 @@ Unary Syntax: `[operator] [operand]`
 * `^` Power
 * `%` Modulo
 
-## Bitwise Operators
+### Bitwise Operators
 * `&` Bitwise AND
 * `|` Bitwise OR
 * `$` Bitwise XOR
-* `~` Bitwise NOT (Unary)
+* `~` Bitwise NOT
 
-## Comparison Operators
+### Comparison Operators
 These evaluate to `1` if the condition is true, or `0` if false.
+
 * `==` Equal to
 * `!=` Not equal to
 * `<<` Less than
@@ -34,11 +35,17 @@ These evaluate to `1` if the condition is true, or `0` if false.
 * `<=` Less than or equal to
 * `>=` Greater than or equal to
 
+### Logical Operators
+These will always evaluate to either `1` or `0`.
 
-## Logical Operators
 * `&&` Logical AND (Short-circuit)
 * `||` Logical OR (Short-circuit)
 * `!` Logical NOT (Unary: turns truthy to `0`, falsy to `1`)
+
+### Type Conversion Operators
+* `=,` String
+* `=.` Integer
+* `='` Float
 
 ## Examples
 ```py
