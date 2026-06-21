@@ -1,7 +1,7 @@
 import re
 import sys
 
-# aergia upgraded lexer
+# aergia lexer
 # made by las-r on github
 
 # lexer rules
