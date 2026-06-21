@@ -69,3 +69,114 @@
     ]
     ? out
 }
+
+# length of an array or string
+{len :arr:
+    = n 0
+    [`arr _
+        =+ n 1
+    ]
+    ? n
+}
+
+{zip :a b:
+    = out <>
+    = lena @len:a:
+    = lenb @len:b:
+    = n lena
+    (>> lena lenb
+        = n lenb
+    )
+    = i 0
+    [<< i n
+        +: out < : a i : b i >
+        =+ i 1
+    ]
+    ? out
+}
+
+{enumerate :arr:
+    = out <>
+    = i 0
+    [`arr itm
+        +: out < i itm >
+        =+ i 1
+    ]
+    ? out
+}
+
+{sort :arr:
+    = out <>
+    [`arr itm
+        +: out itm
+    ]
+    = n @len:out:
+    = i 0
+    [<< i n
+        = j 0
+        [<< j -n 1
+            (>> : out j : out +j 1
+                = tmp : out j
+                =: out j : out +  1
+                =: out +j 1 tmp
+            )
+            =+ j 1
+        ]
+        =+ i 1
+    ]
+    ? out
+}
+
+{sortby :arr f:
+    = out <>
+    [`arr itm
+        +: out itm
+    ]
+    = n @len:out:
+    = i 0
+    [<< i n
+        = j 0
+        [<< j -n 1
+            (>> @f:: out j: @f:: out +j 1:
+                = tmp : out j
+                =: out j : out +j 1
+                =: out +j 1 tmp
+            )
+            =+ j 1
+        ]
+        =+ i 1
+    ]
+    ? out
+}
+
+{any :arr f:
+    [`arr itm
+        (@f:itm:
+            ? 1
+        )
+    ]
+    ? 0
+}
+
+{all :arr f:
+    [`arr itm
+        (! @f:itm:
+            ? 0
+        )
+    ]
+    ? 1
+}
+
+{flat :arr:
+    = out <>
+    [`arr sub
+        [`sub itm
+            +: out itm
+        ]
+    ]
+    ? out
+}
+
+{flatmap :arr f:
+    ? @flat:@map:arr f::
+}
