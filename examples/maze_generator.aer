@@ -70,6 +70,8 @@
     ]
     +: board row
 ]
+=: : board 0 1 " "
+=: : board _1 _2 " "
 = visited < >
 [`@arr.iota:HEIGHT: _
     = row < >
