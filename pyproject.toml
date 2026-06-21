@@ -35,5 +35,8 @@ Issues = "https://github.com/las-r/aergia/issues"
 [project.scripts]
 aergia = "aergia.__main__:main"
 
+[tool.setuptools.package-data]
+aergia = ["std/*.aer", "std/**/*.aer"]
+
 [tool.setuptools.packages.find]
 include = ["aergia*"]
