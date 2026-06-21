@@ -168,7 +168,7 @@ def test_parse_deeply_nested_prefix_math():
 def test_parse_advanced_array_operators():
     """Examines complex structural mutations from the ARROPS table."""
     # Slice operator ::
-    ast_slice = get_ast(":: arr 0 2")
+    ast_slice = get_ast("^: arr 0 2")
     assert isinstance(ast_slice[0], SliceNode)
     
     # Insert operator *:
