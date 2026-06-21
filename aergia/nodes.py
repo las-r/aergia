@@ -26,6 +26,8 @@ BINOPS = {
     ">>": lambda l, r: 1 if l > r else 0,
     "<=": lambda l, r: 1 if l <= r else 0,
     ">=": lambda l, r: 1 if l >= r else 0,
+    "&&": None,
+    "||": None,
 }
 UNOPS = {
     "~": operator.inv,
