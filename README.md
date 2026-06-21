@@ -24,34 +24,48 @@
 </p>
 
 <p align="center">
-  Aergia is a minimalist yet still usable programming language, depending on your definition of usable.
+  <strong>Aergia</strong> is a minimalist and lightweight interpreted programming language. 
 </p>
 
-## Documentation
-Documentation for Aergia can be found [here](https://las-r.github.io/aergia/).
+```py
+{greet :name:
+    > "Hello, %name%!"
+}
 
-## IDE Support
-Here is a list of every IDE with Aergia support:
-- [Sublime Text](https://github.com/las-r/aergia/tree/main/editors/sublime)
-- [Visual Studio Code](https://github.com/las-r/aergia/tree/main/editors/vscode)
-- [Notepad++](https://github.com/las-r/aergia/tree/main/editors/npp)
+= lang_name "Aergia"
+@greet:lang_name:
+```
+
+## Installation & Quick Start
+Get up and running with `pip` in seconds:
+
+```bash
+pip install aergia-lang
+aergia your_program.aer
+```
+
+## Documentation
+Full documentation and syntax guides be found [here](https://las-r.github.io/aergia/).
 
 ## Tools
-Aergia is provided with a few basic tools to aid in development:
-- [**Agathos**](https://las-r.github.io/aergia/packages.html#agathos): A package manager.
-- **Lethes**: A basic program minifier.
-```bash
-aergia --lethes <filename.aer>
-# or for shorthand:
-aergia -l <filename.aer>
-```
-- **Otia**: A basic program prettifier.
-```bash
-aergia --otia <filename.aer>
-# or for shorthand:
-aergia -o <filename.aer>
-```
+Aergia includes built-in tools to streamline your development workflow:
+
+* [**Agathos**](https://las-r.github.io/aergia/packages.html#agathos): The Aergia package manager.
+* **Lethes**: A native program minifier to compress your source code.
+  ```bash
+  aergia --lethes <filename.aer>  # Shorthand: aergia -l <filename.aer>
+  ```
+* **Otia**: An automatic code prettifier and formatter.
+  ```bash
+  aergia --otia <filename.aer>    # Shorthand: aergia -o <filename.aer>
+  ```
+
+## IDE Support
+* [VS Code Extension](https://github.com/las-r/aergia/tree/main/editors/vscode)
+* [Sublime Text Grammar](https://github.com/las-r/aergia/tree/main/editors/sublime)
+* [Notepad++ UDL](https://github.com/las-r/aergia/tree/main/editors/npp)
 
 ## Contributors
-Here is a list of every person that has directly contributed to the development of Aergia, excluding myself, las-r. (Huge thanks to the people here!):
-- [lyxal](https://github.com/lyxal)
+A huge thanks to the developers helping shape Aergia! 
+
+* [lyxal](https://github.com/lyxal)
