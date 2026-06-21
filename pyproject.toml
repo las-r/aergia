@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "aergia-lang"
-version = "1.18.1"
+dynamic = ["version"]
 description = "The Aergia programming language"
 authors = [{ name = "las-r" }]
 readme = "README.md"
@@ -37,3 +37,5 @@ aergia = "aergia.__main__:main"
 
 [tool.setuptools.packages.find]
 include = ["aergia*"]
+
+[tool.setuptools_scm]
