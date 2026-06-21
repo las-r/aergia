@@ -44,27 +44,27 @@
     },
     {
       "name": "keyword.operator.control.aergia",
-      "match": "(\\+>|\\*>|\\*<|~>|<<<|>>>)"
+      "match": "<<<|>>>|@!:|<!:|>\\!:|\\!\\!:|\\+>|\\+<|\\*>|\\*<|~>|->|=>"
     },
     {
       "name": "keyword.operator.arithmetic.aergia",
-      "match": "(~|&|\\||\\$|\\+|-|\\*|/|%|\\^)"
+      "match": "~|&|\\||\\$|\\+|-|\\*|/|%|\\^"
     },
     {
       "name": "keyword.operator.comparison.aergia",
-      "match": "(==|!=|<=|>=|<<|>>)"
+      "match": "==|!=|<=|>=|<<|>>|=\\?"
     },
     {
       "name": "keyword.operator.array.aergia",
-      "match": "(\\+:|-:|~:|\\*:|#:|::)"
+      "match": "\\+:|-:|~:|\\*:|#:|::|\\.\\."
     },
     {
       "name": "keyword.operator.logical.aergia",
-      "match": "(&&|\\|\\||!)"
+      "match": "&&|\\|\\||!"
     },
     {
       "name": "keyword.operator.misc.aergia",
-      "match": "(@|:|=|;|\\?|<|>|,|\\.|')"
+      "match": "\\$:|\\^:|=:|\\=,|\\=\\.|\\=\\'|@|:|=|;|\\?|<|>|,|\\.|'"
     },
     {
       "name": "punctuation.section.bracket.aergia",
@@ -72,7 +72,7 @@
     },
     {
       "name": "constant.numeric.aergia",
-      "match": "\\b_?\\d+(\\.\\d+)?\\b"
+      "match": "\\b_?\\d+(\\.\\d+)?\\b|\\.\\d+"
     },
     {
       "name": "variable.other.aergia",
