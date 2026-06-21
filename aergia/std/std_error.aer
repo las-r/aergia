@@ -1,0 +1,16 @@
+# standard error library
+# by las-r
+# matches etype values set in nodes.py ETYPEMAP
+
+= DivisionByZero "DivisionByZero"
+= IndexOutOfRange "IndexOutOfRange"
+= KeyNotFound "KeyNotFound"
+= TypeError "TypeError"
+= NameError "NameError"
+= ValueError "ValueError"
+= FileNotFound "FileNotFound"
+= PermissionDenied "PermissionDenied"
+= ImportError "ImportError"
+= ConstraintError "ConstraintError"
+= InterpolationError "InterpolationError"
+= RuntimeError "RuntimeError"

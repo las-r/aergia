@@ -36,13 +36,24 @@ UNOPS = {
     "=.": int,
     "='": float,
 }
+ETYPEMAP = {
+    "ZeroDivisionError": "DivisionByZero",
+    "IndexError": "IndexOutOfRange",
+    "KeyError": "KeyNotFound",
+    "TypeError": "TypeError",
+    "NameError": "NameError",
+    "ValueError": "ValueError",
+    "FileNotFoundError": "FileNotFound",
+    "PermissionError": "PermissionDenied",
+}
 
 # exceptions
 class AergiaRuntimeError(Exception):
-    def __init__(self, message, line, col):
+    def __init__(self, message, line, col, etype="RuntimeError"):
         self.message = message
         self.line = line
         self.col = col
+        self.etype = etype
         self.frames = []
         super().__init__(self.message)
         
@@ -205,7 +216,7 @@ class Super:
         if (highb - lowb) > 2**16:
             raise AergiaRuntimeError(
                 f"Constraints are too loose for '{self.name}' (explicit range exceeds 2^16)",
-                line=self.consn.line, col=self.consn.col
+                line=self.consn.line, col=self.consn.col, etype="ConstraintError"
             )
         testenv = env.copy()
         probe_offset = 2**16 + 1
@@ -213,13 +224,13 @@ class Super:
         if self.consn.eval(testenv) != 0:
             raise AergiaRuntimeError(
                 f"Constraints are too loose for '{self.name}' (unbounded negative space detected)",
-                line=self.consn.line, col=self.consn.col
+                line=self.consn.line, col=self.consn.col, etype="ConstraintError"
             )
         testenv[self.name] = highb + probe_offset
         if self.consn.eval(testenv) != 0:
             raise AergiaRuntimeError(
                 f"Constraints are too loose for '{self.name}' (unbounded positive space detected)",
-                line=self.consn.line, col=self.consn.col
+                line=self.consn.line, col=self.consn.col, etype="ConstraintError"
             )
         valid = []
         for candidate in range(lowb, highb + 1):
@@ -235,7 +246,7 @@ class Super:
         if not valid:
             raise AergiaRuntimeError(
                 f"Constraints are too tight. No possible value found matching constraints for '{self.name}'",
-                line=self.consn.line, col=self.consn.col
+                line=self.consn.line, col=self.consn.col, etype="ConstraintError"
             )
         self.value = random.choice(valid)
         env[self.name] = self.value
@@ -274,7 +285,7 @@ class LiteralNode:
         except AergiaRuntimeError:
             raise
         except Exception as e:
-            raise AergiaRuntimeError(f"Interpolation Error: {e}", line=self.line, col=self.col)
+            raise AergiaRuntimeError(f"Interpolation Error: {e}", line=self.line, col=self.col, etype="InterpolationError")
 
 class VariableNode:
     def __init__(self, name):
@@ -290,8 +301,10 @@ class VariableNode:
             if isinstance(val, Super):
                 val.collapse(env)
             return env[self.name]
+        except AergiaRuntimeError:
+            raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
 # assignment node
 class AssignNode:
@@ -309,7 +322,7 @@ class AssignNode:
         except AergiaRuntimeError:
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
 # super node  
 class SuperNode:
@@ -327,7 +340,7 @@ class SuperNode:
         except AergiaRuntimeError:
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
 # i/o nodes
 class OutputNode:
@@ -344,7 +357,7 @@ class OutputNode:
         except AergiaRuntimeError:
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
 class StringInputNode:
     def __init__(self):
@@ -355,7 +368,7 @@ class StringInputNode:
         try:
             return input()
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
 class IntInputNode:
     def __init__(self):
@@ -366,7 +379,7 @@ class IntInputNode:
         try:
             return int(input())
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
 class FloatInputNode:
     def __init__(self):
@@ -377,7 +390,7 @@ class FloatInputNode:
         try:
             return float(input())
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
 # operation nodes
 class UnaryOpNode:
@@ -397,7 +410,7 @@ class UnaryOpNode:
         except AergiaRuntimeError:
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
 class BinaryOpNode:
     def __init__(self, op, left, right):
@@ -418,7 +431,7 @@ class BinaryOpNode:
         except AergiaRuntimeError:
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
 class ShortCircuitANDNode:
     def __init__(self, left, right):
@@ -438,7 +451,7 @@ class ShortCircuitANDNode:
         except AergiaRuntimeError:
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
     
 class ShortCircuitORNode:
     def __init__(self, left, right):
@@ -458,7 +471,7 @@ class ShortCircuitORNode:
         except AergiaRuntimeError:
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
 # array nodes
 class ArrayNode:
@@ -473,7 +486,7 @@ class ArrayNode:
         except AergiaRuntimeError:
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
 class IndexNode:
     def __init__(self, arrayn, indexn):
@@ -494,7 +507,7 @@ class IndexNode:
         except AergiaRuntimeError:
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
 class PushNode:
     def __init__(self, arrayn, itemn):
@@ -522,7 +535,7 @@ class PushNode:
         except AergiaRuntimeError:
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
 class PopNode:
     def __init__(self, arrayn):
@@ -543,7 +556,7 @@ class PopNode:
         except AergiaRuntimeError:
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
 class PopIndexNode:
     def __init__(self, arrayn, indexn):
@@ -570,7 +583,7 @@ class PopIndexNode:
         except AergiaRuntimeError:
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
 class InsertNode:
     def __init__(self, arrayn, itemn, indexn):
@@ -597,7 +610,7 @@ class InsertNode:
         except AergiaRuntimeError:
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
 class RemoveItemNode:
     def __init__(self, arrayn, itemn):
@@ -624,7 +637,7 @@ class RemoveItemNode:
         except AergiaRuntimeError:
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
 class SliceNode:
     def __init__(self, arrayn, startn, endn):
@@ -649,7 +662,7 @@ class SliceNode:
         except AergiaRuntimeError:
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
         
 class SetIndexNode:
     def __init__(self, arrayn, indexn, valuen):
@@ -676,7 +689,7 @@ class SetIndexNode:
         except AergiaRuntimeError:
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
 # range node
 class RangeNode:
@@ -710,7 +723,7 @@ class MapNode:
         try:
             return {k.eval(env): v.eval(env) for k, v in self.pairs}
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
         
 # file nodes
 class OpenFileNode:
@@ -728,7 +741,7 @@ class OpenFileNode:
         except AergiaRuntimeError:
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
         
 class ReadFileNode:
     def __init__(self, filen):
@@ -743,7 +756,7 @@ class ReadFileNode:
         except AergiaRuntimeError:
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
 class WriteFileNode:
     def __init__(self, filen, valn):
@@ -761,7 +774,7 @@ class WriteFileNode:
         except AergiaRuntimeError:
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
         
 class CloseFileNode:
     def __init__(self, filen):
@@ -777,7 +790,7 @@ class CloseFileNode:
         except AergiaRuntimeError:
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
 # control flow nodes
 class IfNode:
@@ -801,7 +814,7 @@ class IfNode:
         except (AergiaRuntimeError, ReturnException, ExitException, BreakException, ContinueException):
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
 class WhileNode:
     def __init__(self, cond, body):
@@ -825,7 +838,7 @@ class WhileNode:
         except (AergiaRuntimeError, ReturnException, ExitException):
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
 class ForNode:
     def __init__(self, array, iname, body):
@@ -854,7 +867,7 @@ class ForNode:
         except (AergiaRuntimeError, ReturnException, ExitException):
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
         
 class BreakNode:
     def __init__(self):
@@ -871,6 +884,34 @@ class ContinueNode:
         
     def eval(self, env):
         raise ContinueException()
+    
+# error catching node
+class TryCatchNode:
+    def __init__(self, errname, body, catchbody):
+        self.errname = errname
+        self.body = body
+        self.catchbody = catchbody
+        self.line = None
+        self.col = None
+
+    def eval(self, env):
+        try:
+            last = 0
+            for node in self.body:
+                if node:
+                    last = node.eval(env)
+            return last
+        except AergiaRuntimeError as e:
+            catchenv = env.copy()
+            catchenv[self.errname] = e.message
+            catchenv[self.errname + ".type"] = e.etype
+            last = 0
+            for node in self.catchbody:
+                if node:
+                    last = node.eval(catchenv)
+            return last
+        except ExitException:
+            raise
 
 # function nodes
 class FunctionNode:
@@ -889,7 +930,7 @@ class FunctionNode:
         except AergiaRuntimeError:
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
         
 class AnonymousFunctionNode:
     def __init__(self, para, ret):
@@ -905,7 +946,7 @@ class AnonymousFunctionNode:
         except AergiaRuntimeError:
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
 class CallNode:
     def __init__(self, target, args):
@@ -918,7 +959,7 @@ class CallNode:
         try:
             func = self.target.eval(env)
             if not func:
-                raise AergiaRuntimeError("Target is not a valid function", line=self.line, col=self.col)
+                raise AergiaRuntimeError("Target is not a valid function", line=self.line, col=self.col, etype="TypeError")
             eargs = [arg.eval(env) for arg in self.args]
             if callable(func):
                 return func(*eargs)
@@ -956,7 +997,7 @@ class CallNode:
         except ExitException:
             raise
         except Exception as e:
-            err = AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            err = AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
             err.frames = [(env.get("__file__"), self.line, self.col)]
             raise err
 
@@ -972,7 +1013,7 @@ class ReturnNode:
         except (AergiaRuntimeError, ReturnException):
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
 # object nodes
 class ClassNode:
@@ -1062,7 +1103,7 @@ class ImportNode:
                     if candidate.exists():
                         file = candidate
             if not file.exists():
-                raise AergiaRuntimeError(f"Could not resolve import: '{filename}'", line=self.line, col=self.col)
+                raise AergiaRuntimeError(f"Could not resolve import: '{filename}'", line=self.line, col=self.col, etype="ImportError")
             file = file.resolve()
             if "__imports__" not in env:
                 env["__imports__"] = set()
@@ -1102,7 +1143,7 @@ class ImportNode:
         except ExitException:
             raise
         except Exception as e:
-            err = AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            err = AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
             err.frames = [(env.get("__file__"), self.line, self.col)]
             raise err
 
@@ -1132,7 +1173,7 @@ class PyImportNode:
                                     env[f"{self.rname}.{name}.{sname}"] = sval
             return 0
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
 # system nodes
 class EvaluationNode:
@@ -1167,7 +1208,7 @@ class EvaluationNode:
         except (ReturnException, ExitException):
             raise
         except Exception as e:
-            err = AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            err = AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
             err.frames = [(env.get("__file__"), self.line, self.col)]
             raise err
 
@@ -1184,4 +1225,4 @@ class ExitNode:
         except (AergiaRuntimeError, ExitException):
             raise
         except Exception as e:
-            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))

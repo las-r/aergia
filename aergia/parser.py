@@ -111,6 +111,27 @@ def parseexpr(tokens):
                 return track(ClassNode(name, para, body))
             else:
                 return track(FunctionNode(name, para, body))
+            
+    # error catching block
+    if token == "!!":
+        if tokens and tokens[0][0] == "(":
+            tokens.popleft()
+            errname = tokens.popleft()[0]
+            body = []
+            while tokens and tokens[0][0] != ")":
+                body.append(parseexpr(tokens))
+            if tokens: tokens.popleft()
+            catchbody = []
+            if tokens and tokens[0][0] == "->":
+                tokens.popleft()
+                if tokens and tokens[0][0] == "(":
+                    tokens.popleft()
+                    while tokens and tokens[0][0] != ")":
+                        catchbody.append(parseexpr(tokens))
+                    if tokens: tokens.popleft()
+                else:
+                    raise SyntaxError("Expected '(' after '->' in try-catch")
+            return track(TryCatchNode(errname, body, catchbody))
     
     # arrays/maps
     if token == "<":
