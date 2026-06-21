@@ -1,5 +1,4 @@
 import re
-import sys
 
 # aergia lexer
 # made by las-r on github
