@@ -1,11 +1,11 @@
 ---
 layout: default
-title: 9. Modules & System Integration
+title: 10. Modules & System Integration
 parent: Syntax
-nav_order: 9
+nav_order: 10
 ---
 
-# 9. Modules & System Integration
+# 10. Modules & System Integration
 Aergia code can load external resources either from separate `.aer` files or tap natively directly into Python's vast package index.
 
 * `+> expr prefix` **Open Import:** Parses and executes an external `.aer` source file path.

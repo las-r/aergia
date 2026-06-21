@@ -1,11 +1,11 @@
 ---
 layout: default
-title: 7. Functions
+title: 8. Functions
 parent: Syntax
-nav_order: 7
+nav_order: 8
 ---
 
-# 7. Functions
+# 8. Functions
 Functions handle execution isolation, scoping transitions, and value boundaries. In Aergia, functions are first-class values, meaning both named blocks and anonymous lambdas evaluate to function objects that can be assigned to variables, passed to other operations, or invoked inline.
 
 If a function does not explicitly return a value, it will just return the value of the last evaluated expression.
