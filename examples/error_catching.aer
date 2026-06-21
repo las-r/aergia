@@ -1,0 +1,11 @@
+!!(outer
+    !!(inner
+        = arr < >
+        > : arr 0
+    ) -> (
+        > "inner caught: %inner%"
+    )
+    = x /1 0
+) -> (
+    > "outer caught: %outer%"
+)
