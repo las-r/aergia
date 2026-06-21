@@ -143,6 +143,22 @@ def parseexpr(tokens):
         inc = parseexpr(tokens)
         return track(RangeNode(start, end, inc))
     
+    # files
+    if token == "@!:":
+        filename = parseexpr(tokens)
+        act = parseexpr(tokens)
+        return track(OpenFileNode(filename, act))
+    if token == "<!:":
+        file = parseexpr(tokens)
+        return track(ReadFileNode(file))
+    if token == ":!>":
+        file = parseexpr(tokens)
+        val = parseexpr(tokens)
+        return track(WriteFileNode(file, val))
+    if token == "!!:":
+        file = parseexpr(tokens)
+        return track(CloseFileNode(file))
+    
     # imports
     if token == "+>":
         file = parseexpr(tokens)

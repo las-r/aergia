@@ -711,6 +711,73 @@ class MapNode:
             return {k.eval(env): v.eval(env) for k, v in self.pairs}
         except Exception as e:
             raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+        
+# file nodes
+class OpenFileNode:
+    def __init__(self, filenamen, actn):
+        self.filenamen = filenamen
+        self.actn = actn
+        self.line = None
+        self.col = None
+    
+    def eval(self, env):
+        try:
+            filename = self.filenamen.eval(env)
+            act = self.actn.eval(env)
+            return open(filename, act)
+        except AergiaRuntimeError:
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+        
+class ReadFileNode:
+    def __init__(self, filen):
+        self.filen = filen
+        self.line = None
+        self.col = None
+    
+    def eval(self, env):
+        try:
+            file = self.filen.eval(env)
+            return file.read()
+        except AergiaRuntimeError:
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+
+class WriteFileNode:
+    def __init__(self, filen, valn):
+        self.filen = filen
+        self.valn = valn
+        self.line = None
+        self.col = None
+    
+    def eval(self, env):
+        try:
+            file = self.filen.eval(env)
+            val = self.valn.eval(env)
+            file.write(val)
+            return val
+        except AergiaRuntimeError:
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
+        
+class CloseFileNode:
+    def __init__(self, filen):
+        self.filen = filen
+        self.line = None
+        self.col = None
+    
+    def eval(self, env):
+        try:
+            file = self.filen.eval(env)
+            file.close()
+            return 0
+        except AergiaRuntimeError:
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col)
 
 # control flow nodes
 class IfNode:
