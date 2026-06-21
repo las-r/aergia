@@ -40,10 +40,10 @@ Every package MUST have the following things:
 This is how an `aerpkg.json` should look like (note that every field is MANDATORY):
 ```json
 {
-  "name": "example_package", // Recommended to use underlines instead of hyphens to separate words
+  "name": "example_package",
   "author": "las-r",
-  "version": "0.0.1", // Semantic versioning recommended, obviously
-  "dependencies": [], // Should just be a list of links to other GH repos
+  "version": "0.0.1",
+  "dependencies": [],  // Should just be a list of links to other GH repos
   "src": "src"
 }
 ```
