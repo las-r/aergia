@@ -18,9 +18,9 @@ Arrays are contiguous, ordered collections with zero-based indexing. Maps are co
 | `~:` | Pop Specific Key/Index | Removes and returns the element at a numerical index. | Removes and returns the value of a specific key. |
 | `*:` | Insert / Map Pair | Inserts an item into the array at a numerical index. | Maps a key to a value (equivalent to `=:` behavior). |
 | `$:` | Remove by Value/Key | Finds and removes the first occurrence of a specific value. | Deletes a key-value pair matching the given key. |
-| `::` | Slice Collection | Slices an array between two indexes. | *Not supported* (Raises a type error). |
+| `^:` | Slice Collection | Slices an array between two indexes. | N/A |
 | `=:` | Set Index/Key | Sets the value at a specific numerical index. | Sets or updates the value associated with a key. |
-| `..` | Range Initialization | Creates a range list based on a start, end, and step. | *Not supported*. |
+| `..` | Range Initialization | Creates a range list based on a start, end, and step. | N/A |
 
 ## Examples
 
