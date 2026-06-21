@@ -1,0 +1,88 @@
+*< random rand
++< "std_arr.aer" arr
++< "std_str.aer" str
+
+# dfs maze generator
+# by las-r
+
+# settings
+= WIDTH 25
+= HEIGHT 25
+
+# constants
+= DIRS < 
+    < 0 2 >
+    < 2 0 >
+    < 0 _2 >
+    < _2 0 >
+>
+
+# helpers
+{get_neighbors :x y:
+    = nc < >
+    [`DIRS d
+        = dx : d 0
+        = dy : d 1
+        = nx +x dx
+        = ny +y dy
+        (&& && >= nx 0 << nx WIDTH && >= ny 0 << ny HEIGHT
+            +: nc < nx ny >
+        )
+    ]
+    ? nc
+}
+
+{remove :x y:
+    =: : board y x " "
+}
+
+# maze generator
+{dfs_maze :x y:
+    =: : visited y x 1
+    @remove:x y:
+
+    = n @get_neighbors:x y:
+    @rand.shuffle:n:
+
+    [`n c
+        # unpack neighbor
+        = cx : c 0
+        = cy : c 1
+
+        (== : : visited cy cx 0
+            # remove wall
+            = wx =. /+x cx 2
+            = wy =. /+y cy 2
+            @remove:wx wy:
+
+            # call on chosen neighbor
+            @dfs_maze:cx cy:
+        )
+    ]
+}
+
+# variables
+= board < >
+[`@arr.iota:HEIGHT: _
+    = row < >
+    [`@arr.iota:WIDTH: _
+        +: row "#"
+    ]
+    +: board row
+]
+= visited < >
+[`@arr.iota:HEIGHT: _
+    = row < >
+    [`@arr.iota:WIDTH: _
+        +: row 0
+    ]
+    +: visited row
+]
+
+# generate
+@dfs_maze:@rand.randrange:1 WIDTH 2: @rand.randrange:1 HEIGHT 2::
+
+# output
+[`board row
+    > @str.join:row " ":
+]
