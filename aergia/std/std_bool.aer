@@ -1,9 +1,11 @@
 # standard boolean library
 # by las-r
 
+# boolean definition constants
 = true 1
 = false 0
 
+# evaluates whether a given value is a strict boolean integer (either 0 or 1).
 {is_bool :val:
     (|| == val 0 == val 1
         ? true

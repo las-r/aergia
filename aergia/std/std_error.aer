@@ -1,7 +1,7 @@
 # standard error library
 # by las-r
-# matches etype values set in nodes.py ETYPEMAP
 
+# exception type name constants
 = DivisionByZero "DivisionByZero"
 = IndexOutOfRange "IndexOutOfRange"
 = KeyNotFound "KeyNotFound"

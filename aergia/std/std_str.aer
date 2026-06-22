@@ -1,6 +1,7 @@
 # standard string library
 # by las-r
 
+# joins an array of items into a single string separated by a delimiter string.
 {join :arr del:
     = out ""
     = first 1
@@ -15,6 +16,7 @@
     ? out
 }
 
+# splits a string into an array of substrings based on a delimiter character.
 {split :str del:
     = out < >
     = cur ""
@@ -24,7 +26,7 @@
                 +: out cur
                 = cur ""
             ) -> (
-                =+ cur chr
+               =+ cur chr
             )
         ) -> (
             =+ out chr
@@ -34,6 +36,7 @@
     ? out
 }
 
+# verifies if a string contains a specific substring sequence.
 {has :str seq:
     = matchidx 0
     = found 0
@@ -58,6 +61,7 @@
     ? found
 }
 
+# reverses the characters of a string.
 {reverse :str:
     = out <>
     [`str chr
@@ -66,6 +70,7 @@
     ? @str_join:out "":
 }
 
+# trims leading white space from the left side of a string.
 {ltrim :str:
     = out ""
     = start 0
@@ -81,9 +86,13 @@
     ]
     ? out
 }
+
+# trims trailing white space from the right side of a string.
 {rtrim :str: 
     ? @str_ltrim:@str_reverse:str::
 }
+
+# strips both leading and trailing white space from a string.
 {trim :str:
     ? @str_ltrim:@str_rtrim:str::
 }
