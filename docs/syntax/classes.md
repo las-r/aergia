@@ -56,5 +56,5 @@ Methods are functions defined inside a class block. When you extract a method fr
 ```py
 # Bind and execute the 'greet' method on the 'sam' instance
 # Structure: @ -> instance method_name
-@-> kane greet  # Prints: "Hello, Kane Pixels! You are 20 years old."
+@-> kane greet  # Prints: "Hello, Kane Pixels! You are 21 years old."
 ```
