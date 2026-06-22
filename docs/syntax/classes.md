@@ -6,7 +6,7 @@ nav_order: 9
 ---
 
 # 9. Classes & Objects
-Classes provide an object-oriented paradigm for creating stateful blueprints with independent values and functions. In Aergia, classes share the same structural block symbol (`{`) as functions, but are explicitly differentiated by a conventions-driven engine: if the definition identifier begins with an **uppercase letter**, it evaluates to a class blueprint rather than a regular function.
+Classes provide an object-oriented paradigm for creating stateful blueprints with independent values and functions.
 
 Every instantiated class receives its own isolated state environment, automatically exposing a reference pointer called `this`.
 
