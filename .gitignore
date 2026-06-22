@@ -53,6 +53,7 @@ coverage.xml
 cover/
 *.aer
 !examples/*.aer
+!examples/**/*.aer
 !aergia/std/
 !aergia/std/**/*
 
