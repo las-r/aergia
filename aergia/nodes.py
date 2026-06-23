@@ -987,7 +987,7 @@ class CallNode:
                 fenv = env.copy()
             if hasattr(func, "para"):
                 if len(func.para) != len(eargs):
-                    raise ValueError(f"Function takes {len(func.para)} arguments, but {len(eargs)} were given")
+                    raise AergiaRuntimeError(f"Function takes {len(func.para)} arguments, but {len(eargs)} were given", line=self.line, col=self.col, etype="TypeError")
                 for param, arg in zip(func.para, eargs, strict=True):
                     fenv.bindings[param] = arg
             if hasattr(func, "body"):
