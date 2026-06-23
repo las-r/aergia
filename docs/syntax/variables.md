@@ -11,6 +11,7 @@ Variables are declared and assigned dynamically using the `=` operator followed 
 | Token | Operation | Syntax Pattern | Description |
 | :--- | :--- | :--- | :--- |
 | `=` | Assignment | `= variable_name expr` | Binds the result of `expr` to `variable_name` |
+| ``=` `` | Local Assignment | ``=` local_variable_name expr`` | Binds the result of `expr` to `local_variable_name`, but only within the current scope |
 | `=?` | Super Assignment | `=? variable_name constraint` | Defines a supervalue `variable_name` |
 
 ## Examples
