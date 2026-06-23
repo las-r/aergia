@@ -1,0 +1,103 @@
+*> pyray
+*< random r
++< "std_arr.aer" arr
+
+# snake clone
+# by las-r
+
+# settings
+= WIDTH 800
+= HEIGHT 600
+= TW 20
+= TH 20
+= GW =. /WIDTH TW
+= GH =. /HEIGHT TH
+
+# helpers
+{napple
+    = na < @r.randint:0 -GW 1: @r.randint:0 -GH 1: >
+    [|| @arr.has:snake na: == na apple
+        = na < @r.randint:0 -GW 1: @r.randint:0 -GH 1: >
+    ]
+    ? na
+}
+
+{reset
+    = snake < < =. /GW 3 =. /GH 2 > >
+    = apple < =. *2 /GW 3 =. /GH 2 >
+    = dx 1 = dy 0
+    = mbuf 0
+}
+
+# variables
+= snake < < =. /GW 3 =. /GH 2 > >
+= apple < =. *2 /GW 3 =. /GH 2 >
+= dx 1 = dy 0
+= mbuf 0
+
+# init
+@init_window:WIDTH HEIGHT "Snake in Aergia":
+@set_target_fps:15:
+
+# main loop
+[!@window_should_close
+    # input
+    (&& && @is_key_pressed:KeyboardKey.KEY_W: != <dx dy> <0 1> !mbuf
+        = dx 0 = dy _1
+        = mbuf 1
+    )
+    (&& && @is_key_pressed:KeyboardKey.KEY_S: != <dx dy> <0 _1> !mbuf
+        = dx 0 = dy 1
+        = mbuf 1
+    )
+    (&& && @is_key_pressed:KeyboardKey.KEY_A: != <dx dy> <1 0> !mbuf
+        = dx _1 = dy 0
+        = mbuf 1
+    )
+    (&& && @is_key_pressed:KeyboardKey.KEY_D: != <dx dy> <_1 0> !mbuf
+        = dx 1 = dy 0
+        = mbuf 1
+    )
+    (@is_key_pressed:KeyboardKey.KEY_R:
+        @reset
+    )
+
+    # new snake head
+    = head : snake 0
+    = nx +dx : head 0
+    = ny +dy : head 1
+    = nh < nx ny >
+
+    # apple
+    (== nh apple
+        = apple @napple
+    ) -> (
+        -: snake
+    )
+
+    # death
+    (|| || ! && <= 0 nx << nx GW ! && <= 0 ny << ny GH @arr.has:snake nh:
+        @reset
+        >>>
+    )
+
+    # update head
+    *: snake 0 nh
+    = mbuf 0
+
+    # draw
+    @begin_drawing
+    @clear_background:BLACK:
+    [`snake s
+        = sx : s 0
+        = sy : s 1
+        @draw_rectangle:*sx TW *sy TH TW TH RAYWHITE:
+    ]
+    = ax : apple 0
+    = ay : apple 1
+    @draw_rectangle:*ax TW *ay TH TW TH BLUE:
+    @end_drawing
+]
+
+# deinit
+@close_window
