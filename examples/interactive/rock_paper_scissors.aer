@@ -1,5 +1,5 @@
-+< "std_arr.aer" arr
 *< random r
++< "std_arr.aer" arr
 
 = choices < "rock" "paper" "scissors" >
 = winner ""
