@@ -208,30 +208,33 @@ def parseexpr(tokens):
     
     # assignments
     if token == "=":
+        scoped = False
+        if tokens and tokens[0][0] == "`":
+            scoped = True
         if tokens and tokens[0][0] in BINOPS:
             op = tokens.popleft()[0]
             vname = tokens[0][0]
             vval = parseexpr(tokens)
             value = parseexpr(tokens)
             if op == "&&":
-                return track(AssignNode(vname, track(ShortCircuitANDNode(vval, value))))
+                return track(AssignNode(vname, track(ShortCircuitANDNode(vval, value)), scoped=scoped))
             if op == "||":
-                return track(AssignNode(vname, track(ShortCircuitORNode(vval, value))))
-            return track(AssignNode(vname, track(BinaryOpNode(op, vval, value))))
-        if tokens and tokens[0][0] in UNOPS:
+                return track(AssignNode(vname, track(ShortCircuitORNode(vval, value)), scoped=scoped))
+            return track(AssignNode(vname, track(BinaryOpNode(op, vval, value)), scoped=scoped))
+        elif tokens and tokens[0][0] in UNOPS:
             op = tokens.popleft()[0]
             vname = tokens[0][0]
             vval = parseexpr(tokens)
-            return track(AssignNode(vname, track(UnaryOpNode(op, vval))))
+            return track(AssignNode(vname, track(UnaryOpNode(op, vval)), scoped=scoped))
         name = tokens.popleft()[0]
         val = parseexpr(tokens)
-        return track(AssignNode(name, val))
+        return track(AssignNode(name, val, scoped=scoped))
     
     # super assignment
     if token == "=?":
         name = tokens.popleft()[0]
         cons = parseexpr(tokens)
-        return track(SuperNode(name, cons))
+        return track(SuperAssignNode(name, cons))
     
     # binary ops
     if token in BINOPS:

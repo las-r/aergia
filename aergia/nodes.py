@@ -306,26 +306,29 @@ class VariableNode:
         except Exception as e:
             raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
-# assignment node
+# assignment nodes
 class AssignNode:
-    def __init__(self, name, child):
+    def __init__(self, name, child, scoped=False):
         self.name = name
         self.child = child
+        self.scoped = scoped
         self.line = None
         self.col = None
 
     def eval(self, env):
         try:
             value = self.child.eval(env)
-            env[self.name] = value
+            if self.scoped:
+                env.bindings[self.name] = value
+            else:
+                env[self.name] = value
             return value
         except AergiaRuntimeError:
             raise
         except Exception as e:
             raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
-# super node  
-class SuperNode:
+class SuperAssignNode:
     def __init__(self, name, constraints):
         self.name = name
         self.constraints = constraints
