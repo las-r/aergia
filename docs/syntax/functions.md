@@ -41,3 +41,21 @@ Anonymous functions omit the identifier name entirely, moving straight into the 
 = subtract {:a b: -a b}
 > @subtract:10 3:  # Prints 7
 ```
+
+## Argument Unpacking
+Arguments can be unpacked from arrays using the backtick (`` ` ``) modifer.
+
+```py
+# A function that takes in 3 arguments
+{add :x y z:
+    ? +x +y z
+}
+
+# Unpacks array into arguments
+= args <1 2 3>
+> @add:`args:
+
+# You can still use normal arguments alongside the unpacked ones
+= some_args <4 5>
+> @add:`some_args 6:
+```
