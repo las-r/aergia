@@ -210,6 +210,7 @@ def parseexpr(tokens):
     if token == "=":
         scoped = False
         if tokens and tokens[0][0] == "`":
+            tokens.popleft()
             scoped = True
         if tokens and tokens[0][0] in BINOPS:
             op = tokens.popleft()[0]
