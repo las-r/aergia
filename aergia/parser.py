@@ -201,6 +201,12 @@ def parseexpr(tokens):
         value = parseexpr(tokens)
         return track(ExitNode(value))
     
+    # error raising
+    if token == "!>":
+        err = parseexpr(tokens)
+        msg = parseexpr(tokens)
+        return track(RaiseErrorNode(err, msg))
+    
     # evaluation
     if token == ";":
         value = parseexpr(tokens)

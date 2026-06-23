@@ -888,7 +888,24 @@ class ContinueNode:
     def eval(self, env):
         raise ContinueException()
     
-# error catching node
+# error nodes
+class RaiseErrorNode:
+    def __init__(self, errn, msgn):
+        self.errn = errn
+        self.msgn = msgn
+        self.line = None
+        self.col = None
+        
+    def eval(self, env):
+        try:
+            err = self.errn.eval(env)
+            msg = self.msgn.eval(env)
+            raise AergiaRuntimeError(msg, line=self.line, col=self.col, etype=ETYPEMAP.get(err, "RuntimeError"))
+        except AergiaRuntimeError:
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
+    
 class TryCatchNode:
     def __init__(self, errname, body, catchbody):
         self.errname = errname
