@@ -172,7 +172,7 @@ def parseexpr(tokens):
     if token == "<!:":
         file = parseexpr(tokens)
         return track(ReadFileNode(file))
-    if token == ":!>":
+    if token == ">!:":
         file = parseexpr(tokens)
         val = parseexpr(tokens)
         return track(WriteFileNode(file, val))
