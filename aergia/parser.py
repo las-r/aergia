@@ -280,7 +280,11 @@ def parseexpr(tokens):
         if tokens and tokens[0][0] == ":":
             tokens.popleft()
             while tokens and tokens[0][0] != ":":
-                args.append(parseexpr(tokens))
+                if tokens and tokens[0][0] == "`":
+                    tokens.popleft()
+                    args.append(UnpackNode(parseexpr(tokens)))
+                else:
+                    args.append(parseexpr(tokens))
             if tokens: tokens.popleft()
         return track(CallNode(target, args))
     
@@ -304,7 +308,7 @@ def parseexpr(tokens):
         return track(LiteralNode(unescaped))
     
     # number and variable
-    clean = '-' + token[1:] if token.startswith('_') and len(token) > 1 else token
+    clean = "-" + token[1:] if token.startswith("_") and len(token) > 1 else token
     try:
         val = float(clean)
         return track(LiteralNode(int(val) if val.is_integer() else val))

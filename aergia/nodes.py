@@ -950,6 +950,15 @@ class AnonymousFunctionNode:
             raise
         except Exception as e:
             raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
+        
+class UnpackNode:
+    def __init__(self, node):
+        self.node = node
+        self.line = None
+        self.col = None
+    
+    def eval(self, env):
+        return self.node.eval(env)
 
 class CallNode:
     def __init__(self, target, args):
@@ -963,7 +972,13 @@ class CallNode:
             func = self.target.eval(env)
             if not func:
                 raise AergiaRuntimeError("Target is not a valid function", line=self.line, col=self.col, etype="TypeError")
-            eargs = [arg.eval(env) for arg in self.args]
+            eargs = []
+            for arg in self.args:
+                val = arg.eval(env)
+                if isinstance(arg, UnpackNode):
+                    eargs.extend(val)
+                else:
+                    eargs.append(val)
             if callable(func):
                 return func(*eargs)
             if hasattr(func, "capturedenv"):
@@ -971,7 +986,9 @@ class CallNode:
             else:
                 fenv = env.copy()
             if hasattr(func, "para"):
-                for param, arg in zip(func.para, eargs):
+                if len(func.para) != len(eargs):
+                    raise ValueError(f"Function takes {len(func.para)} arguments, but {len(eargs)} were given")
+                for param, arg in zip(func.para, eargs, strict=True):
                     fenv.bindings[param] = arg
             if hasattr(func, "body"):
                 body = func.body
