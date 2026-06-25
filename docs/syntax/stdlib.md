@@ -6,7 +6,7 @@ nav_order: 11
 ---
 
 # 11. Standard Libraries
-Aergia includes a modular suite of 4 core standard libraries built directly into the toolkit to manage collections, boolean validation, structured errors, and string scanning.
+Aergia includes a modular suite of several core standard libraries built directly into the toolkit.
 
 ## Library Overview
 | Library File | Category | Core Purpose |
@@ -76,3 +76,14 @@ Provides named global string constants matching native errors emitted by the `no
 * **`ltrim :str:`** Clears leading string spacer layout blocks from the left margin until text contents hit a non-space boundary.
 * **`rtrim :str:`** Clears trailing string space margins working backward from the right-hand side.
 * **`trim :str:`** Symmetrically runs both `ltrim` and `rtrim` pipelines across text targets.
+
+## `std_type.aer` (Type Checkers)
+### Data Types
+* **`is_int :val:`** Returns if value is equivalent to an integer or not.
+* **`is_float :val:`** Returns if value is equivalent to an float or not.
+* **`is_str :val:`** Returns if value is equivalent to an string or not.
+* **`is_arr :val:`** Returns if value is equivalent to an array or not.
+
+### Iteration Types
+* **`is_iterable :val:`** Returns if value is iterable or not.
+* **`is_empty :val:`** Returns if value is an empty iterable or not.
