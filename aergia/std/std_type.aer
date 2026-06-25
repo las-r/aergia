@@ -1,0 +1,74 @@
+# standard type library
+# by las-r
+
+# checks if value is a integer
+{is_int :val:
+    !!(err
+        ? (== val =. val 1) -> (0)
+    ) -> (
+        (== err "ValueError"
+            ? 0
+        )
+    )
+}
+
+# checks if value is a float
+{is_float :val:
+    !!(err
+        =. val
+        ? 0
+    ) -> (
+        (== err "ValueError"
+            ? 0
+        )
+    )
+}
+
+# checks if value is a string
+{is_str :val:
+    !!(err
+        (== val + val ""
+            ? (@is_iterable:val: 1) -> (0)
+        )
+    ) -> (
+        (== err "ValueError"
+            ? 0
+        )
+    )
+}
+
+# checks if value is an array
+{is_arr :val:
+    (@is_iterable:val:
+        ? !@is_str:val:
+    )
+}
+
+# checks if value is an iterable
+{is_iterable :val:
+    !!(err
+        [`val _
+            ? 1
+        ]
+    ) -> (
+        (== err "ValueError"
+            ? 0
+        )
+    )
+}
+
+# checks if value is an empty iterable
+{is_empty :val:
+    (@is_iterable:val:
+        !!(err
+            [`val _
+                ? 0
+            ]
+            ? 1
+        ) -> (
+            (== err "ValueError"
+                ? 0
+            )
+        )
+    )
+}
