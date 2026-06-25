@@ -713,7 +713,7 @@ class RangeNode:
             raise TypeError(f"Object of type {type(end).__name__} is not an integer")
         if not isinstance(inc, int):
             raise TypeError(f"Object of type {type(inc).__name__} is not an integer")
-        return list(range(start, end, inc))
+        return range(start, end, inc)
     
 # map node
 class MapNode:
