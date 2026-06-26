@@ -818,6 +818,34 @@ class IfNode:
             raise
         except Exception as e:
             raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
+        
+class SwitchCaseNode:
+    def __init__(self, match, cases, elsebody=None):
+        self.match = match
+        self.cases = cases
+        self.elsebody = elsebody if elsebody is not None else []
+        self.line = None
+        self.col = None
+        
+    def eval(self, env):
+        try:
+            matchval = self.match.eval(env)
+            for casen, bodyns in self.cases.items():
+                if matchval == casen.eval(env):
+                    last = 0
+                    for node in bodyns:
+                        if node:
+                            last = node.eval(env)
+                    return last
+            last = 0
+            for node in self.elsebody:
+                if node:
+                    last = node.eval(env)
+            return last
+        except (AergiaRuntimeError, ReturnException, ExitException, BreakException, ContinueException):
+            raise
+        except Exception as e:
+            raise AergiaRuntimeError(str(e), line=self.line, col=self.col, etype=ETYPEMAP.get(type(e).__name__, "RuntimeError"))
 
 class WhileNode:
     def __init__(self, cond, body):

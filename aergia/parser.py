@@ -59,6 +59,42 @@ def parseexpr(tokens):
                 raise SyntaxError("Expected '(' after '->' operator")
         return track(IfNode(cond, body, elsebody))
     
+    # switch block
+    if token == "~~":
+        if tokens and tokens[0][0] == "(":
+            tokens.popleft()
+            checkval = parseexpr(tokens)
+            cases = {}
+            while tokens and tokens[0][0] != ")":
+                caseval = parseexpr(tokens)
+                if tokens and tokens[0][0] == "->":
+                    tokens.popleft()
+                    if tokens and tokens[0][0] == "(":
+                        tokens.popleft()
+                        casebody = []
+                        while tokens and tokens[0][0] != ")":
+                            casebody.append(parseexpr(tokens))
+                        if tokens: tokens.popleft()
+                    else:
+                        raise SyntaxError("Expected '(' after '->' operator")
+                else:
+                    raise SyntaxError("Expected '->' after switch case value")
+                cases[caseval] = casebody
+            if tokens: tokens.popleft()
+            elsebody = []
+            if tokens and tokens[0][0] == "->":
+                tokens.popleft()
+                if tokens and tokens[0][0] == "(":
+                    tokens.popleft()
+                    while tokens and tokens[0][0] != ")":
+                        elsebody.append(parseexpr(tokens))
+                    if tokens: tokens.popleft()
+                else:
+                    raise SyntaxError("Expected '(' after '->' operator")
+            return track(SwitchCaseNode(checkval, cases, elsebody))
+        else:
+            raise SyntaxError("Expected '(' after '~~'")
+    
     # while/for block
     if token == "[":
         if tokens and tokens[0][0] == "`":
@@ -132,6 +168,10 @@ def parseexpr(tokens):
                 else:
                     raise SyntaxError("Expected '(' after '->' in try-catch")
             return track(TryCatchNode(errname, body, catchbody))
+        else:
+            err = parseexpr(tokens)
+            msg = parseexpr(tokens)
+            return track(RaiseErrorNode(err, msg))
     
     # arrays/maps
     if token == "<":
