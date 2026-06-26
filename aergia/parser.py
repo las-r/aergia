@@ -12,7 +12,7 @@ ARROPS = {
     "+:": (PushNode, 2),
     "-:": (PopNode, 1),
     "~:": (PopIndexNode, 2),
-    "*:": (lambda a, idx, itm: InsertNode(a, itm, idx), 3), # Reorder parameter structure layout
+    "*:": (lambda a, idx, itm: InsertNode(a, itm, idx), 3),
     "$:": (RemoveItemNode, 2),
     "^:": (SliceNode, 3),
     "=:": (SetIndexNode, 3)
