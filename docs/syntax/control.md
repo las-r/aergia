@@ -9,7 +9,7 @@ nav_order: 6
 Control flow operations use brackets or parentheses to enclose evaluation scopes and execution bodies.
 
 ## Conditionals (If-Else, Switch-Case)
-Syntax: `( cond statement1 statement2 ... ) -> ( elsestatement1 ... )`
+Syntax: `(cond statement1 statement2 ...) -> (elsestatement1 ...)`
 
 ### Examples
 ```py
