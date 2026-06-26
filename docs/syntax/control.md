@@ -8,7 +8,7 @@ nav_order: 6
 # 6. Control Flow
 Control flow operations use brackets or parentheses to enclose evaluation scopes and execution bodies.
 
-## Conditionals (If & Else)
+## Conditionals (If-Else, Switch-Case)
 Syntax: `( cond statement1 statement2 ... ) -> ( elsestatement1 ... )`
 
 ### Examples
@@ -26,6 +26,16 @@ Syntax: `( cond statement1 statement2 ... ) -> ( elsestatement1 ... )`
 = a 2
 = b 1
 > (<< a b "A is less than B") -> ("A is not less than B")
+
+# Switch cases check for a value and if any case value matches.
+= letter .
+~~(letter
+    "a" -> (> "Wow!")
+    "b" -> (> "Huzzah!")
+    "c" -> (> "Cheers!")
+) -> (
+    > "No matches found."
+)
 ```
 
 ## Loops (While & For)
