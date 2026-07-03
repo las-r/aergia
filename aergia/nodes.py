@@ -1042,11 +1042,18 @@ class CallNode:
             if not isinstance(body, list):
                 body = [body]
             try:
-                last = 0
-                for node in body:
-                    if node:
-                        last = node.eval(fenv)
-                return last
+                if isinstance(self.target, AnonymousFunctionNode):
+                    last = 0
+                    for node in body:
+                        if node:
+                            last = node.eval(fenv)
+                    return last
+                elif isinstance(self.target, FunctionNode):
+                    for node in body:
+                        if node:
+                            node.eval(fenv)
+                else:
+                    raise AergiaRuntimeError(f"Function call target must be callable.", line=self.line, col=self.col, etype="TypeError")
             except ReturnException as e:
                 return e.value
             except AergiaRuntimeError as e:
