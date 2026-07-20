@@ -1,3 +1,4 @@
+import pytest
 from aergia.lexer import tokenize
 from aergia.parser import parse
 from aergia.nodes import *

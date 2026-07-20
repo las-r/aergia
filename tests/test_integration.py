@@ -108,6 +108,40 @@ def test_recursive_function_execution(capsys):
     captured = capsys.readouterr()
     assert captured.out.strip() == "8"
 
+def test_named_function_call_via_variable(capsys):
+    """Regression: CallNode used to dispatch on self.target instead of the
+    resolved func, so any call through a VariableNode (i.e. every normal
+    named call) raised 'Function call target must be callable.'"""
+    code = """
+    {double :n:
+        ? *n 2
+    }
+    > @double:21:
+    """
+    run_aergia(code)
+    captured = capsys.readouterr()
+    assert captured.out.strip() == "42"
+
+def test_named_function_implicit_return():
+    """Regression: named functions without an explicit '?' used to
+    fall through and return None instead of the last evaluated expr."""
+    code = """
+    {addone :n:
+        +n 1
+    }
+    = r @addone:4:
+    """
+    env = run_aergia(code)
+    assert env["r"] == 5
+
+def test_logical_not_returns_int():
+    """Regression: '!' used operator.not_ which yields python bool
+    (True/False) instead of the documented 0/1 int."""
+    code = "= r ! 0"
+    env = run_aergia(code)
+    assert env["r"] == 1
+    assert type(env["r"]) is int
+
 def test_runtime_error_traceback():
     """Asserts that runtime environment faults trigger proper diagnostics."""
     code = """
