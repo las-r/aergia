@@ -6,7 +6,7 @@ from aergia.lexer import tokenize
 from aergia.parser import parse
 from aergia.nodes import Environment
 
-STDDIR = Path(__file__).parent / "aergia" / "std"
+STDDIR = Path(__file__).parent.parent / "aergia" / "std"
 
 def run_aergia(code, inp=""):
     """Same helper as test_integration.py, but wired up so imports of
