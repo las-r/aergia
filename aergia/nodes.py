@@ -31,7 +31,7 @@ BINOPS = {
 }
 UNOPS = {
     "~": operator.inv,
-    "!": operator.not_,
+    "!": lambda v: 1 if not v else 0,
     "=,": str,
     "=.": int,
     "='": float,
@@ -1042,16 +1042,18 @@ class CallNode:
             if not isinstance(body, list):
                 body = [body]
             try:
-                if isinstance(self.target, AnonymousFunctionNode):
+                if isinstance(func, AnonymousFunctionNode):
                     last = 0
                     for node in body:
                         if node:
                             last = node.eval(fenv)
                     return last
-                elif isinstance(self.target, FunctionNode):
+                elif isinstance(func, FunctionNode):
+                    last = 0
                     for node in body:
                         if node:
-                            node.eval(fenv)
+                            last = node.eval(fenv)
+                    return last
                 else:
                     raise AergiaRuntimeError(f"Function call target must be callable.", line=self.line, col=self.col, etype="TypeError")
             except ReturnException as e:
