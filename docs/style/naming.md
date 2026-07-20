@@ -10,4 +10,16 @@ nav_order: 1
     - Constants, on the other hand, should be named using `UPPER_SNAKE_CASE`.
 - Functions should be named using `camelCase`.
 
-If you're making a library, you should append the name of the library to the front of any functions or values using an underscore. `e.g. math_squareRoot`
+If you're making a library, don't prefix your own function names inside the file (e.g. write `join`, not `str_join`). Namespacing is handled by the caller's import instead:
+
+```py
+# closed import binds every export behind the "str" prefix
++< "std_str.aer" str
+@str.join:< "a" "b" > "-":
+
+# open import binds exports directly into the current scope, no prefix
++> "std_str.aer"
+@join:< "a" "b" > "-":
+```
+
+Because of this, calls *within* a library file should always use the bare, unprefixed name - the std library follows this rule consistently (`std_arr.aer`, `std_str.aer`, etc).

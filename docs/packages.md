@@ -14,7 +14,7 @@ Agathos is Aergia's decentralized package management tool. It lets you:
 - List packages with name, author, and version.
 
 ### Installing Packages
-You can install packages from GitHub using the `--libget` argument, or `-lh` for shorthand. 
+You can install packages from GitHub using the `--libget` argument, or `-lg` for shorthand. 
 
 ```bash
 aergia --libget https://github.com/las-r/aergia-example-package
