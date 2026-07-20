@@ -144,10 +144,11 @@
     [<< i n
         = j 0
         [<< j -n 1
-            (>> @f:: out j: @f:: out +j 1:
-                = tmp : out j
-                =: out j : out +j 1
-                =: out +j 1 tmp
+            = a : out j
+            = b : out +j 1
+            (>> @f:a: @f:b:
+                =: out j b
+                =: out +j 1 a
             )
             =+ j 1
         ]

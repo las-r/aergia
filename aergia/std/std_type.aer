@@ -6,7 +6,7 @@
     !!(err
         ? (== val =. val 1) -> (0)
     ) -> (
-        (== err "ValueError"
+        (== err.type "ValueError"
             ? 0
         )
     )
@@ -15,10 +15,9 @@
 # checks if value is a float
 {is_float :val:
     !!(err
-        =. val
-        ? 0
+        ? (!= val =. val 1) -> (0)
     ) -> (
-        (== err "ValueError"
+        (== err.type "ValueError"
             ? 0
         )
     )
@@ -31,7 +30,7 @@
             ? (@is_iterable:val: 1) -> (0)
         )
     ) -> (
-        (== err "ValueError"
+        (== err.type "ValueError"
             ? 0
         )
     )
@@ -46,15 +45,15 @@
 
 # checks if value is an iterable
 {is_iterable :val:
+    = ok 1
     !!(err
         [`val _
-            ? 1
+            <<<
         ]
     ) -> (
-        (== err "ValueError"
-            ? 0
-        )
+        = ok 0
     )
+    ? ok
 }
 
 # checks if value is an empty iterable
@@ -66,7 +65,7 @@
             ]
             ? 1
         ) -> (
-            (== err "ValueError"
+            (== err.type "ValueError"
                 ? 0
             )
         )

@@ -29,10 +29,12 @@
                =+ cur chr
             )
         ) -> (
-            =+ out chr
+            +: out chr
         )
     ]
-    +: out cur
+    (!= del ""
+        +: out cur
+    )
     ? out
 }
 
@@ -67,20 +69,16 @@
     [`str chr
         *: out 0 chr
     ]
-    ? @str_join:out "":
+    ? @join:out "":
 }
 
 # trims leading white space from the left side of a string.
 {ltrim :str:
     = out ""
     = start 0
-    = end 0
     [`str chr
-        (!start
-            (!= chr " "
-                = start 1
-            )
-        ) -> (
+        (|| start != chr " "
+            = start 1
             =+ out chr
         )
     ]
@@ -89,10 +87,10 @@
 
 # trims trailing white space from the right side of a string.
 {rtrim :str: 
-    ? @str_ltrim:@str_reverse:str::
+    ? @reverse:@ltrim:@reverse:str:::
 }
 
 # strips both leading and trailing white space from a string.
 {trim :str:
-    ? @str_ltrim:@str_rtrim:str::
+    ? @ltrim:@rtrim:str::
 }
