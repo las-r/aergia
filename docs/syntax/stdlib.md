@@ -10,7 +10,7 @@ Aergia includes a modular suite of several core standard libraries built directl
 
 ## Library Overview
 | Library File | Category | Core Purpose |
-| :--- | :--- | :--- |
+| --- | --- | --- |
 | `std_arr.aer` | Array Utilities | Higher-order mapping, reducing, filtering, and sequence sorting. |
 | `std_bool.aer`| Boolean Logic | Definitions and validation constraints for truth values. |
 | `std_error.aer`| Exception Architecture | Standard identifiers mapped to the interpreter's native runtime exceptions. |
