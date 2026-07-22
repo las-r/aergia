@@ -23,43 +23,58 @@ contexts:
         1: punctuation.definition.function.aergia
         2: support.function.name.aergia
 
-    # Comparison Operators
-    - match: '==|!=|<=|>=|<<|>>'
-      scope: keyword.operator.comparison.aergia
-
     # Control Operators
-    - match: '\+>|\*>|\*<|~>'
+    - match: '<<<|>>>|@!:|<!:|>!:|!!:|\+>|\+<|\*>|\*<|~>|->|=>'
       scope: keyword.operator.control.aergia
 
+    # Comparison Operators
+    - match: '==|!=|<=|>=|<<|>>|=\?'
+      scope: keyword.operator.comparison.aergia
+
     # Array Manipulation Operators
-    - match: '\+:|-:|~:|\*:|#:|::'
+    - match: '\+:|-:|~:|\*:|#:|::|\.\.'
       scope: keyword.operator.array.aergia
 
     # Logical Operators
-    - match: '&&|\|\|'
+    - match: '&&|\|\||!'
       scope: keyword.operator.logical.aergia
 
-    # Miscellaneous and Arithmetic Operators
-    - match: '~|!|&|\||\$|\+|-|\*|/|%|\^|@|:|=|\?|;|<|>|,|\.|'''
-      scope: keyword.operator.logical.arithmetic.aergia
+    # Miscellaneous Operators
+    - match: '\$:|\^:|=:|=,|=\.|=\'''
+      scope: keyword.operator.misc.aergia
+
+    # Arithmetic & Simple Operators
+    - match: '~|&|\||\$|\+|-|\*|/|%|\^|@|:|=|\?|;|<|>|,|\.|\'''
+      scope: keyword.operator.arithmetic.aergia
 
     # Brackets, Braces, and Backticks
     - match: '[\[\]\(\)\{\}\`]'
       scope: punctuation.section.bracket.aergia
 
-    # Numeric Constants
-    - match: '\b\d+(\.\d+)?\b'
+    # Numeric Constants (handles numbers like 10, 3.14, .5, and _100)
+    - match: '\b_?\d+(\.\d+)?\b|\.\d+'
       scope: constant.numeric.aergia
 
     # Variables / Identifiers
     - match: '\b[a-zA-Z_][\w.]*\b'
       scope: variable.other.aergia
 
-  # Handles everything inside strings until a closing quote
+  # Handles string content and nested string interpolation %...%
   string-double:
     - meta_scope: string.quoted.double.aergia
     - match: '\\.'
       scope: constant.character.escape.aergia
+    - match: '%'
+      scope: punctuation.definition.interpolation.begin.aergia
+      push: string-interpolation
     - match: '"'
       scope: punctuation.definition.string.end.aergia
       pop: true
+
+  # Context for evaluating language structures inside string interpolation %...%
+  string-interpolation:
+    - meta_scope: meta.interpolation.aergia
+    - match: '%'
+      scope: punctuation.definition.interpolation.end.aergia
+      pop: true
+    - include: main
