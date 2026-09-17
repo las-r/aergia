@@ -33,6 +33,14 @@
     ? _1
 }
 
+# swaps 2 indexes in an array
+{swap :arr i j:
+    = p ~: arr i
+    = q ~: arr j
+    *: arr i q
+    *: arr j p
+}
+
 # applies a function to each element of an array and returns an array of the results.
 {map :arr f:
     = out <>
