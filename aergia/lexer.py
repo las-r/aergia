@@ -12,7 +12,7 @@ REGEX = re.compile(r"""
     (?P<DELIM>    [()\[\]{}:]) |
     (?P<OPERATOR> ==|!=|<<|>>|<=|>=|&&|\|\||[+\-*/%^&\|$~!_]) |
     (?P<SYMBOL>   [=>.,'?]) |
-    (?P<IDENT>    [a-zA-Z]\w*) |
+    (?P<IDENT>    [a-zA-Z][a-zA-Z0-9]+) |
     (?P<SKIP>     [ \t\r\n]+) |
     (?P<MISMATCH> .)
 """, re.VERBOSE)
