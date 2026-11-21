@@ -7,12 +7,12 @@ from aergia.nodes import *
 # math parser
 def parsem(tokens: Tokens):
     tok = tokens.peek()
-    if tok and tok.value in UNOPS:
-        op = tokens.eat().value
+    if tok and tok in UNOPS:
+        op = tokens.eat()
         a = parsex(tokens)
         return UnOpNode(op, a)
-    if tok and tok.value in BINOPS:
-        op = tokens.eat().value
+    if tok and tok in BINOPS:
+        op = tokens.eat()
         a = parsex(tokens)
         b = parsex(tokens)
         return BinOpNode(op, a, b)
@@ -27,7 +27,7 @@ def parsex(tokens: Tokens):
     # assignment
     if tok == "=":
         tokens.eat()
-        name = tokens.eat().value
+        name = tokens.eat()
         value = parsex(tokens)
         return AssignNode(name, value)
 
