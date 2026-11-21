@@ -1,5 +1,5 @@
 > [!WARNING]
-> This branch of Aergia is a major WIP.
+> This branch is for the Aergia v2 rewrite and is a major WIP.
 
 <p align="center">
   <img src="assets/images/name.svg" alt="Aergia" width="300" />
