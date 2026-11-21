@@ -38,7 +38,7 @@ class AssignNode:
         env[self.name] = value
         return value
 
-class VariableNode:
+class IdentifierNode:
     def __init__(self, name):
         self.name = name
 
