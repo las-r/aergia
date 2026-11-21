@@ -1,6 +1,5 @@
 import sys
 import aergia.lexer
-import aergia.nodes
 import aergia.parser
 
 # aergia
