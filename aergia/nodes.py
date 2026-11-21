@@ -45,6 +45,23 @@ class IdentifierNode:
     def eval(self, env):
         return env[self.name]
 
+# io nodes
+class PrintNode:
+    def __init__(self, value):
+        self.value = value
+
+    def eval(self, env):
+        value = self.value.eval(env)
+        print(value)
+        return value
+
+class InputNode:
+    def __init__(self, itype):
+        self.itype = itype
+
+    def eval(self, env):
+        return self.itype(input())
+
 # operation nodes
 class UnOpNode:
     def __init__(self, op, a):

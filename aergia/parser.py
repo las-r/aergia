@@ -31,6 +31,21 @@ def parsex(tokens: Tokens):
         value = parsex(tokens)
         return AssignNode(name, value)
 
+    # io
+    if tok == ">":
+        tokens.eat()
+        value = parsex(tokens)
+        return PrintNode(value)
+    if tok == ",":
+        tokens.eat()
+        return InputNode(str)
+    if tok == ".":
+        tokens.eat()
+        return InputNode(int)
+    if tok == ",":
+            tokens.eat()
+            return InputNode(float)
+
     # math
     if tok in UNOPS or tok in BINOPS:
         return parsem(tokens)

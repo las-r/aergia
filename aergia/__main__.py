@@ -20,8 +20,6 @@ def main():
     env = {}
     for n in nodes:
         n.eval(env)
-        
-    print(env)
 
 if __name__ == "__main__":
     main()
