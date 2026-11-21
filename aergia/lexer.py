@@ -1,3 +1,4 @@
+import codecs
 import re
 
 # aergia lexer
@@ -10,7 +11,7 @@ REGEX = re.compile(r"""
     (?P<STRING>   "(?:\\.|[^"\\])*") |
     (?P<DELIM>    [()\[\]{}:]) |
     (?P<OPERATOR> ==|!=|<<|>>|<=|>=|&&|\|\||[+\-*/%^&\|$~!_]) |
-    (?P<SYMBOL>   [=>.,'?])
+    (?P<SYMBOL>   [=>.,'?]) |
     (?P<IDENT>    [a-zA-Z]\w*) |
     (?P<SKIP>     [ \t\r\n]+) |
     (?P<MISMATCH> .)
@@ -23,7 +24,7 @@ class Tokens:
         self.i = 0
         
     def can_eat(self):
-        return self.i <= len(self.tokens)
+        return self.i < len(self.tokens)
         
     def eat(self):
         self.i += 1
@@ -45,6 +46,8 @@ def tokenize(code):
     for match in REGEX.finditer(code):
         typ = match.lastgroup
         val = match.group()
+        if typ == "STRING":
+            val = f'"{codecs.decode(val[1:-1], "unicode_escape")}"'
         if typ in ("SKIP", "COMMENT"):
             continue
         elif typ == "MISMATCH":
