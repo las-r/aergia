@@ -25,7 +25,7 @@ class LiteralNode:
         self.value = value
 
     def eval(self, env):
-        return self.val
+        return self.value
 
 # variable nodes
 class AssignNode:
