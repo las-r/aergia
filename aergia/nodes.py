@@ -120,6 +120,13 @@ class IndexNode(Node):
     def eval(self, env):
         return self.array.eval(env)[self.index.eval(env)] 
 
+class LengthNode(Node):
+    def __init__(self, array):
+        self.array = array
+
+    def eval(self, env):
+        return len(self.array.eval(env))
+
 # control flow
 class IfNode(Node):
     def __init__(self, cond, body, ebody):
