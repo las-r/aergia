@@ -15,64 +15,53 @@ def parseb(tokens: Tokens, end):
 
 # expression parser
 def parsex(tokens: Tokens):
-    tok = tokens.peek()
+    tok = tokens.eat()
     if tok is None:
         raise SyntaxError("Unexpected end of input")
 
     # assignment
     if tok == "=":
-        tokens.eat()
         name = tokens.eat()
         value = parsex(tokens)
         return AssignNode(name, value)
 
     # io
     if tok == ">":
-        tokens.eat()
         value = parsex(tokens)
         return PrintNode(value)
     if tok == ",":
-        tokens.eat()
         return InputNode(str)
     if tok == ".":
-        tokens.eat()
         return InputNode(int)
     if tok == "'":
-        tokens.eat()
         return InputNode(float)
 
     # array
     if tok == "<":
-        tokens.eat()
         items = parseb(tokens, ">")
         return ArrayNode(items)
     if tok == "`":
-        tokens.eat()
         array = parsex(tokens)
         index = parsex(tokens)
         return IndexNode(array, index)
     if tok == "#":
-        tokens.eat()
         array = parsex(tokens)
         return LengthNode(array)
 
     # control flow
     if tok == "(":
-        tokens.eat()
         cond = parsex(tokens)
         body = parseb(tokens, ")")
         tokens.expect("(")
         ebody = parseb(tokens, ")")
         return IfNode(cond, body, ebody)
     if tok == "[":
-        tokens.eat()
         cond = parsex(tokens)
         body = parseb(tokens, "]")
         return WhileNode(cond, body)
 
     # functional
     if tok == "{":
-        tokens.eat()
         params = []
         if tokens.peek() == ":":
             tokens.eat()
@@ -82,7 +71,6 @@ def parsex(tokens: Tokens):
         body = parseb(tokens, "}")
         return DefinitionNode(params, body)
     if tok == "@":
-        tokens.eat()
         func = parsex(tokens)
         args = []
         if tokens.peek() == ":":
@@ -90,23 +78,19 @@ def parsex(tokens: Tokens):
             args = parseb(tokens, ":")
         return CallNode(func, args)
     if tok == "?":
-        tokens.eat()
         value = parsex(tokens)
         return ReturnNode(value)
 
     # math
     if tok in UNOPS:
-        op = tokens.eat()
         a = parsex(tokens)
-        return UnOpNode(op, a)
+        return UnOpNode(tok, a)
     if tok in BINOPS:
-        op = tokens.eat()
         a = parsex(tokens)
         b = parsex(tokens)
-        return BinOpNode(op, a, b)
+        return BinOpNode(tok, a, b)
 
     # literals & identifiers
-    tok = tokens.eat()
     if len(tok) > 1 and tok[0] == tok[-1] == '"':
         return LiteralNode(tok[1:-1])
     try:
