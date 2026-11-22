@@ -12,19 +12,6 @@ def parseb(tokens: Tokens, end):
     tokens.expect(end)
     return body
 
-# math parser
-def parsem(tokens: Tokens, tok):
-    if tok in UNOPS:
-        op = tokens.eat()
-        a = parsex(tokens)
-        return UnOpNode(op, a)
-    if tok in BINOPS:
-        op = tokens.eat()
-        a = parsex(tokens)
-        b = parsex(tokens)
-        return BinOpNode(op, a, b)
-    return None
-
 # expression parser
 def parsex(tokens: Tokens):
     tok = tokens.peek()
@@ -50,8 +37,8 @@ def parsex(tokens: Tokens):
         tokens.eat()
         return InputNode(int)
     if tok == "'":
-            tokens.eat()
-            return InputNode(float)
+        tokens.eat()
+        return InputNode(float)
 
     # control flow
     if tok == "(":
@@ -73,7 +60,7 @@ def parsex(tokens: Tokens):
         params = []
         if tokens.peek() == ":":
             tokens.eat()
-            while tokens.can_eat and tokens.peek() != ":":
+            while tokens.can_eat() and tokens.peek() != ":":
                 params.append(tokens.eat())
             tokens.expect(":")
         body = parseb(tokens, "}")
@@ -92,8 +79,15 @@ def parsex(tokens: Tokens):
         return ReturnNode(value)
 
     # math
-    if tok in UNOPS or tok in BINOPS:
-        return parsem(tokens, tok)
+    if tok in UNOPS:
+            op = tokens.eat()
+            a = parsex(tokens)
+            return UnOpNode(op, a)
+    if tok in BINOPS:
+        op = tokens.eat()
+        a = parsex(tokens)
+        b = parsex(tokens)
+        return BinOpNode(op, a, b)
 
     # literals & identifiers
     tok = tokens.eat()

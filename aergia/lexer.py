@@ -36,8 +36,10 @@ class Tokens:
         return self.tokens[self.i]
     
     def expect(self, val):
+        if not self.can_eat():
+            raise SyntaxError(f"Expected '{val}', reached end of input")
         if self.peek() != val:
-            raise SyntaxError(f"Expected {val}, got {self.peek()}")
+            raise SyntaxError(f"Expected '{val}', got '{self.peek()}'")
         self.eat()
     
 # tokenizer
@@ -51,6 +53,6 @@ def tokenize(code):
         if typ in ("SKIP", "COMMENT"):
             continue
         elif typ == "MISMATCH":
-            raise SyntaxError(f"Unexpected token: {val}")
+            raise SyntaxError(f"Unexpected token '{val}'")
         tokens.append(val)
     return Tokens(tokens)
