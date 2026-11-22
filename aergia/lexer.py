@@ -6,6 +6,7 @@ import re
 
 # regex pattern
 REGEX = re.compile(r"""
+    (?P<COMMENT>  \\[^\r\n]*) |
     (?P<NUMBER>   \d+(?:\.\d+)?) |
     (?P<STRING>   "(?:\\.|[^"\\])*") |
     (?P<DELIM>    [()\[\]{}:]) |
