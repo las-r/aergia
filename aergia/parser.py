@@ -5,6 +5,12 @@ from aergia.nodes import *
 # aergia parser
 # by las-r
 
+# identifier checker
+def check(iden):
+    if not re.compile(r"[a-zA-Z][a-zA-Z0-9]*|;").fullmatch(iden):
+        raise SyntaxError(f"Invalid token '{iden}'")
+    return iden
+
 # body parser
 def parseb(tokens: Tokens, end):
     body = []
@@ -21,7 +27,7 @@ def parsex(tokens: Tokens):
 
     # assignment
     if tok == "=":
-        name = tokens.eat()
+        name = check(tokens.eat())
         value = parsex(tokens)
         return AssignNode(name, value)
 
@@ -99,9 +105,7 @@ def parsex(tokens: Tokens):
         try:
             return LiteralNode(float(tok))
         except ValueError:
-            if not re.compile(r"[a-zA-Z][a-zA-Z0-9]*|;").fullmatch(tok):
-                raise SyntaxError(f"Invalid token '{tok}'")
-            return IdentifierNode(tok)
+            return IdentifierNode(check(tok))
 
 # main parser
 def parse(tokens: Tokens):

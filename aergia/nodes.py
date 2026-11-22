@@ -18,6 +18,7 @@ BINOPS = {
     "<<": lambda a, b: int(a < b),
     ">=": lambda a, b: int(a >= b),
     "<=": lambda a, b: int(a <= b),
+    "&&": None, "||": "None"
 }
 
 # exceptions
