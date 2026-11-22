@@ -49,7 +49,7 @@ def parsex(tokens: Tokens):
     if tok == ".":
         tokens.eat()
         return InputNode(int)
-    if tok == ",":
+    if tok == "'":
             tokens.eat()
             return InputNode(float)
 
@@ -66,6 +66,30 @@ def parsex(tokens: Tokens):
         cond = parsex(tokens)
         body = parseb(tokens, "]")
         return WhileNode(cond, body)
+
+    # functional
+    if tok == "{":
+        tokens.eat()
+        params = []
+        if tokens.peek() == ":":
+            tokens.eat()
+            while tokens.can_eat and tokens.peek() != ":":
+                params.append(tokens.eat())
+            tokens.expect(":")
+        body = parseb(tokens, "}")
+        return DefinitionNode(params, body)
+    if tok == "@":
+        tokens.eat()
+        func = parsex(tokens)
+        args = []
+        if tokens.peek() == ":":
+            tokens.eat()
+            args = parseb(tokens, ":")
+        return CallNode(func, args)
+    if tok == "?":
+        tokens.eat()
+        value = parsex(tokens)
+        return ReturnNode(value)
 
     # math
     if tok in UNOPS or tok in BINOPS:
