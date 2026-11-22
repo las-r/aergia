@@ -105,6 +105,37 @@ class BinOpNode(Node):
             b = self.b.eval(env)
             return BINOPS[self.op](a, b)
 
+# map
+class MapNode(Node):
+    def eval(self, env):
+        return {}
+
+class SizeNode(Node):
+    def __init__(self, map_):
+        self.map_ = map_
+
+    def eval(self, env):
+        return len(self.map_.eval(env))
+
+class GetNode(Node):
+    def __init__(self, map_, key):
+        self.map_ = map_
+        self.key = key
+
+    def eval(self, env):
+        return self.map_.eval(env).get(self.key.eval(env), 0)
+
+class SetNode(Node):
+    def __init__(self, name, key, value):
+        self.name = name
+        self.key = key
+        self.value = value
+
+    def eval(self, env):
+        value = self.value.eval(env)
+        env[self.name][self.key.eval(env)] = value
+        return value
+
 # control flow
 class IfNode(Node):
     def __init__(self, cond, body, ebody):

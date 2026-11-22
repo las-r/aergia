@@ -27,6 +27,12 @@ def parsex(tokens: Tokens):
 
     # assignment
     if tok == "=":
+        if tokens.peek() == "`":
+            tokens.eat()
+            name = check(tokens.eat())
+            key = parsex(tokens)
+            value = parsex(tokens)
+            return SetNode(name, key, value)
         name = check(tokens.eat())
         value = parsex(tokens)
         return AssignNode(name, value)
@@ -41,6 +47,17 @@ def parsex(tokens: Tokens):
         return InputNode(int)
     if tok == "'":
         return InputNode(float)
+
+    # map
+    if tok == "<":
+        return MapNode()
+    if tok == "#":
+        map_ = parsex(tokens)
+        return SizeNode(map_)
+    if tok == "`":
+        map_ = parsex(tokens)
+        key = parsex(tokens)
+        return GetNode(map_, key)
 
     # control flow
     if tok == "(":
