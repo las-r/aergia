@@ -81,9 +81,9 @@ def parsex(tokens: Tokens):
 
     # math
     if tok in UNOPS:
-            op = tokens.eat()
-            a = parsex(tokens)
-            return UnOpNode(op, a)
+        op = tokens.eat()
+        a = parsex(tokens)
+        return UnOpNode(op, a)
     if tok in BINOPS:
         op = tokens.eat()
         a = parsex(tokens)
