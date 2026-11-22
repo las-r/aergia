@@ -41,6 +41,21 @@ def parsex(tokens: Tokens):
         tokens.eat()
         return InputNode(float)
 
+    # array
+    if tok == "<":
+        tokens.eat()
+        items = parseb(tokens, ">")
+        return ArrayNode(items)
+    if tok == "`":
+        tokens.eat()
+        array = parsex(tokens)
+        index = parsex(tokens)
+        return IndexNode(array, index)
+    if tok == "#":
+        tokens.eat()
+        array = parsex(tokens)
+        return LengthNode(array)
+
     # control flow
     if tok == "(":
         tokens.eat()
