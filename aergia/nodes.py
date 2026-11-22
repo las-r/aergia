@@ -151,6 +151,7 @@ class CallNode(Node):
         func = self.func.eval(env)
         args = [a.eval(env) for a in self.args]
         lenv = env.copy()
+        lenv[";"] = func
         for param, arg in zip(func.params, args):
             lenv[param] = arg
         res = 0

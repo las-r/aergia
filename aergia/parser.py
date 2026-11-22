@@ -100,7 +100,7 @@ def parsex(tokens: Tokens):
         try:
             return LiteralNode(float(tok))
         except ValueError:
-            if not re.compile(r"[a-zA-Z][a-zA-Z0-9]*").fullmatch(tok):
+            if not re.compile(r"[a-zA-Z][a-zA-Z0-9]*|;").fullmatch(tok):
                 raise SyntaxError(f"Invalid token '{tok}'")
             return IdentifierNode(tok)
 
