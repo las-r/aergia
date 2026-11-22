@@ -6,12 +6,12 @@ import re
 
 # regex pattern
 REGEX = re.compile(r"""
-    (?P<COMMENT>  \#.*) |
+    (?P<COMMENT>  //[^\r\n]*) |
     (?P<NUMBER>   \d+(?:\.\d+)?) |
     (?P<STRING>   "(?:\\.|[^"\\])*") |
     (?P<DELIM>    [()\[\]{}:]) |
     (?P<OPERATOR> ==|!=|<<|>>|<=|>=|&&|\|\||[+\-*/%^&\|$~!_]) |
-    (?P<SYMBOL>   [=>.,'@?;]) |
+    (?P<SYMBOL>   [=>.,'@?;<#]) |
     (?P<IDENT>    [a-zA-Z][a-zA-Z0-9]*) |
     (?P<SKIP>     [ \t\r\n]+) |
     (?P<MISMATCH> .)
