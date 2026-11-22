@@ -10,10 +10,10 @@
 </p>
 
 ```py
-greet = {:name:
-    > "Hello, %name%!"
+= greet {:name:
+    > ++"Hello, " name "!"
 }
 
-= lang_name "Aergia"
-@greet:lang_name:
+= lang "Aergia"
+@greet:lang:
 ```
