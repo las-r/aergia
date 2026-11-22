@@ -148,13 +148,14 @@ class CallNode(Node):
         self.args = args
 
     def eval(self, env):
+        func = self.func.eval(env)
         args = [a.eval(env) for a in self.args]
         lenv = env.copy()
-        for param, arg in zip(self.func.params, args):
+        for param, arg in zip(func.params, args):
             lenv[param] = arg
         res = 0
         try:
-            for n in self.func.body:
+            for n in func.body:
                 res = n.eval(lenv)
         except Return as r:
             res = r.value
