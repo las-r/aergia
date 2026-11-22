@@ -34,7 +34,7 @@ class Function:
 # node base
 class Node: pass
 
-# literal class
+# literal
 class LiteralNode(Node):
     def __init__(self, value):
         self.value = value
@@ -42,7 +42,7 @@ class LiteralNode(Node):
     def eval(self, env):
         return self.value
 
-# variable nodes
+# variable
 class AssignNode(Node):
     def __init__(self, name, value):
         self.name = name
@@ -60,7 +60,7 @@ class IdentifierNode(Node):
     def eval(self, env):
         return env[self.name]
 
-# io nodes
+# io
 class PrintNode(Node):
     def __init__(self, value):
         self.value = value
@@ -77,7 +77,7 @@ class InputNode(Node):
     def eval(self, env):
         return self.itype(input())
 
-# operation nodes
+# math
 class UnOpNode(Node):
     def __init__(self, op, a):
         self.op = op
@@ -104,7 +104,7 @@ class BinOpNode(Node):
             b = self.b.eval(env)
             return BINOPS[self.op](a, b)
 
-# control flow nodes
+# control flow
 class IfNode(Node):
     def __init__(self, cond, body, ebody):
         self.cond = cond
@@ -133,7 +133,7 @@ class WhileNode(Node):
                 res = n.eval(env)
         return res
 
-# function nodes
+# functional
 class DefinitionNode(Node):
     def __init__(self, params, body):
         self.params = params
