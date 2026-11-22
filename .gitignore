@@ -224,3 +224,4 @@ __marimo__/
 
 # Aergia
 *.aer
+!examples/*
