@@ -72,11 +72,20 @@ class PrintNode(Node):
         return value
 
 class InputNode(Node):
-    def __init__(self, itype):
-        self.itype = itype
+    def __init__(self, msg):
+        self.msg = msg
 
     def eval(self, env):
-        return self.itype(input())
+        return input(self.msg.eval(env))
+
+# type conversion
+class ConvertNode(Node):
+    def __init__(self, value, typec):
+        self.value = value
+        self.typec = typec
+
+    def eval(self, env):
+        return self.typec(self.value.eval(env))
 
 # math
 class UnOpNode(Node):

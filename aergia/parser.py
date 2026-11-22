@@ -27,12 +27,6 @@ def parsex(tokens: Tokens):
 
     # assignment
     if tok == "=":
-        if tokens.peek() == "`":
-            tokens.eat()
-            name = check(tokens.eat())
-            key = parsex(tokens)
-            value = parsex(tokens)
-            return SetNode(name, key, value)
         name = check(tokens.eat())
         value = parsex(tokens)
         return AssignNode(name, value)
@@ -41,23 +35,36 @@ def parsex(tokens: Tokens):
     if tok == ">":
         value = parsex(tokens)
         return PrintNode(value)
-    if tok == ",":
-        return InputNode(str)
-    if tok == ".":
-        return InputNode(int)
-    if tok == "'":
-        return InputNode(float)
+    if tok == "<":
+        msg = parsex(tokens)
+        return InputNode(msg)
+
+    # type conversion
+    if tok == "#":
+        value = parsex(tokens)
+        return ConvertNode(value, int)
+    if tok == "##":
+        value = parsex(tokens)
+        return ConvertNode(value, float)
+    if tok == "#'":
+        value = parsex(tokens)
+        return ConvertNode(value, str)
 
     # map
-    if tok == "<":
+    if tok == ".":
         return MapNode()
-    if tok == "#":
-        map_ = parsex(tokens)
-        return SizeNode(map_)
-    if tok == "`":
+    if tok == "=.":
+        name = check(tokens.eat())
+        key = parsex(tokens)
+        value = parsex(tokens)
+        return SetNode(name, key, value)
+    if tok == ",":
         map_ = parsex(tokens)
         key = parsex(tokens)
         return GetNode(map_, key)
+    if tok == "..":
+        map_ = parsex(tokens)
+        return SizeNode(map_)
 
     # control flow
     if tok == "(":
