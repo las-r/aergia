@@ -105,29 +105,6 @@ class BinOpNode(Node):
             b = self.b.eval(env)
             return BINOPS[self.op](a, b)
 
-# array
-class ArrayNode(Node):
-    def __init__(self, items):
-        self.items = items
-
-    def eval(self, env):
-        return [i.eval(env) for i in self.items]
-
-class IndexNode(Node):
-    def __init__(self, array, index):
-        self.array = array
-        self.index = index
-
-    def eval(self, env):
-        return self.array.eval(env)[self.index.eval(env)] 
-
-class LengthNode(Node):
-    def __init__(self, array):
-        self.array = array
-
-    def eval(self, env):
-        return len(self.array.eval(env))
-
 # control flow
 class IfNode(Node):
     def __init__(self, cond, body, ebody):

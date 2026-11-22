@@ -42,18 +42,6 @@ def parsex(tokens: Tokens):
     if tok == "'":
         return InputNode(float)
 
-    # array
-    if tok == "<":
-        items = parseb(tokens, ">")
-        return ArrayNode(items)
-    if tok == "`":
-        array = parsex(tokens)
-        index = parsex(tokens)
-        return IndexNode(array, index)
-    if tok == "#":
-        array = parsex(tokens)
-        return LengthNode(array)
-
     # control flow
     if tok == "(":
         cond = parsex(tokens)
