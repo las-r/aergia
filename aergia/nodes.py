@@ -88,3 +88,32 @@ class BinOpNode:
         if self.op in BINOPS:
             b = self.b.eval(env)
             return BINOPS[self.op](a, b)
+
+# control flow nodes
+class IfNode:
+    def __init__(self, cond, body, ebody):
+        self.cond = cond
+        self.body = body
+        self.ebody = ebody
+
+    def eval(self, env):
+        res = 0
+        if self.cond.eval(env):
+            for n in self.body:
+                res = n.eval(env)
+        else:
+            for n in self.ebody:
+                res = n.eval(env)
+        return res
+
+class WhileNode:
+    def __init__(self, cond, body):
+        self.cond = cond
+        self.body = body
+
+    def eval(self, env):
+        res = 0
+        while self.cond.eval(env):
+            for n in self.body:
+                res = n.eval(env)
+        return res

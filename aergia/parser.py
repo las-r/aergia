@@ -4,14 +4,21 @@ from aergia.nodes import *
 # aergia parser
 # by las-r
 
+# body parser
+def parseb(tokens: Tokens, end):
+    body = []
+    while tokens.can_eat() and tokens.peek() != end:
+        body.append(parsex(tokens))
+    tokens.expect(end)
+    return body
+
 # math parser
-def parsem(tokens: Tokens):
-    tok = tokens.peek()
-    if tok and tok in UNOPS:
+def parsem(tokens: Tokens, tok):
+    if tok in UNOPS:
         op = tokens.eat()
         a = parsex(tokens)
         return UnOpNode(op, a)
-    if tok and tok in BINOPS:
+    if tok in BINOPS:
         op = tokens.eat()
         a = parsex(tokens)
         b = parsex(tokens)
@@ -46,9 +53,23 @@ def parsex(tokens: Tokens):
             tokens.eat()
             return InputNode(float)
 
+    # control flow
+    if tok == "(":
+        tokens.eat()
+        cond = parsex(tokens)
+        body = parseb(tokens, ")")
+        tokens.expect("(")
+        ebody = parseb(tokens, ")")
+        return IfNode(cond, body, ebody)
+    if tok == "[":
+        tokens.eat()
+        cond = parsex(tokens)
+        body = parseb(tokens, "]")
+        return WhileNode(cond, body)
+
     # math
     if tok in UNOPS or tok in BINOPS:
-        return parsem(tokens)
+        return parsem(tokens, tok)
 
     # literals & identifiers
     tok = tokens.eat()
