@@ -1,3 +1,4 @@
+import dataclasses
 import operator as oper
 
 # aergia nodes
@@ -19,8 +20,22 @@ BINOPS = {
     "<=": lambda a, b: int(a <= b),
 }
 
+# exceptions
+@dataclasses.dataclass
+class Return(Exception):
+    value: Node
+
+# function
+@dataclasses.dataclass
+class Function:
+    params: list
+    body: list
+
+# node base
+class Node: pass
+
 # literal class
-class LiteralNode:
+class LiteralNode(Node):
     def __init__(self, value):
         self.value = value
 
@@ -28,7 +43,7 @@ class LiteralNode:
         return self.value
 
 # variable nodes
-class AssignNode:
+class AssignNode(Node):
     def __init__(self, name, value):
         self.name = name
         self.value = value
@@ -38,7 +53,7 @@ class AssignNode:
         env[self.name] = value
         return value
 
-class IdentifierNode:
+class IdentifierNode(Node):
     def __init__(self, name):
         self.name = name
 
@@ -46,7 +61,7 @@ class IdentifierNode:
         return env[self.name]
 
 # io nodes
-class PrintNode:
+class PrintNode(Node):
     def __init__(self, value):
         self.value = value
 
@@ -55,7 +70,7 @@ class PrintNode:
         print(value)
         return value
 
-class InputNode:
+class InputNode(Node):
     def __init__(self, itype):
         self.itype = itype
 
@@ -63,7 +78,7 @@ class InputNode:
         return self.itype(input())
 
 # operation nodes
-class UnOpNode:
+class UnOpNode(Node):
     def __init__(self, op, a):
         self.op = op
         self.a = a
@@ -73,7 +88,7 @@ class UnOpNode:
             a = self.a.eval(env)
             return UNOPS[self.op](a)
 
-class BinOpNode:
+class BinOpNode(Node):
     def __init__(self, op, a, b):
         self.op = op
         self.a = a
@@ -90,7 +105,7 @@ class BinOpNode:
             return BINOPS[self.op](a, b)
 
 # control flow nodes
-class IfNode:
+class IfNode(Node):
     def __init__(self, cond, body, ebody):
         self.cond = cond
         self.body = body
@@ -106,7 +121,7 @@ class IfNode:
                 res = n.eval(env)
         return res
 
-class WhileNode:
+class WhileNode(Node):
     def __init__(self, cond, body):
         self.cond = cond
         self.body = body
@@ -117,3 +132,37 @@ class WhileNode:
             for n in self.body:
                 res = n.eval(env)
         return res
+
+# function nodes
+class DefinitionNode(Node):
+    def __init__(self, params, body):
+        self.params = params
+        self.body = body
+
+    def eval(self, env):
+        return Function(self.params, self.body)
+
+class CallNode(Node):
+    def __init__(self, func, args):
+        self.func = func
+        self.args = args
+
+    def eval(self, env):
+        args = [a.eval(env) for a in self.args]
+        lenv = env.copy()
+        for param, arg in zip(self.func.params, args):
+            lenv[param] = arg
+        res = 0
+        try:
+            for n in self.func.body:
+                res = n.eval(lenv)
+        except Return as r:
+            res = r.value
+        return res
+
+class ReturnNode(Node):
+    def __init__(self, value):
+        self.value = value
+
+    def eval(self, env):
+        raise Return(self.value.eval(env))
