@@ -1,7 +1,9 @@
-> [!WARNING]
-> This branch is for the Aergia v2 rewrite and is a major WIP.
+<p align="center">
+  <img src="assets/images/name_v2.svg" alt="Aergia" width="300" />
+</p>
 
-Aergia is a minimalist and lightweight interpreted programming language. 
+<p align="center">Aergia is a minimalist and lightweight interpreted programming language.<p>
+
 ```py
 = greet {:name:
     > ++"Hello, " name "!"
