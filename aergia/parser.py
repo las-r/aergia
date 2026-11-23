@@ -14,7 +14,7 @@ def check(iden):
 # body parser
 def parseb(tokens: Tokens, end):
     body = []
-    while tokens.can_eat() and tokens.peek() != end:
+    while tokens.peek() != end:
         body.append(parsex(tokens))
     tokens.expect(end)
     return body
@@ -81,19 +81,14 @@ def parsex(tokens: Tokens):
     # functional
     if tok == "{":
         params = []
-        if tokens.peek() == ":":
-            tokens.eat()
-            while tokens.can_eat() and tokens.peek() != ":":
-                params.append(tokens.eat())
-            tokens.expect(":")
+        while tokens.peek() != ":":
+            params.append(check(tokens.eat()))
+        tokens.expect(":")
         body = parseb(tokens, "}")
         return DefinitionNode(params, body)
     if tok == "@":
         func = parsex(tokens)
-        args = []
-        if tokens.peek() == ":":
-            tokens.eat()
-            args = parseb(tokens, ":")
+        args = parseb(tokens, ":")
         return CallNode(func, args)
     if tok == "?":
         value = parsex(tokens)

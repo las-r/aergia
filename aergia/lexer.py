@@ -27,8 +27,10 @@ class Tokens:
         return self.i < len(self.tokens)
         
     def eat(self):
-        self.i += 1
-        return self.tokens[self.i - 1]
+        if self.can_eat():
+            self.i += 1
+            return self.tokens[self.i - 1]
+        raise SyntaxError("Unexpected end of input")
     
     def peek(self):
         if self.i >= len(self.tokens):
