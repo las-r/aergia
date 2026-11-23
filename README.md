@@ -24,3 +24,7 @@
 pip install git+https://github.com/las-r/aergia
 aergia <file.aer>
 ```
+
+### IDE Support
+Aergia v2 has support for the following IDEs:
+- [VSCode](https://github.com/las-r/aergia-vscode)
