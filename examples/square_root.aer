@@ -3,7 +3,7 @@
 
 = N 6  \ precision
 
-= isqrt {y:
+= isqrt {y;
     = L 0
     [<= *+L 1 +L 1 y
         = L +L 1
@@ -11,9 +11,9 @@
     ? L
 }
 
-= sqrt {y:
+= sqrt {y;
     (== y 0 ? 0)()
-    = X @isqrt y:
+    = X @isqrt y;
     = i 0
     [<< i N
         = X +X /-y *X X *X 2
@@ -22,4 +22,4 @@
     ? X
 }
 
-> @sqrt #< "Enter n for sqrt(n): ":
+> @sqrt #< "Enter n for sqrt(n): ";
