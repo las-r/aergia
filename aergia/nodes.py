@@ -198,7 +198,7 @@ class CallNode(Node):
     def eval(self, env):
         func = check(self.func.eval(env), Function)
         args = [a.eval(env) for a in self.args]
-        lenv = env | {";": func} | {p: a for p, a in zip(func.params, args)}
+        lenv = env | {":": func} | {p: a for p, a in zip(func.params, args)}
         res = 0
         try:
             for n in func.body:

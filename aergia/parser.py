@@ -81,14 +81,14 @@ def parsex(tokens: Tokens):
     # functional
     if tok == "{":
         params = []
-        while tokens.peek() != ":":
+        while tokens.peek() != ";":
             params.append(check(tokens.eat()))
-        tokens.expect(":")
+        tokens.expect(";")
         body = parseb(tokens, "}")
         return DefinitionNode(params, body)
     if tok == "@":
         func = parsex(tokens)
-        args = parseb(tokens, ":")
+        args = parseb(tokens, ";")
         return CallNode(func, args)
     if tok == "?":
         value = parsex(tokens)
