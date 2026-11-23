@@ -22,6 +22,12 @@ BINOPS = {
     "&&": None, "||": "None"
 }
 
+# helper functions
+def check(val, types):
+    if isinstance(val, types):
+        return val
+    raise TypeError(f"Expected '{val}' to be in {types}, got {type(val)} instead")
+
 # exceptions
 @dataclasses.dataclass
 class Return(Exception):
@@ -96,7 +102,7 @@ class UnOpNode(Node):
 
     def eval(self, env):
         if self.op in UNOPS:
-            a = self.a.eval(env)
+            a = check(self.a.eval(env), (int, float))
             return UNOPS[self.op](a)
 
 class BinOpNode(Node):
@@ -106,13 +112,13 @@ class BinOpNode(Node):
         self.b = b
 
     def eval(self, env):
-        a = self.a.eval(env)
+        a = check(self.a.eval(env), (int, float, str))
         if self.op == "&&" and a == 0:
             return 0
         if self.op == "||" and a != 0:
             return 1
         if self.op in BINOPS:
-            b = self.b.eval(env)
+            b = check(self.b.eval(env), (int, float, str))
             return BINOPS[self.op](a, b)
 
 # map
@@ -125,7 +131,7 @@ class SizeNode(Node):
         self.map_ = map_
 
     def eval(self, env):
-        return len(self.map_.eval(env))
+        return len(check(self.map_.eval(env), dict))
 
 class GetNode(Node):
     def __init__(self, map_, key):
@@ -133,7 +139,7 @@ class GetNode(Node):
         self.key = key
 
     def eval(self, env):
-        return self.map_.eval(env).get(self.key.eval(env), 0)
+        return check(self.map_.eval(env), dict).get(self.key.eval(env), 0)
 
 class SetNode(Node):
     def __init__(self, name, key, value):
@@ -142,7 +148,7 @@ class SetNode(Node):
         self.value = value
 
     def eval(self, env):
-        value = self.value.eval(env)
+        value = check(self.value.eval(env), dict)
         env[self.name][self.key.eval(env)] = value
         return value
 
@@ -155,7 +161,7 @@ class IfNode(Node):
 
     def eval(self, env):
         res = 0
-        if self.cond.eval(env):
+        if self.cond.eval(env) != 0:
             for n in self.body:
                 res = n.eval(env)
         else:
@@ -170,7 +176,7 @@ class WhileNode(Node):
 
     def eval(self, env):
         res = 0
-        while self.cond.eval(env):
+        while self.cond.eval(env) != 0:
             for n in self.body:
                 res = n.eval(env)
         return res
@@ -190,7 +196,7 @@ class CallNode(Node):
         self.args = args
 
     def eval(self, env):
-        func = self.func.eval(env)
+        func = check(self.func.eval(env), Function)
         args = [a.eval(env) for a in self.args]
         lenv = env | {";": func} | {p: a for p, a in zip(func.params, args)}
         res = 0
