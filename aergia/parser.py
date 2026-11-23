@@ -7,7 +7,7 @@ from aergia.nodes import *
 
 # identifier checker
 def check(iden):
-    if not re.compile(r"[a-zA-Z][a-zA-Z0-9]*|;").fullmatch(iden):
+    if not re.compile(r"[a-zA-Z][a-zA-Z0-9]*|:").fullmatch(iden):
         raise SyntaxError(f"Invalid token '{iden}'")
     return iden
 
