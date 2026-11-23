@@ -1,0 +1,25 @@
+\ babylonion square root example
+\ by las-r
+
+= N 6  \ precision
+
+= isqrt {:y:
+    = L 0
+    [<= *+L 1 +L 1 y
+        = L +L 1
+    ]
+    ? L
+}
+
+= sqrt {:y:
+    (== y 0 ? 0)()
+    = X @isqrt:y:
+    = i 0
+    [<< i N
+        = X +X /-y *X X *X 2
+        = i +i 1
+    ]
+    ? X
+}
+
+> @sqrt:#< "Enter n for sqrt(n): ":
