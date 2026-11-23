@@ -1,7 +1,7 @@
 \ recursive factorial example
 \ by las-r
 
-= fact {:n: (<= n 1 1)(*n @;:-n 1:)}
+= fact {n: (<= n 1 1)(*n @; -n 1:)}
 
 = n #< "Enter n for n!: "
-> @fact:n:
+> @fact n:
