@@ -77,6 +77,10 @@ def parsex(tokens: Tokens):
         cond = parsex(tokens)
         body = parseb(tokens, "]")
         return WhileNode(cond, body)
+    if tok == "<<<":
+        return BreakNode()
+    if tok == ">>>":
+        return ContinueNode()
 
     # functional
     if tok == "{":

@@ -61,6 +61,10 @@ class Scope:
 class Return(Exception):
     value: Node
 
+class Break(Exception): pass
+
+class Continue(Exception): pass
+
 # function
 @dataclasses.dataclass
 class Function:
@@ -205,9 +209,22 @@ class WhileNode(Node):
     def eval(self, env):
         res = 0
         while self.cond.eval(env) != 0:
-            for n in self.body:
-                res = n.eval(env)
+            try:
+                for n in self.body:
+                    res = n.eval(env)
+            except Break:
+                break
+            except Continue:
+                continue
         return res
+
+class BreakNode(Node):
+    def eval(self, env):
+        raise Break()
+
+class ContinueNode(Node):
+    def eval(self, env):
+        raise Continue()
 
 # functional
 class DefinitionNode(Node):
