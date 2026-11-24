@@ -19,7 +19,8 @@ BINOPS = {
     "<<": lambda a, b: int(a < b),
     ">=": lambda a, b: int(a >= b),
     "<=": lambda a, b: int(a <= b),
-    "&&": None, "||": "None"
+    "&&": lambda _, b: int(b != 0), 
+    "||": lambda _, b: int(b != 0)
 }
 
 # helper functions
@@ -27,6 +28,33 @@ def check(val, types):
     if isinstance(val, types):
         return val
     raise TypeError(f"Expected '{val}' to be in {types}, got {type(val)} instead")
+
+# scope
+class Scope:
+    def __init__(self, parent=None):
+        self.vars = {}
+        self.parent = parent
+
+    def __contains__(self, name):
+        return name in self.vars or (self.parent is not None and name in self.parent)
+
+    def __getitem__(self, name):
+        if name in self.vars:
+            return self.vars[name]
+        if self.parent is not None:
+            return self.parent[name]
+        raise KeyError(name)
+
+    def __setitem__(self, name, value):
+        if name in self.vars:
+            self.vars[name] = value
+        elif self.parent is not None and name in self.parent:
+            self.parent[name] = value
+        else:
+            self.vars[name] = value 
+
+    def define(self, name, value):
+        self.vars[name] = value
 
 # exceptions
 @dataclasses.dataclass
@@ -148,8 +176,8 @@ class SetNode(Node):
         self.value = value
 
     def eval(self, env):
-        value = check(self.value.eval(env), dict)
-        env[self.name][self.key.eval(env)] = value
+        value = self.value.eval(env)
+        check(env[self.name], dict)[self.key.eval(env)] = value
         return value
 
 # control flow
@@ -198,7 +226,10 @@ class CallNode(Node):
     def eval(self, env):
         func = check(self.func.eval(env), Function)
         args = [a.eval(env) for a in self.args]
-        lenv = env | {":": func} | {p: a for p, a in zip(func.params, args)}
+        lenv = Scope(env)
+        lenv.define(":", func)
+        for p, a in zip(func.params, args):
+            lenv.define(p, a)
         res = 0
         try:
             for n in func.body:
