@@ -7,11 +7,13 @@ order: 1
 
 ## Basics
 `\ COMMENT` makes a comment
+
 ```aergia
 \ this is a comment
 ```
 
 `= NAME VALUE` assigns a variable
+
 ```aergia
 = num 2
 = message "hi!"
@@ -19,13 +21,26 @@ order: 1
 
 `> VALUE` prints a value  
 `< PROMPT` takes input
+
 ```aergia
 > "hello"
 = name < "name? "
 ```
 
+## Type Conversions
+`#VALUE` converts to an integer  
+`##VALUE` converts to a float  
+`#'VALUE` converts a string
+
+```aergia
+= num ##< "Enter a number: "
+= numstr #'num
+= numint #num
+```
+
 ## Control flow
 `(COND BODY)(ELSE)` defines an if statement, else is mandatory
+
 ```aergia
 (<< a 50
     > "a is under 50"
@@ -35,6 +50,7 @@ order: 1
 ```
 
 `[COND BODY]` defines a while loop
+
 ```aergia
 = i 0
 [<< i 10
@@ -48,6 +64,7 @@ order: 1
 `=. NAME KEY VALUE` sets a value to a key  
 `,MAP KEY` gets a value  
  `..MAP` gets the size of a map
+
 ```aergia
 = map .
 =. map "a" 1
@@ -63,6 +80,7 @@ order: 1
 `? VALUE` returns a value  
 `;` ends a parameter list or an argument list  
 `:` refers to the current function (recursion, callbacks)
+
 ```aergia
 = fact {n; (<= n 1 1)(*n @: -n 1;)}
 
