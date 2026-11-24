@@ -1,0 +1,57 @@
+---
+layout: default
+---
+{% comment %} work out previous/next pages from section + order {% endcomment %}
+{% assign prev_doc = nil %}
+{% assign next_doc = nil %}
+{% assign last_doc = nil %}
+{% assign hit = false %}
+{% for section in site.doc_sections %}
+    {% assign items = site.docs | where: "section", section.id | sort: "order" %}
+    {% for d in items %}
+        {% if hit and next_doc == nil %}{% assign next_doc = d %}{% endif %}
+        {% if d.url == page.url %}
+            {% assign hit = true %}
+            {% assign prev_doc = last_doc %}
+        {% endif %}
+        {% assign last_doc = d %}
+    {% endfor %}
+{% endfor %}
+
+<div class="docs-shell">
+    {% include sidebar.html %}
+
+    <article class="doc">
+        {% assign current_section = site.doc_sections | where: "id", page.section | first %}
+        <h1>{{ page.title }}</h1>
+        {% if page.description %}<p class="doc-lead">{{ page.description }}</p>{% endif %}
+
+        <div class="doc-content">
+            {{ content }}
+        </div>
+
+        <nav class="pager" aria-label="Previous and next page">
+            {% if prev_doc %}
+            <a class="pager-prev" href="{{ prev_doc.url | relative_url }}">
+                <span>Previous</span>{{ prev_doc.title }}
+            </a>
+            {% else %}<span></span>{% endif %}
+            {% if next_doc %}
+            <a class="pager-next" href="{{ next_doc.url | relative_url }}">
+                <span>Next</span>{{ next_doc.title }}
+            </a>
+            {% endif %}
+        </nav>
+
+        <p class="edit-link">
+            <a href="https://github.com/{{ site.repo }}/edit/{{ site.repo_branch }}/{{ page.path }}">Edit this page on GitHub</a>
+        </p>
+    </article>
+
+    <aside class="toc" id="toc">
+        <h2>On this page</h2>
+        <ul id="toc-list"></ul>
+    </aside>
+</div>
+
+<script src="{{ '/assets/js/toc.js' | relative_url }}"></script>

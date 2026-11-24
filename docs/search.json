@@ -1,0 +1,13 @@
+---
+---
+[
+{%- for d in site.docs -%}
+{%- assign sec = site.doc_sections | where: "id", d.section | first -%}
+{
+    "title": {{ d.title | jsonify }},
+    "section": {{ sec.title | jsonify }},
+    "url": {{ d.url | relative_url | jsonify }},
+    "content": {{ d.content | markdownify | strip_html | normalize_whitespace | truncate: 4000 | jsonify }}
+}{% unless forloop.last %},{% endunless %}
+{%- endfor -%}
+]

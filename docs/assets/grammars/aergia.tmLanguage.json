@@ -1,0 +1,119 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "Aergia",
+    "scopeName": "source.aergia",
+    "patterns": [
+        { "include": "#comment" },
+        { "include": "#string" },
+        { "include": "#number" },
+        { "include": "#function-params" },
+        { "include": "#assignment" },
+        { "include": "#self-reference" },
+        { "include": "#control" },
+        { "include": "#function" },
+        { "include": "#conversion" },
+        { "include": "#io" },
+        { "include": "#map" },
+        { "include": "#operator" },
+        { "include": "#identifier" }
+    ],
+    "repository": {
+        "comment": {
+            "name": "comment.line.backslash.aergia",
+            "match": "\\\\[^\\r\\n]*"
+        },
+        "string": {
+            "name": "string.quoted.double.aergia",
+            "begin": "\"",
+            "end": "\"",
+            "beginCaptures": { "0": { "name": "punctuation.definition.string.begin.aergia" } },
+            "endCaptures": { "0": { "name": "punctuation.definition.string.end.aergia" } },
+            "patterns": [
+                {
+                    "name": "constant.character.escape.aergia",
+                    "match": "\\\\."
+                }
+            ]
+        },
+        "number": {
+            "name": "constant.numeric.aergia",
+            "match": "\\b\\d+(?:\\.\\d+)?\\b"
+        },
+        "function-params": {
+            "begin": "\\{",
+            "end": ";",
+            "beginCaptures": { "0": { "name": "storage.type.function.aergia" } },
+            "endCaptures": { "0": { "name": "punctuation.terminator.params.aergia" } },
+            "patterns": [
+                { "include": "#comment" },
+                {
+                    "name": "variable.parameter.aergia",
+                    "match": "[a-zA-Z][a-zA-Z0-9]*"
+                },
+                {
+                    "name": "invalid.illegal.param.aergia",
+                    "match": "[^\\s;]"
+                }
+            ]
+        },
+        "assignment": {
+            "match": "(=\\.|=)\\s*([a-zA-Z][a-zA-Z0-9]*)",
+            "captures": {
+                "1": { "name": "keyword.operator.assignment.aergia" },
+                "2": { "name": "variable.other.definition.aergia" }
+            }
+        },
+        "self-reference": {
+            "name": "variable.language.self.aergia",
+            "match": ":"
+        },
+        "control": {
+            "patterns": [
+                {
+                    "name": "keyword.control.return.aergia",
+                    "match": "\\?"
+                },
+                {
+                    "name": "keyword.control.flow.aergia",
+                    "match": "[()\\[\\]]"
+                }
+            ]
+        },
+        "function": {
+            "patterns": [
+                {
+                    "name": "storage.type.function.aergia",
+                    "match": "\\}"
+                },
+                {
+                    "name": "keyword.other.call.aergia",
+                    "match": "@"
+                },
+                {
+                    "name": "punctuation.terminator.args.aergia",
+                    "match": ":"
+                }
+            ]
+        },
+        "conversion": {
+            "name": "support.function.convert.aergia",
+            "match": "##|#'|#"
+        },
+        "io": {
+            "name": "support.function.io.aergia",
+            "match": "[<>](?![<>=])"
+        },
+        "map": {
+            "name": "support.function.map.aergia",
+            "match": "[.,]"
+        },
+        "operator": {
+            "name": "keyword.operator.aergia",
+            "match": "==|!=|<<|>>|<=|>=|&&|\\|\\||[+\\-*/%^&|$~!_]"
+        },
+        "identifier": {
+            "name": "variable.other.aergia",
+            "match": "[a-zA-Z][a-zA-Z0-9]*"
+        }
+    }
+}

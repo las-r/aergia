@@ -1,0 +1,57 @@
+# site
+title: "aergia / docs"
+author: "Nayif Ehan"
+description: "(WIP) Documentation for the Aergia programming language"
+
+# url
+url: "https://las-r.dev"
+baseurl: "/aergia"
+
+# repo
+repo: "las-r/docs"
+repo_branch: "main"
+
+# build
+markdown: kramdown
+highlighter: rouge
+kramdown:
+    syntax_highlighter: rouge
+livereload: true
+
+# docs collection
+collections:
+    docs:
+        output: true
+        permalink: /:path/
+
+defaults:
+    - scope:
+          path: ""
+          type: "docs"
+      values:
+          layout: "doc"
+
+# sidebar
+doc_sections:
+    - id: getting-started
+      title: Getting Started
+    - id: manual
+      title: Manual
+    - id: reference
+      title: Reference
+
+# exclusions
+exclude:
+    - Gemfile
+    - Gemfile.lock
+    - node_modules/
+    - vendor/bundle/
+    - vendor/cache/
+    - vendor/gems/
+    - vendor/ruby/
+    - README.md
+    - LICENSE
+
+# plugins
+plugins:
+  - jekyll-sitemap

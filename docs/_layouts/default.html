@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" data-baseurl="{{ site.baseurl }}">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>{% if page.url == '/' %}{{ site.title }}{% else %}{{ site.title }} / {{ page.title }}{% endif %}</title>
+
+        {% assign meta_description = page.description | default: page.excerpt | default: site.description | strip_html | normalize_whitespace | escape %}
+        <meta name="description" content="{{ meta_description }}">
+        <meta name="author" content="{{ site.author }}">
+        <meta name="generator" content="Jekyll">
+
+        <link rel="canonical" href="{{ page.url | absolute_url }}">
+        <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+
+        <meta property="og:type" content="{% if page.layout == 'doc' %}article{% else %}website{% endif %}">
+        <meta property="og:title" content="{{ page.title | default: site.title | escape }}">
+        <meta property="og:description" content="{{ meta_description }}">
+        <meta property="og:url" content="{{ page.url | absolute_url }}">
+        <meta property="og:site_name" content="{{ site.title }}">
+        <meta name="twitter:card" content="summary">
+        <meta name="twitter:title" content="{{ page.title | default: site.title | escape }}">
+        <meta name="twitter:description" content="{{ meta_description }}">
+    </head>
+
+    <body class="layout-{{ page.layout }}">
+        <header>
+            <nav class="topbar">
+                <a href="{{ '/' | relative_url }}"><strong>{{ site.title }}</strong></a>
+                <div class="topbar-links">
+                    <a href="https://github.com/{{ site.repo }}">GitHub</a>
+                    {% if page.layout == 'doc' %}
+                    <button type="button" class="menu-toggle" id="menu-toggle" aria-controls="sidebar" aria-expanded="false">Menu</button>
+                    {% endif %}
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            {{ content }}
+        </main>
+
+        <footer>
+            <p>&copy; {{ site.time | date: "%Y" }} {{ site.author }} <br> <a href="https://github.com/las-r/aergia">GitHub</a></p>
+        </footer>
+
+        <script src="{{ '/assets/js/docs.js' | relative_url }}"></script>
+        <script type="module" src="{{ '/assets/js/highlight.js' | relative_url }}"></script>
+    </body>
+</html>

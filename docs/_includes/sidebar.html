@@ -1,0 +1,25 @@
+<div class="sidebar" id="sidebar">
+    <div class="search">
+        <input type="search" id="search-input" placeholder="Search docs..." autocomplete="off"
+               aria-label="Search docs" data-search-url="{{ '/search.json' | relative_url }}">
+        <ul id="search-results" class="search-results" hidden></ul>
+    </div>
+
+    <nav aria-label="Documentation">
+        {% for section in site.doc_sections %}
+            {% assign items = site.docs | where: "section", section.id | sort: "order" %}
+            {% if items.size > 0 %}
+            <div class="sidebar-section">
+                <h2>{{ section.title }}</h2>
+                <ul>
+                    {% for d in items %}
+                    <li>
+                        <a href="{{ d.url | relative_url }}"{% if d.url == page.url %} class="active" aria-current="page"{% endif %}>{{ d.title }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </nav>
+</div>
