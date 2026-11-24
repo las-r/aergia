@@ -6,29 +6,27 @@ order: 1
 ---
 
 ## Basics
+`\ COMMENT` makes a comment
 ```aergia
-\ a backslash starts a comment
+\ this is a comment
 ```
 
+`= NAME VALUE` assigns a variable
 ```aergia
-\ assign: = name value
-
 = num 2
 = message "hi!"
 ```
 
+`> VALUE` prints a value  
+`< PROMPT` takes input
 ```aergia
-\ output: > value
-\ input:  < prompt
-
 > "hello"
 = name < "name? "
 ```
 
 ## Control flow
+`(COND BODY)(ELSE)` defines an if statement, else is mandatory
 ```aergia
-\ if else: (condition body)(else), else is obligatory
-
 (<< a 50
     > "a is under 50"
 )(
@@ -36,9 +34,8 @@ order: 1
 )
 ```
 
+`[COND BODY]` defines a while loop
 ```aergia
-\ while: [condition body]
-
 = i 0
 [<< i 10
     > i
@@ -47,51 +44,51 @@ order: 1
 ```
 
 ## Maps
+`.` creates an empty map  
+`=. NAME KEY VALUE` sets a value to a key  
+`,MAP KEY` gets a value  
+ `..MAP` gets the size of a map
 ```aergia
-\ . creates an empty map
-\ set:  =. name key value
-\ get:  , name key  ->  1
-\ size: ..map      ->  2
-
 = map .
 =. map "a" 1
 =. map "b" 2
-, map "a"
-..map
+
+> ,map "a"
+> ..map
 ```
 
 ## Functions
+`{PARAMS; BODY}` defines a function  
+`@FUNC ARGS;` calls a function  
+`? VALUE` returns a value  
+`;` ends a parameter list or an argument list  
+`:` refers to the current function (recursion, callbacks)
 ```aergia
-\ define: {params; body}, ; ends the parameters
-\ call:   @fn args;, ; ends the arguments
+= fact {n; (<= n 1 1)(*n @: -n 1;)}
 
-= result @{x; +x 1} 1;
+> @fact 10;
 ```
 
-- `;` ends a parameter list or an argument list
-- `?` returns a value
-- `:` refers to the current function (recursion, callbacks)
-
 ## Operators
-- `+a b` add
-- `-a b` subtract
-- `*a b` multiply
-- `/a b` divide
-- `%a b` modulus
-- `^a b` exponent
-- `_a` negate
+`+a b` add  
+`-a b` subtract  
+`*a b` multiply  
+`/a b` divide  
+`%a b` modulus  
+`^a b` exponent  
+`_a` negate
 
-- `&a b` bitwise AND
-- `|a b` bitwise OR
-- `~a` bitwise NOT
+`&a b` bitwise AND  
+`|a b` bitwise OR  
+`~a` bitwise NOT
 
-- `<< a b` less than
-- `>> a b` greater than
-- `<= a b` less or equal
-- `>= a b` greater or equal
-- `== a b` equal
-- `!= a b` not equal
+`<< a b` less than  
+`>> a b` greater than  
+`<= a b` less or equal  
+`>= a b` greater or equal  
+`== a b` equal  
+`!= a b` not equal
 
-- `&& a b` logical AND
-- `|| a b` logical OR
-- `! a` logical NOT
+`&& a b` logical AND  
+`|| a b` logical OR  
+`! a` logical NOT
