@@ -1,0 +1,20 @@
+\ psuedorandom number example
+\ by las-r
+
+= S #< "Enter a seed: "  \ seed
+
+= next {; = S %+*S 1103515245 11102011 2147483648}
+= range {lo hi; +lo %#/@next; 65536 -hi lo}
+= float {; /@next; 2147483648}
+
+> @float;
+> @float;
+> @float;
+> @float;
+> @float;
+
+> @range 0 100;
+> @range 0 100;
+> @range 0 100;
+> @range 0 100;
+> @range 0 100;
