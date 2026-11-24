@@ -1,13 +1,35 @@
 ---
 ---
 [
+{%- assign first = true -%}
 {%- for d in site.docs -%}
 {%- assign sec = site.doc_sections | where: "id", d.section | first -%}
+{%- assign html = d.content | markdownify | replace: '<h3 ', '<h2 ' | replace: '</h3>', '</h2>' -%}
+{%- assign chunks = html | split: '<h2 ' -%}
+{%- for chunk in chunks -%}
+    {%- if forloop.first -%}
+        {%- assign body = chunk | strip_html | normalize_whitespace -%}
+        {%- if body == "" -%}{%- continue -%}{%- endif -%}
+        {%- assign title = d.title -%}
+        {%- assign url = d.url | relative_url -%}
+    {%- else -%}
+        {%- assign parts = chunk | split: '</h2>' -%}
+        {%- assign head = parts | first -%}
+        {%- assign pieces = head | split: '"' -%}
+        {%- assign id = pieces[1] -%}
+        {%- assign heading = head | remove_first: 'id="' | remove_first: id | remove_first: '">' | strip_html -%}
+        {%- assign body = parts | last | strip_html | normalize_whitespace -%}
+        {%- assign title = d.title | append: " › " | append: heading -%}
+        {%- assign url = d.url | relative_url | append: "#" | append: id -%}
+    {%- endif -%}
+    {%- unless first -%},{%- endunless -%}
+    {%- assign first = false -%}
 {
-    "title": {{ d.title | jsonify }},
+    "title": {{ title | jsonify }},
     "section": {{ sec.title | jsonify }},
-    "url": {{ d.url | relative_url | jsonify }},
-    "content": {{ d.content | markdownify | strip_html | normalize_whitespace | truncate: 4000 | jsonify }}
-}{% unless forloop.last %},{% endunless %}
+    "url": {{ url | jsonify }},
+    "content": {{ body | truncate: 4000 | jsonify }}
+}
+{%- endfor -%}
 {%- endfor -%}
 ]
