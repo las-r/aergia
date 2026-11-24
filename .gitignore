@@ -225,3 +225,11 @@ __marimo__/
 # Aergia
 *.aer
 !examples/*
+
+# Docs
+docs/_site/
+docs/.sass-cache/
+docs/.jekyll-cache/
+docs/.jekyll-metadata
+docs/.bundle/
+docs/vendor/
