@@ -70,6 +70,14 @@
         "control": {
             "patterns": [
                 {
+                    "name": "keyword.control.flow.break.aergia",
+                    "match": "<<<"
+                },
+                {
+                    "name": "keyword.control.flow.continue.aergia",
+                    "match": ">>>"
+                },
+                {
                     "name": "keyword.control.return.aergia",
                     "match": "\\?"
                 },

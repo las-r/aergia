@@ -6,6 +6,7 @@ order: 1
 ---
 
 ## Basics
+
 `\ COMMENT` makes a comment
 
 ```aergia
@@ -28,9 +29,10 @@ order: 1
 ```
 
 ## Type Conversions
+
 `#VALUE` converts to an integer  
 `##VALUE` converts to a float  
-`#'VALUE` converts a string
+`#'VALUE` converts to a string
 
 ```aergia
 = num ##< "Enter a number: "
@@ -39,7 +41,8 @@ order: 1
 ```
 
 ## Control flow
-`(COND BODY)(ELSE)` defines an if statement, else is mandatory
+
+`(COND BODY)(ELSE)` defines an if statement; else is mandatory
 
 ```aergia
 (<< a 50
@@ -49,21 +52,30 @@ order: 1
 )
 ```
 
-`[COND BODY]` defines a while loop
+`[COND BODY]` defines a while loop  
+`<<<` exits a loop (equivalent to Python `break`)  
+`>>>` restarts a loop (equivalent to Python `continue`)
 
 ```aergia
 = i 0
 [<< i 10
-    > i
     = i +i 1
+    (== i 5
+        <<<
+    )()
+    (== i 8
+        >>>
+    )()
+    > i
 ]
 ```
 
 ## Maps
+
 `.` creates an empty map  
 `=. NAME KEY VALUE` sets a value to a key  
 `,MAP KEY` gets a value  
- `..MAP` gets the size of a map
+`..MAP` gets the size of a map
 
 ```aergia
 = map .
@@ -75,6 +87,7 @@ order: 1
 ```
 
 ## Functions
+
 `{PARAMS; BODY}` defines a function  
 `@FUNC ARGS;` calls a function  
 `? VALUE` returns a value  
@@ -88,6 +101,7 @@ order: 1
 ```
 
 ## Operators
+
 `+a b` add  
 `-a b` subtract  
 `*a b` multiply  
