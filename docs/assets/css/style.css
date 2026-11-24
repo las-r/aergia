@@ -418,8 +418,7 @@ blockquote.danger strong { color: var(--red); }
 /* tables */
 .doc-content table {
     display: block;
-    width: max-content;
-    max-width: 100%;
+    width: 100%;
     overflow-x: auto;
     border-collapse: collapse;
     margin: 1rem 0;
@@ -432,12 +431,21 @@ blockquote.danger strong { color: var(--red); }
     border: 1px solid var(--border);
     text-align: left;
     vertical-align: top;
+    width: 1px;
+    white-space: nowrap;
+}
+
+.doc-content th:last-child,
+.doc-content td:last-child {
+    width: 100%;
+    white-space: normal;
 }
 
 .doc-content th {
     background: var(--surface);
     font-weight: 600;
 }
+
 
 /* inline code and code blocks */
 code, pre {
