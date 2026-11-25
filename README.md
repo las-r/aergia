@@ -13,5 +13,5 @@
 @greet lang;
 ```
 
-## Documentation (WIP)
+## Documentation
 Full docs for Aergia v2 are at [las-r.dev/aergia](https://las-r.dev/aergia/).
