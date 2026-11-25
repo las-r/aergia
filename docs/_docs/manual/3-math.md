@@ -1,8 +1,8 @@
 ---
 title: "Math"
-description: "Arithmetic and operators."
+description: "Calculating via arithmetic and operators."
 section: manual
-order: 2
+order: 3
 ---
 
 ## Prefix Notation
@@ -24,7 +24,7 @@ Each operator takes a fixed number of operands, so expressions nest without pare
 ```
 
 ## Using Variables
-Variables work anywhere a number does.
+Variables work anywhere a value does.
 
 ```aergia
 = price 20

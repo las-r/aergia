@@ -6,7 +6,7 @@ order: 1
 ---
 
 ## Assigning Variables
-`=` followed by a name and a value assigns a variable.
+`=` followed by a name and a value assigns a variable. It can be used as an expression that returns the set value.
 
 ```aergia
 = name "Aergia"

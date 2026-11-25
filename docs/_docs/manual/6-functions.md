@@ -1,18 +1,18 @@
 ---
 title: "Functions"
-description: "Defining and calling functions."
+description: "Defining and calling lambdas."
 section: manual
-order: 3
+order: 6
 ---
 
 ## Defining a Function
-To define a function, use curly brackets with the parameter list ended by a semicolon.
+To define a function (akin to a lambda), use curly brackets with the parameter list ended by a semicolon.
 
 ```aergia
 {n; +n 1}
 ```
 
-Note that this is a closure. To give a name to a function, it needs to be assigned like a variable.
+To give a name to a function, it needs to be assigned like a variable.
 
 ```aergia
 = inc {n; +n 1}
