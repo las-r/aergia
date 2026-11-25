@@ -1,15 +1,15 @@
 # site
 title: "aergia / docs"
 author: "Nayif Ehan"
-description: "(WIP) Documentation for the Aergia programming language"
+description: "Documentation for the Aergia programming language"
 
 # url
 url: "https://las-r.dev"
 baseurl: "/aergia"
 
 # repo
-repo: "las-r/docs"
-repo_branch: "main"
+repo: "las-r/aergia"
+repo_branch: "main/docs"
 
 # build
 markdown: kramdown
@@ -36,7 +36,7 @@ doc_sections:
     - id: getting-started
       title: Getting Started
     - id: manual
-      title: Manual (WIP)
+      title: Manual
     - id: reference
       title: Reference
 
