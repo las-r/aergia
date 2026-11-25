@@ -1,6 +1,12 @@
 # Contributing to Aergia
 Thanks for your interest in Aergia! Contributions are welcome.
 
+## Core Philosophies
+1. Every feature must justify its existence.
+2. All built-in features must be represented using non-alphanumeric characters.
+3. Every feature must follow uniform syntactic and semantic rules.
+4. Every feature must be composable with every other feature.
+
 ## Getting Started
 ```sh
 git clone https://github.com/las-r/aergia
@@ -10,7 +16,7 @@ aergia <file.aer>
 ```
 
 ## Guidelines
-- Follow the philosophies listed in the README.
+- Follow the core philosophies. If you're unsure whether a change fits them or not, open a discussion for it.
 - Match the existing code style, and please don't run an autolinter over the files.
 - Discuss significant changes before implementing them.
 
