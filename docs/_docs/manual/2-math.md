@@ -1,6 +1,6 @@
 ---
 title: "Math"
-description: "Arithmetic and operators in Aergia."
+description: "Arithmetic and operators."
 section: manual
 order: 2
 ---
