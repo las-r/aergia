@@ -9,13 +9,15 @@ order: 1
 - [Python](https://www.python.org) 3.9+
 - [Git](https://git-scm.com) (for the GitHub and local installs)
 
+## Installing from PyPI (recommended)
+```sh
+pip install aergia-lang
+```
+
 ## Installing from GitHub
 ```sh
 pip install git+https://github.com/las-r/aergia
 ```
-
-## Installing from PyPI
-Coming soon. Use the GitHub install for now.
 
 ## Installing locally
 For contributing or modifying Aergia, install an editable copy:
